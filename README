@@ -1,0 +1,85 @@
+----- Project goals -----
+
+- Create a simulation of the DARwIn-OP robot on the Webots simulator as realisitc as possible.
+- Allow to run a controller written using exclusively the Webots API (and not the Robotis API) in simulation and in reality
+
+
+
+----- Project structure -----
+
+The root of the project should match with the root of Webots.
+At each new Webots release, this project can be merged in the root directory of Webots.
+
+
+
+----- Installation (beta) -----
+
+A. Get the git repository
+
+- 1. Let say its git repository path is called $GIT_REPOSITORY
+
+
+B. Install Webots
+
+- 1. Follow the instructions of the user manual of Webots to install Webots
+
+- 2. Let say its installation path is called $WEBOTS_HOME
+
+
+C. Install default software on the DARwIn-OP
+
+- 1. Let say the root path of the DARwIn-OP is called $DARWINOP
+
+
+D. Run the simulation
+
+- 1. Merge the "resources" directory git repository with the "resources" directory of Webots
+     $ cp -R $GIT_REPOSITORY/resources $WEBOTS_HOME
+
+- 2. Compile the manager library by typing:
+     $ cd $WEBOTS_HOME/resources/projects/robots/darwin-op/lib
+     $ make
+     
+     => $WEBOTS_HOME/resources/projects/robots/darwin-op/lib/managers.a is generated
+
+- 3. Compile a Sample controller
+     Open Webots and compile the controller:
+     $ webots $GIT_REPOSITORY/projects/robots/darwin-op/worlds/darwin-op.wbt
+     From the Webots GUI, open $GIT_REPOSITORY/projects/robots/darwin-op/controllers/sample/Sample.cpp and
+     hit the "Build / Build" menu item.
+     Revert and play the simulation.
+
+
+E. Run the same controller on the DARwIn-OP
+
+- 1. On the DARwIn-OP, create a /Darwin/Linux/project/webots directory
+
+- 2. Copy-paste the "include", "lib", "transfer", and "src" directories of the $GIT_REPOSITORY/resources/projects/robots/darwin-op
+     directory directly in the /Darwin/Linux/project/webots directory
+
+- 3. Do the same with the $GIT_REPOSITORY/projects/robots/darwin-op/controllers directory.
+     Note: From now, on the real DARwIn-OP, you should have these directories:
+       /Darwin/Linux/project/webots/include
+       /Darwin/Linux/project/webots/lib
+       /Darwin/Linux/project/webots/transfer
+       /Darwin/Linux/project/webots/src
+       /Darwin/Linux/project/webots/controllers
+
+- 4. Compile the wrapper library
+     $ cd /Darwin/Linux/project/webots/transfer/lib
+     $ make -f Makefile.darwin-op
+
+- 5. Compile the managers library
+     $ cd /Darwin/Linux/project/webots/lib
+     $ make -f Makefile.darwin-op
+
+- 6. Compile the controller
+     $ cd /Darwin/Linux/project/webots/controllers/sample
+     $ make -f Makefile.darwin-op
+
+
+
+----- Contributors -----
+
+Robotis, Cyberbotics, and users ^^
+
