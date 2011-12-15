@@ -1,0 +1,54 @@
+#VRML_SIM V6.0 utf8
+WorldInfo {
+  info [
+    "Robotis DARwIn-OP robot."
+    "The DARwIn-OP robot simulation model can be programmed using the DARwIn-OP motions files and the DARwIn-OP walk control library."
+    "Author: Fabien Rohrer <fabien.rohrer@cyberbotics.com>"
+    "Date: May 2011"
+  ]
+  title "Robotis DARwIn-OP"
+  basicTimeStep 8
+  displayRefresh 4
+  runRealTime TRUE
+}
+Viewpoint {
+  orientation 0.173742 -0.968733 -0.177116 4.65765
+  position 0.515177 0.604776 -0.420919
+  follow "DARwIn-OP"
+}
+Background {
+  skyColor [
+    0.678431 0.847059 0.901961
+  ]
+}
+DirectionalLight {
+  ambientIntensity 1.6
+  direction -0.5 -2 -0.5
+  intensity 0.7
+  castShadows TRUE
+}
+DirectionalLight {
+  ambientIntensity 1.6
+  direction 0.5 -0.5 0.5
+  intensity 0.7
+}
+SoccerField {
+}
+Walls {
+}
+DEF YELLOW_GOAL Goal {
+  translation 3 0 0
+  postColor 0.992157 0.854902 0.219608
+}
+DEF BLUE_GOAL Goal {
+  translation -3 0 0
+  rotation 0 1 0 3.14159
+  postColor 0.152941 0.505882 0.733333
+}
+DEF BALL Ball {
+}
+DARwInOP {
+  translation -0.413972 0.346131 -0.396853
+  rotation 0 1 0 1.0562
+  controller "sample"
+}
