@@ -40,18 +40,12 @@
 # CLASSPATH=relative/mylib.jar
 
 RESOURCES_PATH = $(WEBOTS_HOME)/resources/projects/robots/darwin-op
-CFLAGS = -I$(RESOURCES_PATH)/include
-LIBRARIES = $(RESOURCES_PATH)/lib/managers.a
+CFLAGS = -I"$(RESOURCES_PATH)/include"
+LIBRARIES = "$(RESOURCES_PATH)/lib/managers.a"
 CPP_SOURCES = main.cpp Sample.cpp
-
-.PHONY: managers
-EXTRA_TARGETS=managers
 
 ### Do not modify: this includes Webots global Makefile.include
 space :=
 space +=
 WEBOTS_HOME_PATH=$(subst $(space),\ ,$(strip $(subst \,/,$(WEBOTS_HOME))))
 include $(WEBOTS_HOME_PATH)/resources/projects/default/controllers/Makefile.include
-
-managers:
-	$(MAKE) -C $(RESOURCES_PATH)/lib $(MAKECMDGOALS)
