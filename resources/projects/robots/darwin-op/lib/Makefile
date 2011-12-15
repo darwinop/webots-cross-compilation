@@ -1,7 +1,15 @@
+ifndef OSTYPE
+OSTYPE=$(shell uname)
+endif
+
+ifeq ($(OSTYPE),Darwin)
+OSTYPE=darwin
+endif
+
 MANAGERS_SOURCES_PATH = ../src/managers
 MANAGERS_INCLUDE_PATH = ../include
 DARWIN_FRAMEWORK_PATH = ../darwin/Framework
-
+WEBOTS_INCLUDE_PATH = $(WEBOTS_HOME)/include/controller/cpp
 TARGET = managers.a
 
 CXX_SOURCES = \
@@ -19,46 +27,46 @@ C_SOURCES = \
   $(DARWIN_FRAMEWORK_PATH)/src/minIni/minIni.c
 SOURCES = $(C_SOURCES) $(CXX_SOURCES)
 
-AR        = ar
-ARFLAGS   = cr
+ifeq ($(OSTYPE),darwin)
+EXTRA_FLAGS = -mmacosx-version-min=10.5 -arch i386 -arch x86_64
+AR          = libtool -o
+else
+EXTRA_FLAGS =
+AR          = ar cr
+endif
+
 CC        = gcc
 CXX       = g++
 OBJECTS   = $(notdir $(CXX_SOURCES:.cpp=.o) $(C_SOURCES:.c=.o))
-CFLAGS   += -c -O2 -Wall -DWEBOTS -I$(DARWIN_FRAMEWORK_PATH)/include -I$(MANAGERS_INCLUDE_PATH) -I$(WEBOTS_HOME)/include/controller/cpp
-CXXFLAGS += -c -O2 -Wall -DWEBOTS -I$(DARWIN_FRAMEWORK_PATH)/include -I$(MANAGERS_INCLUDE_PATH) -I$(WEBOTS_HOME)/include/controller/cpp
-LIBS     += -L"$(WEBOTS_HOME)/lib" -lController -lCppController
+CFLAGS   += -c -O2 -Wall -DWEBOTS -I$(DARWIN_FRAMEWORK_PATH)/include -I$(MANAGERS_INCLUDE_PATH) -I$(WEBOTS_INCLUDE_PATH)
+CXXFLAGS += -c -O2 -Wall -DWEBOTS -I$(DARWIN_FRAMEWORK_PATH)/include -I$(MANAGERS_INCLUDE_PATH) -I$(WEBOTS_INCLUDE_PATH)
 DEPENDENCIES = $(OBJECTS:.o=.d)
 
-.PHONY : clean all compil debug release
+.PHONY: clean compil
+
+compil: $(TARGET)
 
 vpath %.c   $(dir $(SOURCES))
 vpath %.cpp $(dir $(SOURCES))
 
-all compil debug release: $(TARGET)
-
 ifneq ($(MAKECMDGOALS),clean)
-ifneq ($(DEPENDENCIES),)
 -include $(DEPENDENCIES)
-endif
 endif
 
 clean:
 	rm -f $(TARGET) $(OBJECTS) $(DEPENDENCIES)
 
 $(TARGET): $(OBJECTS)
-	$(AR) $(ARFLAGS) $(TARGET) $(OBJECTS)
+	$(AR) $(TARGET) $(OBJECTS)
 
 %.d:%.cpp
-	$(CXX) $(CXXFLAGS) $(LIBS) -MM $< > $@
+	$(CXX) $(CXXFLAGS) -MM $< > $@
 
 %.d:%.c
-	$(CC) $(CFLAGS) $(LIBS) -MM $< > $@
+	$(CC) $(CFLAGS) -MM $< > $@
 
 %.o:%.cpp
-	$(CXX) $(CXXFLAGS) $(LIBS) $< -o $@
+	$(CXX) $(CXXFLAGS) $(EXTRA_FLAGS) $< -o $@
 
 %.o:%.c
-	$(CC) $(CFLAGS) $(LIBS) $< -o $@
-
-test:
-	echo $(dir $(SOURCES))
+	$(CC) $(CFLAGS) $(EXTRA_FLAGS) $< -o $@

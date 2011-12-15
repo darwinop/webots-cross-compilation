@@ -21,6 +21,7 @@ namespace Robot {
 }
 
 namespace managers {
+  using namespace Robot;
   class DARwInOPMotionManager {
     public:
                        DARwInOPMotionManager(webots::Robot *robot);
@@ -31,7 +32,7 @@ namespace managers {
     private:
       webots::Robot   *mRobot;
       bool             mCorrectlyInitialized;
-      ::Robot::Action   *mAction;
+      Action          *mAction;
       int              mBasicTimeStep;
 
 #ifndef CROSSCOMPILATION
