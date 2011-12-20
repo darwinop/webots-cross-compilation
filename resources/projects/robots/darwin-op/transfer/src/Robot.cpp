@@ -37,7 +37,7 @@ double webots::Robot::getTime() const {
   long useconds = end.tv_usec - mStart.tv_usec;
   long mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
 
-  return (double) mtime;
+  return (double) mtime/1000.0;
 }
 
 int webots::Robot::getMode() const {
