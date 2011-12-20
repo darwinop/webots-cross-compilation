@@ -493,7 +493,7 @@ Robot {
     }
     DEF DNeck Servo {
       translation 0 0.051 0
-      rotation 0 -1 0 0
+      rotation 0 1 0 0
       children [
         DEF DNeckShape Shape {
           appearance Appearance {
@@ -647,7 +647,7 @@ Robot {
           }
         }
         DEF DHead Servo {
-          rotation 1 0 0 0
+          rotation -1 0 0 -0.7854
           children [
             DEF DHeadShape Group {
               children [
@@ -1296,6 +1296,7 @@ Robot {
     }
     DEF DPelvYL Servo {
       translation 0.037 -0.1222 -0.005
+      rotation 0 -1 0 0
       children [
         DEF DPelvYLShape Shape {
           appearance Appearance {
@@ -2448,6 +2449,7 @@ Robot {
     }
     DEF DPelvYR Servo {
       translation -0.037 -0.1222 -0.005
+      rotation 0 -1 0 0
       children [
         DEF DPelvYRShape Shape {
           appearance Appearance {
@@ -2596,7 +2598,7 @@ Robot {
           }
         }
         DEF DPelvR Servo {
-          rotation 0 0 1 0
+          rotation 0 0 -1 0
           children [
             DEF DPelvRShape Shape {
               appearance Appearance {
@@ -3763,7 +3765,7 @@ Robot {
         }
         DEF DArmUpperL Servo {
           translation 0 -0.016 0
-          rotation 0 0 1 0
+          rotation 0 0 -1 -0.7854
           children [
             DEF DArmUpperLShape Group {
               children [
@@ -4640,7 +4642,7 @@ Robot {
         }
         DEF DArmUpperR Servo {
           translation 0 -0.016 0
-          rotation 0 0 1 0
+          rotation 0 0 -1 0.7854
           children [
             DEF DArmUpperRShape Group {
               children [
