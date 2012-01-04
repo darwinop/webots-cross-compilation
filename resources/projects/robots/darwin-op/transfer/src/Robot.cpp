@@ -9,6 +9,8 @@
 
 #include <unistd.h>
 
+#include <libgen.h>
+
 webots::Robot::Robot() {
   initDarwinOP();
   initDevices();
@@ -135,12 +137,22 @@ void webots::Robot::initDevices() {
 }
 
 void webots::Robot::initDarwinOP() {
+	char exepath[1024] = {0};
+  if(readlink("/proc/self/exe", exepath, sizeof(exepath)) != -1)  {
+      if(chdir(dirname(exepath)))
+          fprintf(stderr, "chdir error!! \n");
+  }
+  
   mLinuxCM730 = new ::Robot::LinuxCM730("/dev/ttyUSB0");
   mCM730 = new ::Robot::CM730(mLinuxCM730);
+  
   if(mCM730->Connect() == false) {
     printf("Fail to connect CM-730!\n");
     exit(EXIT_FAILURE);
   }
-  ::Robot::MotionManager::GetInstance()->Initialize(mCM730);
-  ::Robot::LinuxMotionTimer::Initialize(::Robot::MotionManager::GetInstance());
+  
+  mCM730->WriteByte(::Robot::CM730::P_LED_PANNEL, 0x01|0x02|0x04, NULL);
+//  ::Robot::MotionManager::GetInstance()->Initialize(mCM730);
+//  ::Robot::LinuxMotionTimer::Initialize(::Robot::MotionManager::GetInstance());
+//  ::Robot::LinuxActionScript::PlayMP3("../../../Data/mp3/Thank you.mp3");
 }
