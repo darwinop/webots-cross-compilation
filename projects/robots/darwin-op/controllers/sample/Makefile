@@ -42,6 +42,7 @@
 RESOURCES_PATH = $(WEBOTS_HOME)/resources/projects/robots/darwin-op
 CFLAGS = -I"$(RESOURCES_PATH)/include"
 LIBRARIES = "$(RESOURCES_PATH)/lib/managers.a"
+LINK_DEPENDENCIES = $(RESOURCES_PATH)/lib/managers.a
 CPP_SOURCES = main.cpp Sample.cpp
 
 ### Do not modify: this includes Webots global Makefile.include
