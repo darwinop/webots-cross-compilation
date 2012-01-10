@@ -2,6 +2,7 @@
 #include <webots/Servo.hpp>
 #include <webots/LED.hpp>
 #include <webots/Camera.hpp>
+#include <webots/Accelerometer.hpp>
 #include <managers/DARwInOPMotionManager.hpp>
 #include <managers/DARwInOPGaitManager.hpp>
 
@@ -32,6 +33,8 @@ Sample::Sample():
   mHeadLED->set(0x10C040);
   mCamera = getCamera("Camera");
   mCamera->enable(mTimeStep);
+  mAccelerometer = getAccelerometer("Accelerometer");
+  mAccelerometer->enable(mTimeStep);
   
   for (int i=0; i<NSERVOS; i++)
     mServos[i] = getServo(servoNames[i]);
@@ -107,15 +110,46 @@ void Sample::run() {
   
   // main loop
   double px = 0.0;
-  double py = 0.6988;
+  double py = 0.0;
+  int fup = 0;
+  int fdown = 0;
+  const double acc_tolerance = 80.0;
+  const double acc_step = 100;
   
   while (true) {
     double x, y;
     bool ballInFieldOfView = getBallCenter(x, y);
+    const double *acc = mAccelerometer->getValues();
     
+    // count how many steps the accelerometer
+    // says that the robot is down
+    if (acc[1] < 512.0 - acc_tolerance)
+      fup++;
+    else
+      fup = 0;
+    
+    if (acc[1] > 512.0 + acc_tolerance)
+      fdown++;
+    else
+      fdown = 0;
+    
+    // the robot face is down
+    if (fup > acc_step) {
+      mMotionManager->playPage(1); // init position
+      mMotionManager->playPage(10); // f_up
+      mMotionManager->playPage(1); // init position    
+      fup = 0;
+    }
+    // the back face is down
+    else if (fdown > acc_step) {
+      mMotionManager->playPage(1); // init position
+      mMotionManager->playPage(11); // b_up
+      mMotionManager->playPage(1); // init position
+      fdown = 0;
+    }
     // if the ball is in the field of view,
     // go in the direction of the ball and kick it
-    if (ballInFieldOfView) {
+    else if (ballInFieldOfView) {
       // set eye led to blue
       mEyeLED->set(0x1040C0);
       
@@ -128,28 +162,28 @@ void Sample::run() {
 
       // go forwards and turn according to the head rotation
       mGaitManager->setXAmplitude(1.0);
-      mGaitManager->setAAmplitude(x);
+      mGaitManager->setAAmplitude(-x);
       mGaitManager->step(mTimeStep);
-      mServos[18]->setPosition(x);
-      mServos[19]->setPosition(y);
+      mServos[18]->setPosition(-x);
+      mServos[19]->setPosition(-y);
       
       // if the ball is close enough
       // kick the ball with the right foot
-      if (y > 1.25) {
+      if (y > 0.6) {
         // set eye led to green
         mEyeLED->set(0x10C040);
         if (x<0.0)
           mMotionManager->playPage(13); // left kick
         else
           mMotionManager->playPage(12); // right kick
-        wait(200);
         px = 0.0;
-        py = 0.6988;
+        py = 0.0;
       }
+    }
     
     // the ball is not in the field of view,
     // search it by turning round and moving vertically the head 
-    } else {
+    else {
       // set eye led to red
       mEyeLED->set(0xC01040);
 
@@ -159,7 +193,7 @@ void Sample::run() {
       mGaitManager->step(mTimeStep);
       
       // move the head vertically
-      mServos[19]->setPosition(0.7*sin(2.0*getTime()) + 0.7);
+      mServos[19]->setPosition(-0.7*sin(2.0*getTime()));
     }
     
     // step
