@@ -1,6 +1,6 @@
 ###############################################################
 #
-# Purpose: Makefile for compiling a wrapper between the Webots
+# Purpose: Makefile for building a wrapper between the Webots
 #          API and the darwin-op real robot framework
 # Author : fabien.rohrer@cyberbotics.com
 # License: GPL
