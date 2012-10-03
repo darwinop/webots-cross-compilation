@@ -29,7 +29,9 @@ DARwInOPGaitManager::DARwInOPGaitManager(webots::Robot *robot, const std::string
   mRobot(robot),
   mCorrectlyInitialized(true),
   mXAmplitude(0.0),
-  mAAmplitude(0.0)
+  mAAmplitude(0.0),
+  mYAmplitude(0.0),
+  mMoveAimOn(false)
 {
   if (!mRobot) {
     cerr << "DARwInOPGaitManager: The robot instance is required" << endl;
@@ -74,7 +76,8 @@ void DARwInOPGaitManager::step(int step) {
   Walking *walking = Walking::GetInstance();
   walking->X_MOVE_AMPLITUDE = mXAmplitude;
   walking->A_MOVE_AMPLITUDE = mAAmplitude;
-  
+  walking->Y_MOVE_AMPLITUDE = mYAmplitude;
+  walking->A_MOVE_AIM_ON = mMoveAimOn;
   int numberOfStepToProcess = step / 8;
   for (int i=0; i<numberOfStepToProcess; i++)
     walking->Process();

@@ -28,8 +28,11 @@ namespace managers {
       virtual         ~DARwInOPGaitManager();
       bool             isCorrectlyInitialized() { return mCorrectlyInitialized; }
       
-      void             setXAmplitude(double x) { mXAmplitude = DGM_BOUND(x, -1.0, 1.0) * 15.0; }
+      void             setXAmplitude(double x) { mXAmplitude = DGM_BOUND(x, -1.0, 1.0) * 15.0; } 
+      void             setYAmplitude(double x) { mYAmplitude = DGM_BOUND(x, -1.0, 1.0) * 15.0; }
       void             setAAmplitude(double a) { mAAmplitude = DGM_BOUND(a, -1.0, 1.0) * 15.0; }
+      void             setMoveAimOn(bool q) { mMoveAimOn = q; }
+
       void             start();
       void             step(int ms);
       void             stop();
@@ -39,6 +42,8 @@ namespace managers {
       bool             mCorrectlyInitialized;
       double           mXAmplitude;
       double           mAAmplitude;
+      double           mYAmplitude;
+      bool             mMoveAimOn;
 
 #ifndef CROSSCOMPILATION
       double           valueToPosition(unsigned short value);
