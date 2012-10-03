@@ -28,7 +28,7 @@ C_SOURCES = \
 SOURCES = $(C_SOURCES) $(CXX_SOURCES)
 
 ifeq ($(OSTYPE),darwin)
-EXTRA_FLAGS = -mmacosx-version-min=10.5 -arch i386 -arch x86_64
+EXTRA_FLAGS = -mmacosx-version-min=10.7 -arch i386 -arch x86_64
 AR          = libtool -o
 else
 EXTRA_FLAGS =
@@ -42,9 +42,9 @@ CFLAGS   += -c -O2 -Wall -DWEBOTS -I$(DARWIN_FRAMEWORK_PATH)/include -I$(MANAGER
 CXXFLAGS += -c -O2 -Wall -DWEBOTS -I$(DARWIN_FRAMEWORK_PATH)/include -I$(MANAGERS_INCLUDE_PATH) -I$(WEBOTS_INCLUDE_PATH)
 DEPENDENCIES = $(OBJECTS:.o=.d)
 
-.PHONY: clean compil
+.PHONY: clean build
 
-compil: $(TARGET)
+build: $(TARGET)
 
 vpath %.c   $(dir $(SOURCES))
 vpath %.cpp $(dir $(SOURCES))

@@ -1,4 +1,4 @@
-.PHONY: compil
+.PHONY: build
 
-compil clean:
-	make -s -C ../lib $@
+build clean:
+	+make -s -C ../lib $@
