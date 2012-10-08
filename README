@@ -67,7 +67,7 @@ E. Run the same controller on the DARwIn-OP
 
 - 4. Compile the wrapper library
      $ cd /Darwin/Linux/project/webots/transfer/lib
-     $ make -f Makefile.darwin-op
+     $ make
 
 - 5. Compile the managers library
      $ cd /Darwin/Linux/project/webots/lib
