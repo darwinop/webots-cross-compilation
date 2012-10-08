@@ -162,7 +162,7 @@ void Sample::run() {
 
       // go forwards and turn according to the head rotation
       mGaitManager->setXAmplitude(1.0);
-      mGaitManager->setAAmplitude(x);
+      mGaitManager->setAAmplitude(-x);
       mGaitManager->step(mTimeStep);
       mServos[18]->setPosition(-x);
       mServos[19]->setPosition(-y);
