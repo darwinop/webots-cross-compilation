@@ -12,8 +12,8 @@
 # TO MODIFY:
 
 # pathes
-#DARWINOP_ROOT = /darwin
-DARWINOP_ROOT = /home/fabien/develop/darwinop/trunk/darwin
+DARWINOP_ROOT = /darwin
+#DARWINOP_ROOT = /home/fabien/develop/darwinop/trunk/darwin
 
 # -------------------------------------------------------------
 
@@ -24,7 +24,8 @@ CXX_SOURCES = \
   ../src/LED.cpp \
   ../src/Accelerometer.cpp \
   ../src/Gyro.cpp \
-  ../src/Camera.cpp 
+  ../src/Camera.cpp \
+  ../src/Speaker.cpp
 OBJECTS = $(CXX_SOURCES:.cpp=.o)
 INCLUDE_DIRS = -I$(DARWINOP_ROOT)/Linux/include -I$(DARWINOP_ROOT)/Framework/include -I../include
 
