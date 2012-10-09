@@ -26,9 +26,9 @@ const double *Gyro::getValues() const {
   CM730 *cm730 = getRobot()->getCM730();
   
   int integerValues[3];
-  cm730->ReadWord(CM730::P_GYRO_X_L, &integerValues[0], 0);
-  cm730->ReadWord(CM730::P_GYRO_Y_L, &integerValues[1], 0);
-  cm730->ReadWord(CM730::P_GYRO_Z_L, &integerValues[2], 0);
+  cm730->ReadWord(CM730::ID_CM, CM730::P_GYRO_X_L, &integerValues[0], 0);
+  cm730->ReadWord(CM730::ID_CM, CM730::P_GYRO_Y_L, &integerValues[1], 0);
+  cm730->ReadWord(CM730::ID_CM, CM730::P_GYRO_Z_L, &integerValues[2], 0);
   
   for (int i=0; i<3; i++)
     values[i] = integerValues[i];
