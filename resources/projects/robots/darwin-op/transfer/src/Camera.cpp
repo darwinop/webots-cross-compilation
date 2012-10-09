@@ -43,7 +43,7 @@ int ::webots::Camera::getHeight() const {
 }
 
 double ::webots::Camera::getFov() const {
-  return 1.0472;
+  return 1.0123;
 }
 
 int ::webots::Camera::getType() const {
