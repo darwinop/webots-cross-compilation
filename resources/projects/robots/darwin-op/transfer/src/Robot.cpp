@@ -114,6 +114,9 @@ void webots::Robot::initDevices() {
   mDevices["Gyro"]          = new webots::Gyro         ("Gyro",          this);
   mDevices["EyeLed"]        = new webots::LED          ("EyeLed",        this);
   mDevices["HeadLed"]       = new webots::LED          ("HeadLed",       this);
+  mDevices["BackLedRed"]    = new webots::LED          ("BackLedRed",    this);
+  mDevices["BackLedGreen"]  = new webots::LED          ("BackLedGreen",  this);
+  mDevices["BackLedBlue"]   = new webots::LED          ("BackLedBlue",   this);
   mDevices["ShoulderR"]     = new webots::Servo        ("ShoulderR",     this);
   mDevices["ShoulderL"]     = new webots::Servo        ("ShoulderL",     this);
   mDevices["ArmUpperR"]     = new webots::Servo        ("ArmUpperR",     this);
