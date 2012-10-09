@@ -24,7 +24,7 @@ void LED::set(int value) {
   int r5 = ((value >> 16) & 0xFF) >> 3;
   int g5 = ((value >>  8) & 0xFF) >> 3;
   int b5 = ( value        & 0xFF) >> 3;
-  int rgb15 = (r5 << 10) | (g5 << 5) | b5;
+  int rgb15 = (b5 << 10) | (g5 << 5) | r5;
   
   // set the led value
   CM730 *cm730 = getRobot()->getCM730();
