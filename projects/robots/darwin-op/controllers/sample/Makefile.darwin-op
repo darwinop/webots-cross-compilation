@@ -15,10 +15,10 @@
 TARGET = sample
 
 # pathes
-#DARWINOP_ROOT = /darwin
-DARWINOP_ROOT = /home/fabien/develop/darwinop/trunk/darwin
-#WEBOTS_DARWINOP_PROJECT_ROOT = /darwin/Linux/project/webots
-WEBOTS_DARWINOP_PROJECT_ROOT = $(WEBOTS_HOME)/resources/projects/robots/darwin-op
+DARWINOP_ROOT = /darwin
+#DARWINOP_ROOT = /home/fabien/develop/darwinop/trunk/darwin
+WEBOTS_DARWINOP_PROJECT_ROOT = /darwin/Linux/project/webots
+#WEBOTS_DARWINOP_PROJECT_ROOT = $(WEBOTS_HOME)/resources/projects/robots/darwin-op
 
 # source filenames
 CXX_SOURCES = \
