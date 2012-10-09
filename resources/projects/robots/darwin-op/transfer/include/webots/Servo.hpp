@@ -17,6 +17,17 @@ namespace webots {
     public:
                     Servo(const std::string &name, const Robot *robot); //Use Robot::getServo() instead
       virtual      ~Servo();
+      virtual void  setAcceleration(double force);
+      virtual void  setVelocity(double vel);
+      virtual void  enablePosition(int ms);
+      virtual void  disablePosition();
+      virtual void  setForce(double force);
+      virtual void  setMotorForce(double motor_force);
+      virtual void  setControlP(double p);
+      virtual void  enableMotorForceFeedback(int ms);
+      virtual void  disableMotorForceFeedback();
+      double getMotorForceFeedback() const;
+      double getPosition() const;
       virtual void  setPosition(double position);
 
     private:

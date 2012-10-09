@@ -49,6 +49,55 @@ void Servo::initStaticMap() {
   }
 }
 
+void Servo::setAcceleration(double force){  // ToDo
+}
+
+void Servo::setVelocity(double vel){  // ToDo
+}
+
+void Servo::enablePosition(int ms){  //EMPTY
+}
+
+void Servo::disablePosition(){  //EMPTY
+}
+
+void Servo::setForce(double force){  // ToDo
+}
+
+void Servo::setMotorForce(double motor_force){
+  CM730 *cm730 = getRobot()->getCM730();
+  if(motor_force > 2.5)
+	{cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, 1023, 0);}
+  else if (motor_force  >=  0)
+  {
+	double value = (motor_force/2.5) * 1023;
+	cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, value, 0);
+  }
+}
+
+void Servo::setControlP(double p){	// ToDo
+}
+
+void Servo::enableMotorForceFeedback(int ms){  //EMPTY
+}
+
+void Servo::disableMotorForceFeedback(){  //EMPTY
+}
+
+double Servo::getMotorForceFeedback() const{	// ToDo
+  return 0;
+}
+
+double Servo::getPosition() const{
+  CM730 *cm730 = getRobot()->getCM730();
+  int value = 0;
+  double position = 0;
+
+  cm730->ReadWord(mNamesToIDs[getName()], MX28::P_PRESENT_POSITION_L, &value, 0);
+  position = (MX28::Value2Angle(value)*M_PI) / 180;
+  return position;
+}
+
 void Servo::setPosition(double position) {
   CM730 *cm730 = getRobot()->getCM730();
   int value = MX28::Angle2Value(position*180.0/M_PI);

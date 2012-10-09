@@ -13,7 +13,6 @@
 
 # pathes
 DARWINOP_ROOT = /darwin
-#DARWINOP_ROOT = /home/fabien/develop/darwinop/trunk/darwin
 
 # -------------------------------------------------------------
 
