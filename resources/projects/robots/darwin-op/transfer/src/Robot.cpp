@@ -5,6 +5,7 @@
 #include <webots/LED.hpp>
 #include <webots/Servo.hpp>
 #include <webots/Device.hpp>
+#include <webots/Speaker.hpp>
 #include "LinuxDARwIn.h"
 
 #include <unistd.h>
@@ -108,6 +109,16 @@ webots::LED *webots::Robot::getLED(const std::string &name) const {
   return NULL;
 }
 
+webots::Speaker *webots::Robot::getSpeaker(const std::string &name) const {
+  webots::Device *device = getDevice(name);
+  if (device) {
+    webots::Speaker *speaker = dynamic_cast<webots::Speaker *> (device);
+    if (speaker)
+      return speaker;
+  }
+  return NULL;
+}
+
 void webots::Robot::initDevices() {
   mDevices["Accelerometer"] = new webots::Accelerometer("Accelerometer", this);
   mDevices["Camera"]        = new webots::Camera       ("Camera",        this);
@@ -137,6 +148,7 @@ void webots::Robot::initDevices() {
   mDevices["FootL"]         = new webots::Servo        ("FootL",         this);
   mDevices["Neck"]          = new webots::Servo        ("Neck",          this);
   mDevices["Head"]          = new webots::Servo        ("Head",          this);
+  mDevices["Speaker"]       = new webots::Speaker      ("Speaker",       this);
 }
 
 void webots::Robot::initDarwinOP() {
