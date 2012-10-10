@@ -43,6 +43,7 @@ namespace webots {
       LED                             *mHeadLedBlue;
       Camera                          *mCamera;
       Accelerometer                   *mAccelerometer;
+      Gyro							  *mGyro;
       
       managers::DARwInOPMotionManager *mMotionManager;
       managers::DARwInOPGaitManager   *mGaitManager;

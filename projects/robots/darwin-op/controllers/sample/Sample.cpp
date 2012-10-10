@@ -38,6 +38,8 @@ Sample::Sample():
   mCamera->enable(mTimeStep);
   mAccelerometer = getAccelerometer("Accelerometer");
   mAccelerometer->enable(mTimeStep);
+  mGyro = getGyro("Gyro");
+  mGyro->enable(mTimeStep);
   
   for (int i=0; i<NSERVOS; i++)
     mServos[i] = getServo(servoNames[i]);
