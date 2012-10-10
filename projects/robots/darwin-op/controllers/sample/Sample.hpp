@@ -21,6 +21,7 @@ namespace webots {
   class LED;
   class Camera;
   class Accelerometer;
+  class Gyro;
   
   class Sample : public Robot {
     public:
@@ -38,8 +39,12 @@ namespace webots {
       Servo                           *mServos[NSERVOS];
       LED                             *mEyeLED;
       LED                             *mHeadLED;
+      LED                             *mBackLedRed;
+      LED                             *mBackLedGreen;
+      LED                             *mHeadLedBlue;
       Camera                          *mCamera;
       Accelerometer                   *mAccelerometer;
+      Gyro							  *mGyro;
       
       managers::DARwInOPMotionManager *mMotionManager;
       managers::DARwInOPGaitManager   *mGaitManager;
