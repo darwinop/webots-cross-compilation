@@ -21,6 +21,7 @@ namespace webots {
   class LED;
   class Camera;
   class Accelerometer;
+  class Gyro;
   
   class Sample : public Robot {
     public:
