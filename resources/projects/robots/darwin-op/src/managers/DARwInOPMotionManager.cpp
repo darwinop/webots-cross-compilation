@@ -53,9 +53,9 @@ DARwInOPMotionManager::DARwInOPMotionManager(webots::Robot *robot) :
   }
 
   if(0 < firm_ver && firm_ver < 27)
-    filename = DARwInOPDirectoryManager::getDataDirectory() + "motion_4096.bin";
-  else if (27 <= firm_ver)
     filename = DARwInOPDirectoryManager::getDataDirectory() + "motion_1024.bin";
+  else if (27 <= firm_ver)
+    filename = DARwInOPDirectoryManager::getDataDirectory() + "motion_4096.bin";
   else {
     fprintf(stderr, "The firmware version of Dynamixel ID %d is corrupted.\n", JointData::ID_HEAD_PAN);
     mCorrectlyInitialized = false;
