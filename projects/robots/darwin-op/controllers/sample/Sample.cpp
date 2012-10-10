@@ -31,6 +31,9 @@ Sample::Sample():
   mEyeLED = getLED("EyeLed");
   mHeadLED = getLED("HeadLed");
   mHeadLED->set(0x10C040);
+  mBackLedRed = getLED("BackLedRed");
+  mBackLedGreen = getLED("BackLedGreen");
+  mBackLedBlue = getLED("BackLedBlue");
   mCamera = getCamera("Camera");
   mCamera->enable(mTimeStep);
   mAccelerometer = getAccelerometer("Accelerometer");

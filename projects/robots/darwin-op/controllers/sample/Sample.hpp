@@ -38,6 +38,9 @@ namespace webots {
       Servo                           *mServos[NSERVOS];
       LED                             *mEyeLED;
       LED                             *mHeadLED;
+      LED                             *mBackLedRed;
+      LED                             *mBackLedGreen;
+      LED                             *mHeadLedBlue;
       Camera                          *mCamera;
       Accelerometer                   *mAccelerometer;
       
