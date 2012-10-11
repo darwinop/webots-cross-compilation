@@ -144,8 +144,8 @@ void Servo::setControlP(double p){
   CM730 *cm730 = getRobot()->getCM730();
   if(p >= 0)
   {
-	  int value = p * 8; // Seems to be good, but has to be verified
-	  cm730->WriteWord(mNamesToIDs[getName()], MX28::P_P_GAIN, value, 0);
+    int value = p * 8; // Seems to be good, but has to be verified
+    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_P_GAIN, value, 0);
   }
 }
 
