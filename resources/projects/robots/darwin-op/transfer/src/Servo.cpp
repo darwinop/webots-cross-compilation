@@ -113,23 +113,21 @@ void Servo::disablePosition(){  //EMPTY
 void Servo::setForce(double force){
   CM730 *cm730 = getRobot()->getCM730();
   if(force == 0)
-    {cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);}
-  else
-  {
+    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);
+  else{
     cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 1, 0);
     this->setMotorForce(fabs(force));
     int firm_ver = 0;
     if(cm730->ReadByte(JointData::ID_HEAD_PAN, MX28::P_VERSION, &firm_ver, 0) != CM730::SUCCESS)
-      {printf("Can't read firmware version from Dynamixel ID %d!\n", JoinData::ID_HEAD_PAN);}
-    else if(27 <= firm_ver)
-    {
+      printf("Can't read firmware version from Dynamixel ID %d!\n", JoinData::ID_HEAD_PAN);
+    else if(27 <= firm_ver){
       if(force > 0)
-        {cm730->WriteWord(mNamesToIDs[getName()], MX28::P_GOAL_POSITION_L, mNamesToLimUp[getName()], 0);}
+        cm730->WriteWord(mNamesToIDs[getName()], MX28::P_GOAL_POSITION_L, mNamesToLimUp[getName()], 0);
       else
-        {cm730->WriteWord(mNamesToIDs[getName()], MX28::P_GOAL_POSITION_L, mNamesToLimDown[getName()], 0);}
+        cm730->WriteWord(mNamesToIDs[getName()], MX28::P_GOAL_POSITION_L, mNamesToLimDown[getName()], 0);
      }
      else
-       {printf("Servo::setForce not available for this version of Dynamixel firmware, please update it.\n");}
+       printf("Servo::setForce not available for this version of Dynamixel firmware, please update it.\n");
   }
 }
 
