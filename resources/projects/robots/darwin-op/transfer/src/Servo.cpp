@@ -10,6 +10,8 @@ using namespace webots;
 using namespace Robot;
 
 std::map<const std::string, int> Servo::mNamesToIDs;
+std::map<const std::string, int> Servo::mNamesToLimUp;
+std::map<const std::string, int> Servo::mNamesToLimDown;
 
 Servo::Servo(const std::string &name, const Robot *robot) :
   Device(name, robot)
@@ -46,6 +48,48 @@ void Servo::initStaticMap() {
     mNamesToIDs["Neck"]      = JointData::ID_HEAD_PAN;
     mNamesToIDs["Head"]      = JointData::ID_HEAD_TILT;
 
+    mNamesToLimUp["ShoulderR"] = 4095;
+    mNamesToLimUp["ShoulderL"] =    0;
+    mNamesToLimUp["ArmUpperR"] = 3548;
+    mNamesToLimUp["ArmUpperL"] =  583;
+    mNamesToLimUp["ArmLowerR"] = 2804;
+    mNamesToLimUp["ArmLowerL"] = 1278;
+    mNamesToLimUp["PelvYR"]    = 2480;
+    mNamesToLimUp["PelvYL"]    = 1600;
+    mNamesToLimUp["PelvR"]     = 2708;
+    mNamesToLimUp["PelvL"]     = 2650;
+    mNamesToLimUp["LegUpperR"] =  889;
+    mNamesToLimUp["LegUpperL"] = 3145;
+    mNamesToLimUp["LegLowerR"] = 2038;
+    mNamesToLimUp["LegLowerL"] = 2067;
+    mNamesToLimUp["AnkleR"]    = 2947;
+    mNamesToLimUp["AnkleL"]    = 1142;
+    mNamesToLimUp["FootR"]     = 2728;
+    mNamesToLimUp["FootL"]     = 1385;
+    mNamesToLimUp["Neck"]      =  790;
+    mNamesToLimUp["Head"]      = 2660;
+
+    mNamesToLimDown["ShoulderR"] =  191;
+    mNamesToLimDown["ShoulderL"] = 3095;
+    mNamesToLimDown["ArmUpperR"] = 1605;
+    mNamesToLimDown["ArmUpperL"] = 2549;
+    mNamesToLimDown["ArmLowerR"] =  970;
+    mNamesToLimDown["ArmLowerL"] = 3109;
+    mNamesToLimDown["PelvYR"]    =  470;
+    mNamesToLimDown["PelvYL"]    = 3680;
+    mNamesToLimDown["PelvR"]     = 1390;
+    mNamesToLimDown["PelvL"]     = 1400;
+    mNamesToLimDown["LegUpperR"] = 2340;
+    mNamesToLimDown["LegUpperL"] = 1724;
+    mNamesToLimDown["LegLowerR"] = 3342;
+    mNamesToLimDown["LegLowerL"] =  722;
+    mNamesToLimDown["AnkleR"]    = 1239;
+    mNamesToLimDown["AnkleL"]    = 2845;
+    mNamesToLimDown["FootR"]     = 1603;
+    mNamesToLimDown["FootL"]     = 2435;
+    mNamesToLimDown["Neck"]      = 3150;
+    mNamesToLimDown["Head"]      = 1815;
+    
   }
 }
 
