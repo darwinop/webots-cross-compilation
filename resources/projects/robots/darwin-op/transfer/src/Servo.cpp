@@ -108,14 +108,18 @@ void Servo::enablePosition(int ms){  //EMPTY
 void Servo::disablePosition(){  //EMPTY
 }
 
-void Servo::setForce(double force){  // NotFinished !!!
+void Servo::setForce(double force){
   CM730 *cm730 = getRobot()->getCM730();
   if(force == 0)
-	{cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);}
+    {cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);}
   else
   {
-	cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 1, 0);
-	//this->setMotorForce(force);
+    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 1, 0);
+    this->setMotorForce(fabs(force));
+    if(force > 0)
+      {cm730->WriteWord(mNamesToIDs[getName()], MX28::P_GOAL_POSITION_L, mNamesToLimUp[getName()], 0);}
+    else
+      {cm730->WriteWord(mNamesToIDs[getName()], MX28::P_GOAL_POSITION_L, mNamesToLimDown[getName()], 0);}
   }
 }
 
