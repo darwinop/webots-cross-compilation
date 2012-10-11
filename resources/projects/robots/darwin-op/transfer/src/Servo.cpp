@@ -78,12 +78,18 @@ void Servo::setForce(double force){  // NotFinished !!!
 void Servo::setMotorForce(double motor_force){
   CM730 *cm730 = getRobot()->getCM730();
   if(motor_force > 2.5)
-	{cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, 1023, 0);}
-  else if (motor_force  >=  0)
   {
-	  double value = (motor_force/2.5) * 1023;
-	  cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, value, 0);
+    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 1, 0);
+    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, 1023, 0);
   }
+  else if (motor_force  >  0)
+  {
+    double value = (motor_force/2.5) * 1023;
+    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 1, 0);
+    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, value, 0);
+  }
+  else
+    {cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);}
 }
 
 void Servo::setControlP(double p){
