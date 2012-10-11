@@ -61,7 +61,15 @@ void Servo::enablePosition(int ms){  //EMPTY
 void Servo::disablePosition(){  //EMPTY
 }
 
-void Servo::setForce(double force){  // ToDo
+void Servo::setForce(double force){  // NotFinished !!!
+  CM730 *cm730 = getRobot()->getCM730();
+  if(force == 0)
+	{cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);}
+  else
+  {
+	cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 1, 0);
+	//this->setMotorForce(force);
+  }
 }
 
 void Servo::setMotorForce(double motor_force){
