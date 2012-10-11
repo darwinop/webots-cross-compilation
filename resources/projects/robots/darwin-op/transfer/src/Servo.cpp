@@ -81,8 +81,8 @@ void Servo::setMotorForce(double motor_force){
 	{cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, 1023, 0);}
   else if (motor_force  >=  0)
   {
-	double value = (motor_force/2.5) * 1023;
-	cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, value, 0);
+	  double value = (motor_force/2.5) * 1023;
+	  cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, value, 0);
   }
 }
 
@@ -108,9 +108,9 @@ double Servo::getMotorForceFeedback() const{
 
   cm730->ReadWord(mNamesToIDs[getName()], MX28::P_PRESENT_LOAD_L, &value, 0);
   if(value<1024)
-	{force = ((double)value/1023) * 2.5;}
+    {force = ((double)value/1023) * 2.5;}
   else
-	{force = -(((double)value-1023)/1023) * 2.5;}
+    {force = -(((double)value-1023)/1023) * 2.5;}
 
   return force;
 }
