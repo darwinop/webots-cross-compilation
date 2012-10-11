@@ -52,7 +52,10 @@ void Servo::initStaticMap() {
 void Servo::setAcceleration(double force){  // ToDo
 }
 
-void Servo::setVelocity(double vel){  // ToDo
+void Servo::setVelocity(double vel){
+  CM730 *cm730 = getRobot()->getCM730();
+  int value = fabs(MX28::Angle2Value(vel*180.0/M_PI));  // Need to be verified
+  cm730->WriteWord(mNamesToIDs[getName()], MX28::P_MOVING_SPEED_L, value, 0);
 }
 
 void Servo::enablePosition(int ms){  //EMPTY
@@ -61,7 +64,15 @@ void Servo::enablePosition(int ms){  //EMPTY
 void Servo::disablePosition(){  //EMPTY
 }
 
-void Servo::setForce(double force){  // ToDo
+void Servo::setForce(double force){  // NotFinished !!!
+  CM730 *cm730 = getRobot()->getCM730();
+  if(force == 0)
+	{cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);}
+  else
+  {
+	cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 1, 0);
+	//this->setMotorForce(force);
+  }
 }
 
 void Servo::setMotorForce(double motor_force){
@@ -70,12 +81,18 @@ void Servo::setMotorForce(double motor_force){
 	{cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, 1023, 0);}
   else if (motor_force  >=  0)
   {
-	double value = (motor_force/2.5) * 1023;
-	cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, value, 0);
+	  double value = (motor_force/2.5) * 1023;
+	  cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, value, 0);
   }
 }
 
-void Servo::setControlP(double p){	// ToDo
+void Servo::setControlP(double p){
+  CM730 *cm730 = getRobot()->getCM730();
+  if(p >= 0)
+  {
+	  int value = p * 8; // Seems to be good, but has to be verified
+	  cm730->WriteWord(mNamesToIDs[getName()], MX28::P_P_GAIN, value, 0);
+  }
 }
 
 void Servo::enableMotorForceFeedback(int ms){  //EMPTY
@@ -84,8 +101,18 @@ void Servo::enableMotorForceFeedback(int ms){  //EMPTY
 void Servo::disableMotorForceFeedback(){  //EMPTY
 }
 
-double Servo::getMotorForceFeedback() const{	// ToDo
-  return 0;
+double Servo::getMotorForceFeedback() const{
+  CM730 *cm730 = getRobot()->getCM730();
+  int value = 0;
+  double force = 0;
+
+  cm730->ReadWord(mNamesToIDs[getName()], MX28::P_PRESENT_LOAD_L, &value, 0);
+  if(value<1024)
+    {force = ((double)value/1023) * 2.5;}
+  else
+    {force = -(((double)value-1023)/1023) * 2.5;}
+
+  return force;
 }
 
 double Servo::getPosition() const{
