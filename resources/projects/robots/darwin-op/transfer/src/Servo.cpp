@@ -90,8 +90,18 @@ void Servo::enableMotorForceFeedback(int ms){  //EMPTY
 void Servo::disableMotorForceFeedback(){  //EMPTY
 }
 
-double Servo::getMotorForceFeedback() const{	// ToDo
-  return 0;
+double Servo::getMotorForceFeedback() const{
+  CM730 *cm730 = getRobot()->getCM730();
+  int value = 0;
+  double force = 0;
+
+  cm730->ReadWord(mNamesToIDs[getName()], MX28::P_PRESENT_LOAD_L, &value, 0);
+  if(value<1024)
+	{force = ((double)value/1023) * 2.5;}
+  else
+	{force = -(((double)value-1023)/1023) * 2.5;}
+
+  return force;
 }
 
 double Servo::getPosition() const{
