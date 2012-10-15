@@ -100,6 +100,9 @@ void DARwInOPMotionManager::playPage(int id) {
   Action::GetInstance()->Start(id);
   while(Action::GetInstance()->IsRunning())
     usleep(mBasicTimeStep*1000);
+    
+  mAction->m_Joint.SetEnableBody(false, true);
+  MotionManager::GetInstance()->SetEnable(false);   
 #else
   Action::PAGE page;
   if (mAction->LoadPage(id, &page)) {
