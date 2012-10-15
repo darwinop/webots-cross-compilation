@@ -41,7 +41,7 @@ namespace webots {
       LED                             *mHeadLED;
       LED                             *mBackLedRed;
       LED                             *mBackLedGreen;
-      LED                             *mHeadLedBlue;
+      LED                             *mBackLedBlue;
       Camera                          *mCamera;
       Accelerometer                   *mAccelerometer;
       Gyro                            *mGyro;
