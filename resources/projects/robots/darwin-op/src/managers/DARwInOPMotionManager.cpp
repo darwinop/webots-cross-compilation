@@ -80,10 +80,7 @@ DARwInOPMotionManager::DARwInOPMotionManager(webots::Robot *robot) :
   }
 
 #ifdef CROSSCOMPILATION
-  mAction->m_Joint.SetEnableBody(true, true);
-  
   MotionManager::GetInstance()->AddModule((MotionModule*) mAction);
-  MotionManager::GetInstance()->SetEnable(true);
 #endif
 }
 
@@ -97,6 +94,9 @@ void DARwInOPMotionManager::playPage(int id) {
     return;
   
 #ifdef CROSSCOMPILATION
+  mAction->m_Joint.SetEnableBody(true, true);
+  MotionManager::GetInstance()->SetEnable(true);
+  
   Action::GetInstance()->Start(id);
   while(Action::GetInstance()->IsRunning())
     usleep(mBasicTimeStep*1000);
