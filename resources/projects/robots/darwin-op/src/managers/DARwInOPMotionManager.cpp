@@ -80,8 +80,7 @@ DARwInOPMotionManager::DARwInOPMotionManager(webots::Robot *robot) :
   }
 
 #ifdef CROSSCOMPILATION
-  for (int i=0; i<DMM_NSERVOS; i++)
-    mAction->m_Joint.SetEnable(i, true);
+  mAction->m_Joint.SetEnableBody(true, true);
   
   MotionManager::GetInstance()->AddModule((MotionModule*) mAction);
   MotionManager::GetInstance()->SetEnable(true);
