@@ -33,6 +33,8 @@ namespace webots {
     private:
       static void   initStaticMap();
       static std::map<const std::string, int> mNamesToIDs;
+      static std::map<const std::string, int> mNamesToLimUp;
+      static std::map<const std::string, int> mNamesToLimDown;
   };
 }
 

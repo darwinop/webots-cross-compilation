@@ -16,12 +16,15 @@ namespace managers {
   class DARwInOPGaitManager;
 }
 
+using namespace Robot;
+
 namespace webots {
   class Servo;
   class LED;
   class Camera;
   class Accelerometer;
   class Gyro;
+  class Speaker;
   
   class Sample : public Robot {
     public:
