@@ -25,6 +25,7 @@ namespace webots {
   class Gyro;
   class LED;
   class Servo;
+  class Speaker;
   
   class Robot {
     public:
@@ -40,6 +41,7 @@ namespace webots {
       Gyro                *getGyro(const std::string &name) const;
       LED                 *getLED(const std::string &name) const;
       Servo               *getServo(const std::string &name) const;
+      Speaker             *getSpeaker(const std::string &name) const;
       
       ::Robot::CM730      *getCM730() const { return mCM730; }
 
