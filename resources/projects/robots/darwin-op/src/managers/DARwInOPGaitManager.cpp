@@ -52,13 +52,8 @@ DARwInOPGaitManager::DARwInOPGaitManager(webots::Robot *robot, const std::string
   walking->LoadINISettings(&ini);
   
 #ifdef CROSSCOMPILATION
-  for (int i=0; i<DGM_NSERVOS; i++)
-    walking->m_Joint.SetEnable(i, true);
-    
   DARwInOPMotionTimerManager::MotionTimerInit();
-  
   MotionManager::GetInstance()->AddModule((MotionModule*)Walking::GetInstance());
-  MotionManager::GetInstance()->SetEnable(true);
 #endif
 }
 
@@ -71,6 +66,8 @@ void DARwInOPGaitManager::step(int step) {
     return;
   }
 #ifdef CROSSCOMPILATION
+  Walking::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true, true);
+  MotionManager::GetInstance()->SetEnable(true);
   if (step != 8) {
     cerr << "DARwInOPGaitManager: steps of 8ms are required" << endl;
     return;
@@ -94,6 +91,10 @@ void DARwInOPGaitManager::step(int step) {
 void DARwInOPGaitManager::stop() {
   Walking *walking = Walking::GetInstance();
   walking->Stop();
+#ifndef CROSSCOMPILATION
+  Walking::GetInstance()->m_Joint.SetEnableBodyWithoutHead(false, true);
+  MotionManager::GetInstance()->SetEnable(false);
+#endif
 }
 
 void DARwInOPGaitManager::start() {
