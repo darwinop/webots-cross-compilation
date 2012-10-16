@@ -3,7 +3,7 @@
 #include <webots/LED.hpp>
 #include <webots/Camera.hpp>
 #include <webots/Accelerometer.hpp>
-#include <webots/Gyro>
+#include <webots/Gyro.hpp>
 #include <managers/DARwInOPMotionManager.hpp>
 #include <managers/DARwInOPGaitManager.hpp>
 
