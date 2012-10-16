@@ -2,6 +2,7 @@
 #include <webots/Robot.hpp>
 
 #include <LinuxDARwIn.h>
+#include "Camera.h"
 
 unsigned char *::webots::Camera::mImage = NULL;
 
@@ -74,11 +75,11 @@ void *::webots::Camera::CameraTimerProc(void *param) {
 }
 
 int ::webots::Camera::getWidth() const {
-  return 320;
+  return ::Robot::Camera::WIDTH;
 }
 
 int ::webots::Camera::getHeight() const {
-  return 240;
+  return ::Robot::Camera::HEIGHT;
 }
 
 double ::webots::Camera::getFov() const {
