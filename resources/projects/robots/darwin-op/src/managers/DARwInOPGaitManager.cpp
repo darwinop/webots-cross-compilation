@@ -5,7 +5,9 @@
 #include <MX28.h>
 #include <Walking.h>
 #include <minIni.h>
+
 #ifdef CROSSCOMPILATION
+#include <managers/DARwInOPMotionTimerManager.hpp>
 #include <MotionManager.h>
 #endif
 
@@ -45,16 +47,13 @@ DARwInOPGaitManager::DARwInOPGaitManager(webots::Robot *robot, const std::string
 #endif
   
   minIni ini(iniFilename.c_str());
-  Walking *walking = Walking::GetInstance();
-  walking->Initialize();
-  walking->LoadINISettings(&ini);
+  mWalking = Walking::GetInstance();
+  mWalking->Initialize();
+  mWalking->LoadINISettings(&ini);
   
 #ifdef CROSSCOMPILATION
-  for (int i=0; i<DGM_NSERVOS; i++)
-    walking->m_Joint.SetEnable(i, true);
-  
-  MotionManager::GetInstance()->AddModule((MotionModule*)Walking::GetInstance());
-  MotionManager::GetInstance()->SetEnable(true);
+  DARwInOPMotionTimerManager::MotionTimerInit();
+  MotionManager::GetInstance()->AddModule((MotionModule*)mWalking);
 #endif
 }
 
@@ -67,34 +66,37 @@ void DARwInOPGaitManager::step(int step) {
     return;
   }
 #ifdef CROSSCOMPILATION
+  mWalking->m_Joint.SetEnableBodyWithoutHead(true, true);
+  MotionManager::GetInstance()->SetEnable(true);
   if (step != 8) {
     cerr << "DARwInOPGaitManager: steps of 8ms are required" << endl;
     return;
   }
 #endif
   
-  Walking *walking = Walking::GetInstance();
-  walking->X_MOVE_AMPLITUDE = mXAmplitude;
-  walking->A_MOVE_AMPLITUDE = mAAmplitude;
-  walking->Y_MOVE_AMPLITUDE = mYAmplitude;
-  walking->A_MOVE_AIM_ON = mMoveAimOn;
+  mWalking->X_MOVE_AMPLITUDE = mXAmplitude;
+  mWalking->A_MOVE_AMPLITUDE = mAAmplitude;
+  mWalking->Y_MOVE_AMPLITUDE = mYAmplitude;
+  mWalking->A_MOVE_AIM_ON = mMoveAimOn;
   int numberOfStepToProcess = step / 8;
   for (int i=0; i<numberOfStepToProcess; i++)
-    walking->Process();
+    mWalking->Process();
 #ifndef CROSSCOMPILATION
   for (int i=0; i<DGM_NSERVOS; i++)
-    mServos[i]->setPosition(valueToPosition(walking->m_Joint.GetValue(i+1)));
+    mServos[i]->setPosition(valueToPosition(mWalking->m_Joint.GetValue(i+1)));
 #endif
 }
 
 void DARwInOPGaitManager::stop() {
-  Walking *walking = Walking::GetInstance();
-  walking->Stop();
+  mWalking->Stop();
+#ifndef CROSSCOMPILATION
+  mWalking->m_Joint.SetEnableBodyWithoutHead(false, true);
+  MotionManager::GetInstance()->SetEnable(false);
+#endif
 }
 
 void DARwInOPGaitManager::start() {
-  Walking *walking = Walking::GetInstance();
-  walking->Start();
+  mWalking->Start();
 }
 
 #ifndef CROSSCOMPILATION
