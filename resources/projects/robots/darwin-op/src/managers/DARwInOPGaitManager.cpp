@@ -5,7 +5,9 @@
 #include <MX28.h>
 #include <Walking.h>
 #include <minIni.h>
+
 #ifdef CROSSCOMPILATION
+#include <managers/DARwInOPMotionTimerManager.hpp>
 #include <MotionManager.h>
 #endif
 
@@ -52,6 +54,8 @@ DARwInOPGaitManager::DARwInOPGaitManager(webots::Robot *robot, const std::string
 #ifdef CROSSCOMPILATION
   for (int i=0; i<DGM_NSERVOS; i++)
     walking->m_Joint.SetEnable(i, true);
+    
+  DARwInOPMotionTimerManager::MotionTimerInit();
   
   MotionManager::GetInstance()->AddModule((MotionModule*)Walking::GetInstance());
   MotionManager::GetInstance()->SetEnable(true);

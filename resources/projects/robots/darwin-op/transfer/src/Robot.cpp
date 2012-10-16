@@ -167,6 +167,4 @@ void webots::Robot::initDarwinOP() {
   }
   
   ::Robot::MotionManager::GetInstance()->Initialize(mCM730);
-  ::Robot::LinuxMotionTimer *motion_timer = new ::Robot::LinuxMotionTimer(::Robot::MotionManager::GetInstance());
-  motion_timer->Start();
 }

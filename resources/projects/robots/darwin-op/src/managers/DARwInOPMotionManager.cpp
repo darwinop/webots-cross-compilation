@@ -6,7 +6,9 @@
 #include <webots/Servo.hpp>
 #include <Action.h>
 #include <MX28.h>
+
 #ifdef CROSSCOMPILATION
+#include <managers/DARwInOPMotionTimerManager.hpp>
 #include <MotionManager.h>
 #include <unistd.h>
 #endif
@@ -43,6 +45,8 @@ DARwInOPMotionManager::DARwInOPMotionManager(webots::Robot *robot) :
   string filename;
   
 #ifdef CROSSCOMPILATION
+  DARwInOPMotionTimerManager::MotionTimerInit();
+
   int firm_ver = 0;
   CM730 *cm730 = mRobot->getCM730();
   if(cm730->ReadByte(JointData::ID_HEAD_PAN, MX28::P_VERSION, &firm_ver, 0)  != CM730::SUCCESS) {
