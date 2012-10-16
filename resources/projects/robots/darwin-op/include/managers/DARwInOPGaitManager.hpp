@@ -18,7 +18,6 @@ namespace webots {
 }
 
 namespace Robot {
-  class Action;
   class Walking;
 }
 
