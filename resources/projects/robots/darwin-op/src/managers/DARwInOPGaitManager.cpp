@@ -89,7 +89,7 @@ void DARwInOPGaitManager::step(int step) {
 
 void DARwInOPGaitManager::stop() {
   mWalking->Stop();
-#ifndef CROSSCOMPILATION
+#ifdef CROSSCOMPILATION
   mWalking->m_Joint.SetEnableBodyWithoutHead(false, true);
   MotionManager::GetInstance()->SetEnable(false);
 #endif
