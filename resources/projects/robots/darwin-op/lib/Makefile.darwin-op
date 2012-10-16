@@ -1,6 +1,7 @@
 MANAGERS_SOURCES_PATH = ../src/managers
 MANAGERS_INCLUDE_PATH = ../include
 DARWIN_FRAMEWORK_PATH = /darwin/Framework
+DARWIN_LINUX_PATH = /darwin/Linux
 WEBOTS_INCLUDE_PATH = ../transfer/include/
 TARGET = managers.a
 
@@ -12,9 +13,11 @@ CXX_SOURCES = \
   $(DARWIN_FRAMEWORK_PATH)/src/motion/MotionStatus.cpp \
   $(DARWIN_FRAMEWORK_PATH)/src/motion/modules/Action.cpp \
   $(DARWIN_FRAMEWORK_PATH)/src/motion/modules/Walking.cpp \
+  $(DARWIN_LINUX_PATH)/build/LinuxMotionTimer.cpp \
   $(MANAGERS_SOURCES_PATH)/DARwInOPDirectoryManager.cpp \
   $(MANAGERS_SOURCES_PATH)/DARwInOPMotionManager.cpp \
-  $(MANAGERS_SOURCES_PATH)/DARwInOPGaitManager.cpp
+  $(MANAGERS_SOURCES_PATH)/DARwInOPGaitManager.cpp \
+  $(MANAGERS_SOURCES_PATH)/DARwInOPMotionTimerManager.cpp
 C_SOURCES = \
   $(DARWIN_FRAMEWORK_PATH)/src/minIni/minIni.c
 SOURCES = $(C_SOURCES) $(CXX_SOURCES)
@@ -25,8 +28,8 @@ AR          = ar cr
 CC        = gcc
 CXX       = g++
 OBJECTS   = $(notdir $(CXX_SOURCES:.cpp=.o) $(C_SOURCES:.c=.o))
-CFLAGS   += -c -O2 -Wall -DWEBOTS -I$(DARWIN_FRAMEWORK_PATH)/include -I$(MANAGERS_INCLUDE_PATH) -I$(WEBOTS_INCLUDE_PATH)
-CXXFLAGS += -c -O2 -Wall -DWEBOTS -I$(DARWIN_FRAMEWORK_PATH)/include -I$(MANAGERS_INCLUDE_PATH) -I$(WEBOTS_INCLUDE_PATH)
+CFLAGS   += -c -O2 -Wall -DWEBOTS -I$(DARWIN_FRAMEWORK_PATH)/include -I$(DARWIN_LINUX_PATH)/include -I$(MANAGERS_INCLUDE_PATH) -I$(WEBOTS_INCLUDE_PATH)
+CXXFLAGS += -c -O2 -Wall -DWEBOTS -I$(DARWIN_FRAMEWORK_PATH)/include -I$(DARWIN_LINUX_PATH)/include -I$(MANAGERS_INCLUDE_PATH) -I$(WEBOTS_INCLUDE_PATH)
 DEPENDENCIES = $(OBJECTS:.o=.d)
 
 .PHONY: clean compil
