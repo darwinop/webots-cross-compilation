@@ -18,7 +18,7 @@ namespace webots {
 }
 
 namespace Robot {
-  class Action;
+  class Walking;
 }
 
 namespace managers {
@@ -40,6 +40,7 @@ namespace managers {
     private:
       webots::Robot   *mRobot;
       bool             mCorrectlyInitialized;
+      Walking         *mWalking;
       double           mXAmplitude;
       double           mAAmplitude;
       double           mYAmplitude;
