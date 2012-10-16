@@ -56,6 +56,10 @@ void ::webots::Camera::disable() {
       exit(-1);
     mIsActive = false;
   }
+  if(mImage) {
+    free(mImage);
+    mImage = NULL;
+  }
 }
 
 const unsigned char *::webots::Camera::getImage() const {
