@@ -119,7 +119,7 @@ void Servo::setForce(double force){
     this->setMotorForce(fabs(force));
     int firm_ver = 0;
     if(cm730->ReadByte(JointData::ID_HEAD_PAN, MX28::P_VERSION, &firm_ver, 0) != CM730::SUCCESS)
-      printf("Can't read firmware version from Dynamixel ID %d!\n", JoinData::ID_HEAD_PAN);
+      printf("Can't read firmware version from Dynamixel ID %d!\n", JointData::ID_HEAD_PAN);
     else if(27 <= firm_ver){
       if(force > 0)
         cm730->WriteWord(mNamesToIDs[getName()], MX28::P_GOAL_POSITION_L, mNamesToLimUp[getName()], 0);
