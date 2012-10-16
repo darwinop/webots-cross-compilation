@@ -10,6 +10,7 @@
 #define CAMERA_HPP
 
 #include <webots/Device.hpp>
+#include <pthread.h>
 
 namespace webots {
   class Camera: public Device  {
@@ -30,8 +31,13 @@ namespace webots {
       static unsigned char imageGetBlue(const unsigned char *image, int width, int x,int y);
       static unsigned char imageGetGrey(const unsigned char *image, int width, int x,int y);
     
+    protected:
+      static void            *CameraTimerProc(void *param);// thread function
+    
     private:
-      unsigned char          *mImage;
+      static unsigned char   *mImage;
+      pthread_t               mCameraThread;// thread structure
+      bool                    mIsActive;
   };
 }
 

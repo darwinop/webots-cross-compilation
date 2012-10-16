@@ -3,11 +3,12 @@
 
 #include <LinuxDARwIn.h>
 
+unsigned char *::webots::Camera::mImage = NULL;
 
 ::webots::Camera::Camera(const std::string &name, const Robot *robot) :
-  Device(name, robot),
-  mImage(NULL)
+  Device(name, robot)
 {
+  mIsActive = false;
 }
 
 ::webots::Camera::~Camera() {
@@ -19,19 +20,53 @@ void ::webots::Camera::enable(int ms) {
   ::Robot::LinuxCamera::GetInstance()->Initialize(0);
   ::Robot::LinuxCamera::GetInstance()->SetCameraSettings(::Robot::CameraSettings());
   mImage = (unsigned char *) malloc (3*getWidth()*getHeight());
+
+//Thread start
+  int error;
+  struct sched_param param;
+  pthread_attr_t attr;
+  
+  pthread_attr_init(&attr);
+  
+  error = pthread_attr_setschedpolicy(&attr, SCHED_RR);
+  if(error != 0)
+    printf("error = %d\n",error);
+  error = pthread_attr_setinheritsched(&attr,PTHREAD_EXPLICIT_SCHED);
+  if(error != 0)
+    printf("error = %d\n",error);
+  
+  memset(&param, 0, sizeof(param));
+  param.sched_priority = 31;// RT
+  error = pthread_attr_setschedparam(&attr, &param);
+  if(error != 0)
+    printf("error = %d\n",error);
+
+  // create and start the thread
+  if((error = pthread_create(&this->mCameraThread, &attr, this->CameraTimerProc, this))!= 0)
+    exit(-1);
+
+  mIsActive = true;
 }
 
 void ::webots::Camera::disable() {
-  if (mImage) {
-    free (mImage);
-    mImage = NULL;
+  if(mIsActive){
+    int error=0;
+    // wait for the thread to end
+    if((error = pthread_join(this->mCameraThread, NULL))!= 0)
+      exit(-1);
+    mIsActive = false;
   }
 }
 
 const unsigned char *::webots::Camera::getImage() const {
-  ::Robot::LinuxCamera::GetInstance()->CaptureFrame();
-  memcpy(mImage, ::Robot::LinuxCamera::GetInstance()->fbuffer->m_RGBFrame->m_ImageData, ::Robot::LinuxCamera::GetInstance()->fbuffer->m_RGBFrame->m_ImageSize);
   return mImage;
+}
+
+void *::webots::Camera::CameraTimerProc(void *param) {
+  while(1) {
+    ::Robot::LinuxCamera::GetInstance()->CaptureFrame();
+    memcpy(mImage, ::Robot::LinuxCamera::GetInstance()->fbuffer->m_RGBFrame->m_ImageData, ::Robot::LinuxCamera::GetInstance()->fbuffer->m_RGBFrame->m_ImageSize);
+  }
 }
 
 int ::webots::Camera::getWidth() const {
