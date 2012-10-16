@@ -22,6 +22,7 @@ namespace Robot {
 }
 
 namespace managers {
+  using namespace Robot;
   class DARwInOPGaitManager {
     public:
                        DARwInOPGaitManager(webots::Robot *robot, const std::string &iniFilename);
