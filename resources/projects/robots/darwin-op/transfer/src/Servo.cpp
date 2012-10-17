@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <fstream>
+#include <algorithm>
 
 using namespace webots;
 using namespace Robot;
@@ -195,6 +196,13 @@ void Servo::setPosition(double position) {
 
   if(value >= 0 && value <= MX28::MAX_VALUE) {
     int error;
+    //       Self-Collision Avoidance      //
+    // Work only with a resolution of 4096 //
+    if(value > std::max(mNamesToLimDown[getName()], mNamesToLimUp[getName()]))
+      value = std::max(mNamesToLimDown[getName()], mNamesToLimUp[getName()])
+    else if(value < std::min(mNamesToLimDown[getName()], mNamesToLimUp[getName()]))
+      value = std::min(mNamesToLimDown[getName()], mNamesToLimUp[getName()])
+      
     cm730->WriteWord(mNamesToIDs[getName()], MX28::P_GOAL_POSITION_L, value, &error);
   }
 }
