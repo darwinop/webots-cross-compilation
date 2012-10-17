@@ -35,6 +35,7 @@ namespace webots {
       static std::map<const std::string, int> mNamesToIDs;
       static std::map<const std::string, int> mNamesToLimUp;
       static std::map<const std::string, int> mNamesToLimDown;
+      double getSpeed() const 
   };
 }
 

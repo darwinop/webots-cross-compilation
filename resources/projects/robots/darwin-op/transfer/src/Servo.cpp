@@ -206,3 +206,16 @@ void Servo::setPosition(double position) {
     cm730->WriteWord(mNamesToIDs[getName()], MX28::P_GOAL_POSITION_L, value, &error);
   }
 }
+
+double Servo::getSpeed() const {
+  CM730 *cm730 = getRobot()->getCM730();
+  int value = 0;
+  double speed = 0;
+  
+  cm730->ReadWord(mNamesToIDs[getName()], MX28::P_PRESENT_SPEED_L, &value, 0);
+  if(value > 1023)
+    value = - (value - 1023);
+  speed = ((value * M_PI) / 30 ) * 0.114;
+  
+  return speed;
+}
