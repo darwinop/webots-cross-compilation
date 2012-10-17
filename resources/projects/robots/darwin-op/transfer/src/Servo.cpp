@@ -101,6 +101,8 @@ void Servo::setAcceleration(double force){  // ToDo
 void Servo::setVelocity(double vel){
   CM730 *cm730 = getRobot()->getCM730();
   int value = fabs((vel*30/M_PI)/0.114);  // Need to be verified
+  if(value > 1023)
+    value = 1023;
   cm730->WriteWord(mNamesToIDs[getName()], MX28::P_MOVING_SPEED_L, value, 0);
 }
 
