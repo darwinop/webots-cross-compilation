@@ -13,6 +13,8 @@
 #include <map>
 #include <sys/time.h>
 
+#define NSERVOS 20
+
 namespace Robot {
   class CM730;
   class LinuxCM730;
