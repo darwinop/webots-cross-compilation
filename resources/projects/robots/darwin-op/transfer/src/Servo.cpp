@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <fstream>
+#include <algorithm>
 
 using namespace webots;
 using namespace Robot;
@@ -15,10 +16,20 @@ std::map<const std::string, int> Servo::mNamesToIDs;
 std::map<const std::string, int> Servo::mNamesToLimUp;
 std::map<const std::string, int> Servo::mNamesToLimDown;
 
+template <typename T> int sgn(T val) {
+  if(val >= 0)
+    return 1;
+  else
+    return -1;
+}
+
 Servo::Servo(const std::string &name, const Robot *robot) :
   Device(name, robot)
 {
   initStaticMap();
+  mAcceleration   = -1;
+  mMaxVelocity    = 10;
+  mActualVelocity =  0;
 }
 
 Servo::~Servo() {
@@ -95,13 +106,22 @@ void Servo::initStaticMap() {
   }
 }
 
-void Servo::setAcceleration(double force){  // ToDo
+void Servo::setAcceleration(double force){
+  mAcceleration = force;
+  if(force == -1)				// No Aceleration limitation -> restore previous Velocity limit
+    setVelocity(mMaxVelocity);
 }
 
 void Servo::setVelocity(double vel){
   CM730 *cm730 = getRobot()->getCM730();
   int value = fabs((vel*30/M_PI)/0.114);  // Need to be verified
+  if(value > 1023)
+    value = 1023;
+  else if(value == 0) // Because 0 means max Velocity for the dynamixel
+    value = 1;
   cm730->WriteWord(mNamesToIDs[getName()], MX28::P_MOVING_SPEED_L, value, 0);
+  if(mAcceleration == -1)
+    mMaxVelocity = vel;
 }
 
 void Servo::enablePosition(int ms){  //EMPTY
@@ -193,6 +213,48 @@ void Servo::setPosition(double position) {
 
   if(value >= 0 && value <= MX28::MAX_VALUE) {
     int error;
+    //       Self-Collision Avoidance      //
+    // Work only with a resolution of 4096 //
+    if(value > std::max(mNamesToLimDown[getName()], mNamesToLimUp[getName()]))
+      value = std::max(mNamesToLimDown[getName()], mNamesToLimUp[getName()])
+    else if(value < std::min(mNamesToLimDown[getName()], mNamesToLimUp[getName()]))
+      value = std::min(mNamesToLimDown[getName()], mNamesToLimUp[getName()])
+      
     cm730->WriteWord(mNamesToIDs[getName()], MX28::P_GOAL_POSITION_L, value, &error);
   }
+}
+
+void Servo::updateSpeed(int ms) {
+	
+  if(mAcceleration != -1) {
+    double speed = getSpeed();
+    int     sens = sgn(speed);
+    
+    // Direction of rotation changed //
+    //     -> reset of velocity      //
+    if(sgn(mActualVelocity) != sens) {
+      mActualVelocity = 0;
+      setVelocity(0);
+    }
+	
+    if(speed == 0)
+      mActualVelocity = 0;
+	  
+    mActualVelocity = sens * (fabs(mActualVelocity) + ms * mAcceleration / 1000);
+    setVelocity(mActualVelocity);
+  }
+}
+    
+
+double Servo::getSpeed() const {
+  CM730 *cm730 = getRobot()->getCM730();
+  int value = 0;
+  double speed = 0;
+  
+  cm730->ReadWord(mNamesToIDs[getName()], MX28::P_PRESENT_SPEED_L, &value, 0);
+  if(value > 1023)
+    value = - (value - 1023);
+  speed = ((value * M_PI) / 30 ) * 0.114;
+  
+  return speed;
 }
