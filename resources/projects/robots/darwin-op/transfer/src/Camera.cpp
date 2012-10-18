@@ -52,8 +52,8 @@ void ::webots::Camera::enable(int ms) {
 void ::webots::Camera::disable() {
   if(mIsActive){
     int error=0;
-    // wait for the thread to end
-    if((error = pthread_join(this->mCameraThread, NULL))!= 0)
+    // End the thread
+    if((error = pthread_cancel(this->mCameraThread, NULL))!= 0)
       exit(-1);
     mIsActive = false;
   }
