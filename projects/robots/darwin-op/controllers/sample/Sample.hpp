@@ -16,8 +16,6 @@ namespace managers {
   class DARwInOPGaitManager;
 }
 
-using namespace Robot;
-
 namespace webots {
   class Servo;
   class LED;
