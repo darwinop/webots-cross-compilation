@@ -16,6 +16,13 @@ std::map<const std::string, int> Servo::mNamesToIDs;
 std::map<const std::string, int> Servo::mNamesToLimUp;
 std::map<const std::string, int> Servo::mNamesToLimDown;
 
+template <typename T> int sgn(T val) {
+  if(val >= 0)
+    return 1;
+  else
+    return -1;
+}
+
 Servo::Servo(const std::string &name, const Robot *robot) :
   Device(name, robot)
 {
