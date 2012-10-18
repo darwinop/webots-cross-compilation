@@ -104,6 +104,8 @@ void Servo::setVelocity(double vel){
   int value = fabs((vel*30/M_PI)/0.114);  // Need to be verified
   if(value > 1023)
     value = 1023;
+  else if(value == 0) // Because 0 means max Velocity for the dynamixel
+    value = 1;
   cm730->WriteWord(mNamesToIDs[getName()], MX28::P_MOVING_SPEED_L, value, 0);
 }
 
