@@ -23,8 +23,18 @@ webots::Robot::~Robot() {
 }
 
 int webots::Robot::step(int ms) {
-  usleep(ms*1000);
-  return 0;
+  double actualTime = getTime() * 1000;
+  int stepDuration = actualTime - mPreviousStepTime;
+  
+  if(stepDuration < getBasicTimeStep()) { // Step to short -> wait remaining time
+    usleep((stepDuration - getBasicTimeStep()) * 1000);
+    mPreviousStepTime = actualTime;
+    return 0;
+  }
+  else { // Step to long -> return step duration
+    mPreviousStepTime = actualTime;
+    return stepDuration;
+  }
 }
 
 std::string webots::Robot::getName() const {
