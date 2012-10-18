@@ -20,6 +20,9 @@ Servo::Servo(const std::string &name, const Robot *robot) :
   Device(name, robot)
 {
   initStaticMap();
+  mAcceleration   = -1;
+  mMaxVelocity    = 10;
+  mActualVelocity =  0;
 }
 
 Servo::~Servo() {
@@ -96,7 +99,10 @@ void Servo::initStaticMap() {
   }
 }
 
-void Servo::setAcceleration(double force){  // ToDo
+void Servo::setAcceleration(double force){
+  mAcceleration = force;
+  if(force == -1)				// No Aceleration limitation -> restore previous Velocity limit
+    setVelocity(mMaxVelocity);
 }
 
 void Servo::setVelocity(double vel){
@@ -107,6 +113,8 @@ void Servo::setVelocity(double vel){
   else if(value == 0) // Because 0 means max Velocity for the dynamixel
     value = 1;
   cm730->WriteWord(mNamesToIDs[getName()], MX28::P_MOVING_SPEED_L, value, 0);
+  if(mAcceleration == -1)
+    mMaxVelocity = vel;
 }
 
 void Servo::enablePosition(int ms){  //EMPTY

@@ -32,6 +32,9 @@ namespace webots {
 
     private:
       static void   initStaticMap();
+      double        mAcceleration;
+      double        mActualVelocity;
+      double        mMaxVelocity;
       static std::map<const std::string, int> mNamesToIDs;
       static std::map<const std::string, int> mNamesToLimUp;
       static std::map<const std::string, int> mNamesToLimDown;
