@@ -29,6 +29,8 @@ namespace webots {
       double getMotorForceFeedback() const;
       double getPosition() const;
       virtual void  setPosition(double position);
+      
+              void  updateSpeed(int ms);
 
     private:
       static void   initStaticMap();

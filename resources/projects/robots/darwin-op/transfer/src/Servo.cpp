@@ -224,6 +224,28 @@ void Servo::setPosition(double position) {
   }
 }
 
+void Servo::updateSpeed(int ms) {
+	
+  if(mAcceleration != -1) {
+    double speed = getSpeed();
+    int     sens = sgn(speed);
+    
+    // Direction of rotation changed //
+    //     -> reset of velocity      //
+    if(sgn(mActualVelocity) != sens) {
+      mActualVelocity = 0;
+      setVelocity(0);
+    }
+	
+    if(speed == 0)
+      mActualVelocity = 0;
+	  
+    mActualVelocity = sens * (fabs(mActualVelocity) + ms * mAcceleration / 1000);
+    setVelocity(mActualVelocity);
+  }
+}
+    
+
 double Servo::getSpeed() const {
   CM730 *cm730 = getRobot()->getCM730();
   int value = 0;
