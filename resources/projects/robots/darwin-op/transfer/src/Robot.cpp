@@ -40,7 +40,7 @@ int webots::Robot::step(int ms) {
     getServo(servoNames[i])->updateSpeed(stepDuration);
   
   if(stepDuration < getBasicTimeStep()) { // Step to short -> wait remaining time
-    usleep((stepDuration - getBasicTimeStep()) * 1000);
+    usleep((getBasicTimeStep() - stepDuration) * 1000);
     mPreviousStepTime = actualTime;
     return 0;
   }
