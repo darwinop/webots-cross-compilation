@@ -10,7 +10,7 @@ Gyro::Gyro(const std::string &name, const Robot *robot) :
   Device(name, robot)
 {
   for (int i=0; i<3; i++)
-    mValues[i] = 512;  // 512 = centrale value -> no rotation
+    mValues[i] = 512;  // 512 = central value -> no rotation
 }
 
 Gyro::~Gyro() {
