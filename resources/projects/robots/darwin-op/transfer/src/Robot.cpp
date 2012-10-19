@@ -39,6 +39,23 @@ int webots::Robot::step(int ms) {
   for(int i=0; i<NSERVOS; i++)
     getServo(servoNames[i])->updateSpeed(stepDuration);
   
+  // Read table from CM730 regarding body sensors //
+  //   read table from:  P_GYRO_Z_L  38 (0x26)    //
+  //         to: P_ACCEL_Z_H   49 (0x31)          //
+  int values[3];
+  unsigned char mControlTable[::Robot::CM730::MAXNUM_ADDRESS];
+
+  if(getCM730()->ReadTable(::Robot::CM730::ID_CM, ::Robot::CM730::P_GYRO_Z_L, ::Robot::CM730::P_VOLTAGE, mControlTable ,0) == ::Robot::CM730::SUCCESS) {
+    values[2] = ::Robot::CM730::MakeWord(mControlTable[::Robot::CM730::P_GYRO_Z_L], mControlTable[::Robot::CM730::P_GYRO_Z_H]);
+    values[1] = ::Robot::CM730::MakeWord(mControlTable[::Robot::CM730::P_GYRO_Y_L], mControlTable[::Robot::CM730::P_GYRO_Y_H]);
+    values[0] = ::Robot::CM730::MakeWord(mControlTable[::Robot::CM730::P_GYRO_X_L], mControlTable[::Robot::CM730::P_GYRO_X_H]);
+    ((Gyro *)mDevices["Gyro"])->setValues(values);
+    values[0] = ::Robot::CM730::MakeWord(mControlTable[::Robot::CM730::P_ACCEL_X_L], mControlTable[::Robot::CM730::P_ACCEL_X_H]);
+    values[1] = ::Robot::CM730::MakeWord(mControlTable[::Robot::CM730::P_ACCEL_Y_L], mControlTable[::Robot::CM730::P_ACCEL_Y_H]);
+    values[2] = ::Robot::CM730::MakeWord(mControlTable[::Robot::CM730::P_ACCEL_Z_L], mControlTable[::Robot::CM730::P_ACCEL_Z_H]);
+    ((Accelerometer *)mDevices["Accelerometer"])->setValues(values);
+  } 
+  
   if(stepDuration < getBasicTimeStep()) { // Step to short -> wait remaining time
     usleep((getBasicTimeStep() - stepDuration) * 1000);
     mPreviousStepTime = actualTime;
