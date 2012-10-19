@@ -6,11 +6,11 @@
 using namespace webots;
 using namespace Robot;
 
-static double values[3];
-
 Accelerometer::Accelerometer(const std::string &name, const Robot *robot) :
   Device(name, robot)
 {
+  for (int i=0; i<3; i++)
+    mValues[i] = 512;  // 512 = central value -> no acceleration
 }
 
 Accelerometer::~Accelerometer() {
@@ -23,15 +23,10 @@ void Accelerometer::disable() {
 }
 
 const double *Accelerometer::getValues() const {
-  CM730 *cm730 = getRobot()->getCM730();
-  
-  int integerValues[3];
-  cm730->ReadWord(CM730::ID_CM, CM730::P_ACCEL_X_L, &integerValues[0], 0);
-  cm730->ReadWord(CM730::ID_CM, CM730::P_ACCEL_Y_L, &integerValues[1], 0);
-  cm730->ReadWord(CM730::ID_CM, CM730::P_ACCEL_Z_L, &integerValues[2], 0);
-  
+  return mValues;
+}
+
+void Accelerometer::setValues(const int *integerValues) {
   for (int i=0; i<3; i++)
-    values[i] = integerValues[i];
-  
-  return values;
+    mValues[i] = integerValues[i];
 }

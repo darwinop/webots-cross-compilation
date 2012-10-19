@@ -9,6 +9,7 @@
 #ifndef GYRO_HPP
 #define GYRO_HPP
 
+#include <webots/Robot.hpp>
 #include <webots/Device.hpp>
 
 namespace webots {
@@ -19,6 +20,12 @@ namespace webots {
       virtual void  enable(int ms);
       virtual void  disable();
       const double *getValues() const;
+
+    private:
+      double        mValues[3];
+      void          setValues(const int *integerValues);
+    
+    friend int Robot::step(int ms);
   };
 }
 
