@@ -12,13 +12,6 @@
 
 #include <libgen.h>
 
-static const char *servoNames[NSERVOS] = {
-  "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
-  "ArmLowerR" /*ID5 */, "ArmLowerL" /*ID6 */, "PelvYR"    /*ID7 */, "PelvYL"    /*ID8 */,
-  "PelvR"     /*ID9 */, "PelvL"     /*ID10*/, "LegUpperR" /*ID11*/, "LegUpperL" /*ID12*/,
-  "LegLowerR" /*ID13*/, "LegLowerL" /*ID14*/, "AnkleR"    /*ID15*/, "AnkleL"    /*ID16*/,
-  "FootR"     /*ID17*/, "FootL"     /*ID18*/, "Neck"      /*ID19*/, "Head"      /*ID20*/
-};
 
 webots::Robot::Robot() {
   initDarwinOP();
@@ -33,11 +26,12 @@ webots::Robot::~Robot() {
 int webots::Robot::step(int ms) {
   double actualTime = getTime() * 1000;
   int stepDuration = actualTime - mPreviousStepTime;
+  std::map<const std::string, int>::iterator servo_it;
   
   //      Update speed of each servos,      //
   // according to acceleration limit if set //
-  for(int i=0; i<NSERVOS; i++)
-    getServo(servoNames[i])->updateSpeed(stepDuration);
+  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++  )
+    ((Servo *) mDevices[(*servo_it).first])->updateSpeed(stepDuration);
   
   if(stepDuration < getBasicTimeStep()) { // Step to short -> wait remaining time
     usleep((getBasicTimeStep() - stepDuration) * 1000);
