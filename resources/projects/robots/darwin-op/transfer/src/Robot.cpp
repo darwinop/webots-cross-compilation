@@ -56,6 +56,34 @@ int webots::Robot::step(int ms) {
     ((Accelerometer *)mDevices["Accelerometer"])->setValues(values);
   } 
   
+// -------- Sync Write to actuators --------
+  const int msgLength = 9; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
+
+  int param[20*msgLength]; 
+  int n=0;
+  int changed_servos=0;
+  int value;
+  
+  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++  ) {
+    if(((Servo *) mDevices[(*servo_it).first])->getTorqueEnable()) {
+      param[n++] = (*servo_it).second;
+      param[n++] = ((Servo *) mDevices[(*servo_it).first])->getPGain();
+      param[n++] = 0;     // Empty
+      value = ((Servo *) mDevices[(*servo_it).first])->getGoalPosition();
+      param[n++] = ::Robot::CM730::GetLowByte(value);
+      param[n++] = ::Robot::CM730::GetHighByte(value);
+      value = ((Servo *) mDevices[(*servo_it).first])->getMovingSpeed();
+      param[n++] = ::Robot::CM730::GetLowByte(value);
+      param[n++] = ::Robot::CM730::GetHighByte(value);
+      value = ((Servo *) mDevices[(*servo_it).first])->getTorqueLimit();
+      param[n++] = ::Robot::CM730::GetLowByte(value);
+      param[n++] = ::Robot::CM730::GetHighByte(value);
+      changed_servos++;
+    }
+  }
+  getCM730()->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_servos , param);
+  
+  
   if(stepDuration < getBasicTimeStep()) { // Step to short -> wait remaining time
     usleep((getBasicTimeStep() - stepDuration) * 1000);
     mPreviousStepTime = actualTime;

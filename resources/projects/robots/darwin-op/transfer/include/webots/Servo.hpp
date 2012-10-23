@@ -51,6 +51,8 @@ namespace webots {
       int getMovingSpeed();
       int getTorqueLimit();
       
+      friend int Robot::step(int ms);
+      
       static std::map<const std::string, int> mNamesToIDs;
       static std::map<const std::string, int> mNamesToLimUp;
       static std::map<const std::string, int> mNamesToLimDown;
