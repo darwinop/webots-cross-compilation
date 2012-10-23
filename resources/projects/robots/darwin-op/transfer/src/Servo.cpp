@@ -30,6 +30,11 @@ Servo::Servo(const std::string &name, const Robot *robot) :
   mAcceleration   = -1;
   mMaxVelocity    = 10;
   mActualVelocity =  0;
+  mGoalPosition = mNamesToInitPos[getName()];
+  mTorqueEnable = 1;    // Yes
+  mPGain = 32;
+  mMovingSpeed = 1023;  // Max speed
+  mTorqueLimit = 1023;  // Max torque
 }
 
 Servo::~Servo() {
@@ -103,6 +108,26 @@ void Servo::initStaticMap() {
     mNamesToLimDown["Neck"]      = 3150;
     mNamesToLimDown["Head"]      = 1815;
     
+    mNamesToInitPos["ShoulderR"] = 1500;
+    mNamesToInitPos["ShoulderL"] = 2517;
+    mNamesToInitPos["ArmUpperR"] = 1834;
+    mNamesToInitPos["ArmUpperL"] = 2283;
+    mNamesToInitPos["ArmLowerR"] = 2380;
+    mNamesToInitPos["ArmLowerL"] = 1710;
+    mNamesToInitPos["PelvYR"]    = 2043;
+    mNamesToInitPos["PelvYL"]    = 2033;
+    mNamesToInitPos["PelvR"]     = 2057;
+    mNamesToInitPos["PelvL"]     = 2043;
+    mNamesToInitPos["LegUpperR"] = 1277;
+    mNamesToInitPos["LegUpperL"] = 2797;
+    mNamesToInitPos["LegLowerR"] = 3513;
+    mNamesToInitPos["LegLowerL"] =  571;
+    mNamesToInitPos["AnkleR"]    = 2843;
+    mNamesToInitPos["AnkleL"]    = 1240;
+    mNamesToInitPos["FootR"]     = 2077;
+    mNamesToInitPos["FootL"]     = 2037;
+    mNamesToInitPos["Neck"]      = 2050;
+    mNamesToInitPos["Head"]      = 2173;
   }
 }
 
