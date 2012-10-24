@@ -119,6 +119,8 @@ void DARwInOPMotionManager::playPage(int id) {
          wait(8*page.step[j].pause);
       }
     }
+    if(page.header.next != 0)
+      playPage(page.header.next);
   }
   else
     cerr << "Cannot load the page" << endl;
