@@ -111,11 +111,13 @@ void DARwInOPMotionManager::playPage(int id) {
   Action::PAGE page;
   if (mAction->LoadPage(id, &page)) {
     // cout << "Play motion " << setw(2) << id << ": " << page.header.name << endl;
-    for(int j=0; j<page.header.stepnum; j++) {
-       for(int k=0; k<DMM_NSERVOS; k++)
-         mTargetPositions[k] = valueToPosition(page.step[j].position[k+1]);
-       achieveTarget(8*page.step[j].time);
-       wait(8*page.step[j].pause);
+    for(int i=0; i<page.header.repeat; i++) {
+      for(int j=0; j<page.header.stepnum; j++) {
+         for(int k=0; k<DMM_NSERVOS; k++)
+           mTargetPositions[k] = valueToPosition(page.step[j].position[k+1]);
+         achieveTarget(8*page.step[j].time);
+         wait(8*page.step[j].pause);
+      }
     }
   }
   else
