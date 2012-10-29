@@ -139,13 +139,12 @@ void Servo::setAcceleration(double force){
 }
 
 void Servo::setVelocity(double vel){
-  CM730 *cm730 = getRobot()->getCM730();
   int value = fabs((vel*30/M_PI)/0.114);  // Need to be verified
   if(value > 1023)
     value = 1023;
   else if(value == 0) // Because 0 means max Velocity for the dynamixel
     value = 1;
-  cm730->WriteWord(mNamesToIDs[getName()], MX28::P_MOVING_SPEED_L, value, 0);
+  mMovingSpeed = value;
   if(mAcceleration == -1)
     mMaxVelocity = vel;
 }
@@ -161,16 +160,16 @@ void Servo::setForce(double force){
   if(force == 0)
     cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);
   else{
-    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 1, 0);
+
     this->setMotorForce(fabs(force));
     int firm_ver = 0;
     if(cm730->ReadByte(JointData::ID_HEAD_PAN, MX28::P_VERSION, &firm_ver, 0) != CM730::SUCCESS)
       printf("Can't read firmware version from Dynamixel ID %d!\n", JointData::ID_HEAD_PAN);
     else if(27 <= firm_ver){
       if(force > 0)
-        cm730->WriteWord(mNamesToIDs[getName()], MX28::P_GOAL_POSITION_L, mNamesToLimUp[getName()], 0);
+        mGoalPosition = mNamesToLimUp[getName()];
       else
-        cm730->WriteWord(mNamesToIDs[getName()], MX28::P_GOAL_POSITION_L, mNamesToLimDown[getName()], 0);
+        mGoalPosition = mNamesToLimDown[getName()];
      }
      else
        printf("Servo::setForce not available for this version of Dynamixel firmware, please update it.\n");
@@ -179,27 +178,27 @@ void Servo::setForce(double force){
 
 void Servo::setMotorForce(double motor_force){
   CM730 *cm730 = getRobot()->getCM730();
-  if(motor_force > 2.5)
-  {
-    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 1, 0);
-    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, 1023, 0);
+  if(motor_force > 2.5) {
+    mTorqueEnable = 1;
+    mTorqueLimit = 1023;
   }
-  else if (motor_force  >  0)
-  {
-    double value = (motor_force/2.5) * 1023;
-    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 1, 0);
-    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, value, 0);
+  else if (motor_force  >  0) {
+    mTorqueEnable = 1;
+    mTorqueLimit = (motor_force/2.5) * 1023;
   }
-  else
-    {cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);}
+  else {
+    mTorqueLimit = 0;
+    mTorqueEnable = 0;
+    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);
+  }
 }
 
 void Servo::setControlP(double p){
-  CM730 *cm730 = getRobot()->getCM730();
+
   if(p >= 0)
   {
     int value = p * 8; // Seems to be good, but has to be verified
-    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_P_GAIN, value, 0);
+    mPGain = value;
   }
 }
 
@@ -234,7 +233,7 @@ double Servo::getPosition() const{
 }
 
 void Servo::setPosition(double position) {
-  CM730 *cm730 = getRobot()->getCM730();
+
   int value = MX28::Angle2Value(position*180.0/M_PI);
 
   if(value >= 0 && value <= MX28::MAX_VALUE) {
@@ -246,7 +245,7 @@ void Servo::setPosition(double position) {
     else if(value < std::min(mNamesToLimDown[getName()], mNamesToLimUp[getName()]))
       value = std::min(mNamesToLimDown[getName()], mNamesToLimUp[getName()])
       
-    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_GOAL_POSITION_L, value, &error);
+    mGoalPosition = value;
   }
 }
 
