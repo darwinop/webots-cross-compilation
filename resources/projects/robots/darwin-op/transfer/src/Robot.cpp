@@ -18,6 +18,7 @@ webots::Robot::Robot() {
   initDevices();
   gettimeofday(&mStart, NULL);
   mPreviousStepTime = 0.0;
+  getCM730()->MakeBulkReadPacket(); // Create the BulkReadPacket to read the actuators states in Robot::step
 }
 
 webots::Robot::~Robot() {
@@ -50,7 +51,7 @@ int webots::Robot::step(int ms) {
     ((Accelerometer *)mDevices["Accelerometer"])->setValues(values);
   } 
   
-// -------- Sync Write to actuators --------
+  // -------- Sync Write to actuators --------
   const int msgLength = 9; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
 
   int param[20*msgLength];
@@ -77,6 +78,16 @@ int webots::Robot::step(int ms) {
   }
   getCM730()->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_servos , param);
   
+  // -------- Bulk Read to read the actuators states (position, speed and load) -------- //
+  getCM730()->BulkRead();
+
+  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++) {
+    ((Servo *) mDevices[(*servo_it).first])->setPresentPosition( getCM730()->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_POSITION_L));
+    ((Servo *) mDevices[(*servo_it).first])->setPresentSpeed( getCM730()->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_SPEED_L));
+    ((Servo *) mDevices[(*servo_it).first])->setPresentLoad( getCM730()->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_LOAD_L));
+  }
+  
+  // Timing management //
   if(stepDuration < getBasicTimeStep()) { // Step to short -> wait remaining time
     usleep((getBasicTimeStep() - stepDuration) * 1000);
     mPreviousStepTime = actualTime;
