@@ -39,11 +39,11 @@ namespace webots {
       double        mActualVelocity;
       double        mMaxVelocity;
       // For SynchWrite //
-      int mGoalPosition;
-      int mTorqueEnable;
-      int mPGain;
-      int mMovingSpeed;
-      int mTorqueLimit;
+      int           mGoalPosition;
+      int           mTorqueEnable;
+      int           mPGain;
+      int           mMovingSpeed;
+      int           mTorqueLimit;
       // For Bulk Read //
       int           mPresentPosition;
       int           mPresentSpeed;
