@@ -258,3 +258,24 @@ double Servo::getSpeed() const {
   
   return speed;
 }
+
+
+int Servo::getGoalPosition() {
+  return mGoalPosition;
+}
+
+int Servo::getTorqueEnable() {
+  return mTorqueEnable;
+}
+
+int Servo::getPGain() {
+  return mPGain;
+}
+
+int Servo::getMovingSpeed() {
+  return mMovingSpeed;
+}
+
+int Servo::getTorqueLimit() {
+  return mTorqueLimit;
+}
