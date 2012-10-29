@@ -44,12 +44,19 @@ namespace webots {
       int mPGain;
       int mMovingSpeed;
       int mTorqueLimit;
+      // For Bulk Read //
+      int           mPresentPosition;
+      int           mPresentSpeed;
+      int           mPresentLoad;
 
       int getGoalPosition();
       int getTorqueEnable();
       int getPGain();
       int getMovingSpeed();
       int getTorqueLimit();
+      void setPresentPosition(int position);
+      void setPresentSpeed(int speed);
+      void setPresentLoad(int load);
       
       friend int Robot::step(int ms);
 
@@ -58,8 +65,6 @@ namespace webots {
       static std::map<const std::string, int> mNamesToLimDown;
       static std::map<const std::string, int> mNamesToInitPos;
       double getSpeed() const;
-      
-    friend int Robot::step(int ms);
   };
 }
 
