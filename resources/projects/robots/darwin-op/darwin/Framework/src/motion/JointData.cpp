@@ -37,9 +37,7 @@ void JointData::SetEnable(int id, bool enable)
 
 void JointData::SetEnable(int id, bool enable, bool exclusive)
 {
-#ifndef WEBOTS
     if(enable && exclusive) MotionManager::GetInstance()->SetJointDisable(id);
-#endif
     m_Enable[id] = enable;
 }
 

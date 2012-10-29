@@ -101,11 +101,7 @@ void Action::Initialize()
 bool Action::LoadFile( char* filename )
 {
 	FILE *action = fopen( filename, "r+b" );
-
-	// Olivier.Michel@cyberbotics.com added the following line to allow opening a readonly file located in the Webots installation directory.
-	if( action == 0 ) action = fopen( filename, "rb" );
-
-	if( action == 0 )
+    if( action == 0 )
 	{
 		if(DEBUG_PRINT == true)
 			fprintf(stderr, "Can not open Action file!\n");
