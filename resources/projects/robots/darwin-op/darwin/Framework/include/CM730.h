@@ -36,6 +36,7 @@ namespace Robot
 		/////////// Need to implement below methods (Platform porting) //////////////
 		// Port control
 		virtual bool OpenPort() = 0;
+        virtual bool SetBaud(int baud) = 0;
 		virtual void ClosePort() = 0;
 		virtual void ClearPort() = 0;
 		virtual int WritePort(unsigned char* packet, int numPacket) = 0;
@@ -57,7 +58,7 @@ namespace Robot
 		virtual bool IsUpdateTimeout() = 0;
 		virtual double GetUpdateTime() = 0;
 
-		virtual void Sleep(int Miliseconds) = 0;
+		virtual void Sleep(double msec) = 0;
 		//////////////////////////////////////////////////////////////////////////////
 	};
 
@@ -162,7 +163,6 @@ namespace Robot
 
 		int TxRxPacket(unsigned char *txpacket, unsigned char *rxpacket, int priority);
 		unsigned char CalculateChecksum(unsigned char *packet);
-		int UpdateTable(int *error);	
 
 	public:
 		bool DEBUG_PRINT;
@@ -172,13 +172,11 @@ namespace Robot
 		~CM730();
 
 		bool Connect();
+        bool ChangeBaud(int baud);
 		void Disconnect();
 		bool DXLPowerOn();
 
 		// For board
-		int ReadByte(int address, int *pValue, int *error);
-		int ReadWord(int address, int *pValue, int *error);
-		int ReadTable(int start_addr, int end_addr, unsigned char *table, int *error);
 		int WriteByte(int address, int value, int *error);
 		int WriteWord(int address, int value, int *error);
 
