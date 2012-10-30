@@ -18,6 +18,12 @@ webots::Robot::Robot() {
   initDevices();
   gettimeofday(&mStart, NULL);
   mPreviousStepTime = 0.0;
+  // Load TimeStep from the file "config.ini"
+  minIni ini("config.ini");
+  LoadINISettings(&ini, "Robot Config");
+  if(mTimeStep < 16)
+    printf("The time step selected of %dms is very small and will probably not be respected.\n A time step of at least 16ms is recommended.\n", mTimeStep);
+    
   getCM730()->MakeBulkReadPacket(); // Create the BulkReadPacket to read the actuators states in Robot::step
 }
 
@@ -120,7 +126,7 @@ int webots::Robot::getMode() const {
 }
 
 double webots::Robot::getBasicTimeStep() const {
-  return 8.0;
+  return mTimeStep;
 }
 
 webots::Device *webots::Robot::getDevice(const std::string &name) const {
@@ -239,4 +245,10 @@ void webots::Robot::initDarwinOP() {
   }
   
   ::Robot::MotionManager::GetInstance()->Initialize(mCM730);
+}
+
+void webots::LoadINISettings(minIni* ini, const std::string &section) {
+  double value = INVALID_VALUE;
+  if((value = ini->getd(section, "time_step", INVALID_VALUE)) != INVALID_VALUE)
+    mTimeStep = value;
 }
