@@ -99,13 +99,16 @@ void DARwInOPMotionManager::playPage(int id) {
   
 #ifdef CROSSCOMPILATION
   mAction->m_Joint.SetEnableBody(true, true);
+  MotionStatus::m_CurrentJoints.SetEnableBody(true);
   MotionManager::GetInstance()->SetEnable(true);
   
   Action::GetInstance()->Start(id);
   while(Action::GetInstance()->IsRunning())
     usleep(mBasicTimeStep*1000);
     
+  // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
   mAction->m_Joint.SetEnableBody(false, true);
+  MotionStatus::m_CurrentJoints.SetEnableBody(false);
   MotionManager::GetInstance()->SetEnable(false);   
 #else
   Action::PAGE page;

@@ -67,6 +67,7 @@ void DARwInOPGaitManager::step(int step) {
   }
 #ifdef CROSSCOMPILATION
   mWalking->m_Joint.SetEnableBodyWithoutHead(true, true);
+  MotionStatus::m_CurrentJoints.SetEnableBodyWithoutHead(true);
   MotionManager::GetInstance()->SetEnable(true);
   if (step != 8) {
     cerr << "DARwInOPGaitManager: steps of 8ms are required" << endl;
@@ -90,7 +91,9 @@ void DARwInOPGaitManager::step(int step) {
 void DARwInOPGaitManager::stop() {
   mWalking->Stop();
 #ifdef CROSSCOMPILATION
+  // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
   mWalking->m_Joint.SetEnableBodyWithoutHead(false, true);
+  MotionStatus::m_CurrentJoints.SetEnableBodyWithoutHead(false);
   MotionManager::GetInstance()->SetEnable(false);
 #endif
 }
