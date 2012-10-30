@@ -36,6 +36,9 @@ Servo::Servo(const std::string &name, const Robot *robot) :
   mPGain = 32;
   mMovingSpeed = 1023;  // Max speed
   mTorqueLimit = 1023;  // Max torque
+  mPresentPosition = mNamesToInitPos[getName()];
+  mPresentSpeed = 0;
+  mPresentLoad = 0
 }
 
 Servo::~Servo() {
@@ -209,26 +212,20 @@ void Servo::disableMotorForceFeedback(){  //EMPTY
 }
 
 double Servo::getMotorForceFeedback() const{
-  CM730 *cm730 = getRobot()->getCM730();
-  int value = 0;
-  double force = 0;
 
-  cm730->ReadWord(mNamesToIDs[getName()], MX28::P_PRESENT_LOAD_L, &value, 0);
-  if(value<1024)
-    {force = ((double)value/1023) * 2.5;}
+  double force = 0;
+  if(mPresentLoad < 1024)
+	{force = 2.5 * mPresentLoad / 1023.0;}
   else
-    {force = -(((double)value-1023)/1023) * 2.5;}
+	{force = -2.5 * (mPresentLoad - 1023) / 1023.0;}
 
   return force;
 }
 
 double Servo::getPosition() const{
-  CM730 *cm730 = getRobot()->getCM730();
-  int value = 0;
-  double position = 0;
 
-  cm730->ReadWord(mNamesToIDs[getName()], MX28::P_PRESENT_POSITION_L, &value, 0);
-  position = (MX28::Value2Angle(value)*M_PI) / 180;
+  double position = 0;
+  position = (MX28::Value2Angle(mPresentPosition)*M_PI) / 180;
   return position;
 }
 
@@ -272,15 +269,16 @@ void Servo::updateSpeed(int ms) {
     
 
 double Servo::getSpeed() const {
-  CM730 *cm730 = getRobot()->getCM730();
+
   int value = 0;
   double speed = 0;
-  
-  cm730->ReadWord(mNamesToIDs[getName()], MX28::P_PRESENT_SPEED_L, &value, 0);
-  if(value > 1023)
-    value = - (value - 1023);
-  speed = ((value * M_PI) / 30 ) * 0.114;
-  
+
+  if(mPresentSpeed > 1023)
+    value = - (mPresentSpeed -1023);
+  else
+    value = mPresentSpeed;
+  speed = (value * M_PI / 30) * 0.114;
+
   return speed;
 }
 
@@ -302,4 +300,17 @@ int Servo::getMovingSpeed() {
 
 int Servo::getTorqueLimit() {
   return mTorqueLimit;
+}
+
+
+void Servo::setPresentPosition(int position) {
+  mPresentPosition = position;
+}
+
+void Servo::setPresentSpeed(int speed) {
+  mPresentSpeed = speed;
+}
+
+void Servo::setPresentLoad(int load) {
+  mPresentLoad = load;
 }
