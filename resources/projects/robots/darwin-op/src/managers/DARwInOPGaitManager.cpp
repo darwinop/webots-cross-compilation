@@ -67,18 +67,21 @@ void DARwInOPGaitManager::step(int step) {
   }
 #ifdef CROSSCOMPILATION
   mWalking->m_Joint.SetEnableBodyWithoutHead(true, true);
+  MotionStatus::m_CurrentJoints.SetEnableBodyWithoutHead(true);
   MotionManager::GetInstance()->SetEnable(true);
-  if (step != 8) {
-    cerr << "DARwInOPGaitManager: steps of 8ms are required" << endl;
-    return;
-  }
 #endif
   
   mWalking->X_MOVE_AMPLITUDE = mXAmplitude;
   mWalking->A_MOVE_AMPLITUDE = mAAmplitude;
   mWalking->Y_MOVE_AMPLITUDE = mYAmplitude;
   mWalking->A_MOVE_AIM_ON = mMoveAimOn;
+
+#ifdef CROSSCOMPILATION
+  int numberOfStepToProcess = 1;
+#else
   int numberOfStepToProcess = step / 8;
+#endif
+
   for (int i=0; i<numberOfStepToProcess; i++)
     mWalking->Process();
 #ifndef CROSSCOMPILATION
@@ -90,7 +93,13 @@ void DARwInOPGaitManager::step(int step) {
 void DARwInOPGaitManager::stop() {
   mWalking->Stop();
 #ifdef CROSSCOMPILATION
+  // Reset Goal Position of all servos (except Head) after walking //
+  for(int i=0; i<(DGM_NSERVOS-2); i++)
+    mRobot->getServos(servoNames[i])->setPosition(MX28::Value2Angle(mWalking->m_Joint.GetValue(i+1))*(M_PI/180));
+  
+  // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
   mWalking->m_Joint.SetEnableBodyWithoutHead(false, true);
+  MotionStatus::m_CurrentJoints.SetEnableBodyWithoutHead(false);
   MotionManager::GetInstance()->SetEnable(false);
 #endif
 }
