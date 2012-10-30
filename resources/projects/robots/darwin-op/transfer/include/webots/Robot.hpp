@@ -13,6 +13,8 @@
 #include <map>
 #include <sys/time.h>
 
+#include <minIni.h>
+
 #define NSERVOS 20
 
 namespace Robot {
@@ -50,8 +52,10 @@ namespace webots {
     private:
       void                 initDevices();
       void                 initDarwinOP();
+      void                 LoadINISettings(minIni* ini, const std::string &section);
       Device              *getDevice(const std::string &name) const;
 
+      int                  mTimeStep;
       ::Robot::LinuxCM730 *mLinuxCM730;
       ::Robot::CM730      *mCM730;
       struct timeval       mStart;
