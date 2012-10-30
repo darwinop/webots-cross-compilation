@@ -91,6 +91,10 @@ void DARwInOPGaitManager::step(int step) {
 void DARwInOPGaitManager::stop() {
   mWalking->Stop();
 #ifdef CROSSCOMPILATION
+  // Reset Goal Position of all servos (except Head) after walking //
+  for(int i=0; i<(DGM_NSERVOS-2); i++)
+    mRobot->getServos(servoNames[i])->setPosition(MX28::Value2Angle(mWalking->m_Joint.GetValue(i+1))*(M_PI/180));
+  
   // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
   mWalking->m_Joint.SetEnableBodyWithoutHead(false, true);
   MotionStatus::m_CurrentJoints.SetEnableBodyWithoutHead(false);
