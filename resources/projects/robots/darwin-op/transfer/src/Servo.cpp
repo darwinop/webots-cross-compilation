@@ -215,9 +215,9 @@ double Servo::getMotorForceFeedback() const{
 
   double force = 0;
   if(mPresentLoad < 1024)
-	{force = ((double)mPresentLoad/1023) * 2.5;}
+	{force = 2.5 * mPresentLoad / 1023.0;}
   else
-	{force = -(((double)mPresentLoad-1023)/1023) * 2.5;}
+	{force = -2.5 * (mPresentLoad - 1023) / 1023.0;}
 
   return force;
 }
