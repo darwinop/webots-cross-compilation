@@ -99,13 +99,20 @@ void DARwInOPMotionManager::playPage(int id) {
   
 #ifdef CROSSCOMPILATION
   mAction->m_Joint.SetEnableBody(true, true);
+  MotionStatus::m_CurrentJoints.SetEnableBody(true);
   MotionManager::GetInstance()->SetEnable(true);
   
   Action::GetInstance()->Start(id);
   while(Action::GetInstance()->IsRunning())
     usleep(mBasicTimeStep*1000);
     
+  // Reset Goal Position of all servos after a motion //
+  for(int i=0; i<DMM_NSERVOS; i++)
+    mRobot->getServos(servoNames[i])->setPosition(MX28::Value2Angle(mAction->m_Joint.GetValue(i+1))*(M_PI/180));
+    
+  // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
   mAction->m_Joint.SetEnableBody(false, true);
+  MotionStatus::m_CurrentJoints.SetEnableBody(false);
   MotionManager::GetInstance()->SetEnable(false);   
 #else
   Action::PAGE page;

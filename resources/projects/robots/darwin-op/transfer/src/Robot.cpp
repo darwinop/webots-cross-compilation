@@ -25,6 +25,11 @@ webots::Robot::Robot() {
     printf("The time step selected of %dms is very small and will probably not be respected.\n A time step of at least 16ms is recommended.\n", mTimeStep);
     
   getCM730()->MakeBulkReadPacket(); // Create the BulkReadPacket to read the actuators states in Robot::step
+  
+  // Unactive all Joints in the Motion Manager //
+  std::map<const std::string, int>::iterator servo_it;
+  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ )
+    ::Robot::MotionStatus::m_CurrentJoints.SetEnable((*servo_it).second, 0);
 }
 
 webots::Robot::~Robot() {
