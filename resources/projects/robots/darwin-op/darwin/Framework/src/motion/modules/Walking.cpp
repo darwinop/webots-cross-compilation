@@ -22,7 +22,6 @@ Walking* Walking::m_UniqueInstance = new Walking();
 
 Walking::Walking()
 {
-/*
 	X_OFFSET = -10;
 	Y_OFFSET = 5;
 	Z_OFFSET = 20;
@@ -42,7 +41,7 @@ Walking::Walking()
 	BALANCE_ANKLE_PITCH_GAIN = 0.9;
 	BALANCE_HIP_ROLL_GAIN = 0.5;
 	BALANCE_ANKLE_ROLL_GAIN = 1.0;
-*/
+
 	P_GAIN = JointData::P_GAIN_DEFAULT;
     I_GAIN = JointData::I_GAIN_DEFAULT;
     D_GAIN = JointData::D_GAIN_DEFAULT;
@@ -50,7 +49,7 @@ Walking::Walking()
 	X_MOVE_AMPLITUDE = 0;
 	Y_MOVE_AMPLITUDE = 0;
 	A_MOVE_AMPLITUDE = 0;	
-	A_MOVE_AIM_ON = true;
+	A_MOVE_AIM_ON = false;
 	BALANCE_ENABLE = true;
 
 	m_Joint.SetAngle(JointData::ID_R_SHOULDER_PITCH, -48.345);
@@ -85,8 +84,6 @@ Walking::~Walking()
 void Walking::LoadINISettings(minIni* ini)
 {
     LoadINISettings(ini, WALKING_SECTION);
-    update_param_time();
-    update_param_move();
 }
 void Walking::LoadINISettings(minIni* ini, const std::string &section)
 {
@@ -366,7 +363,7 @@ void Walking::Process()
 	double offset;
 	double TIME_UNIT = MotionModule::TIME_UNIT;
 	//                     R_HIP_YAW, R_HIP_ROLL, R_HIP_PITCH, R_KNEE, R_ANKLE_PITCH, R_ANKLE_ROLL, L_HIP_YAW, L_HIP_ROLL, L_HIP_PITCH, L_KNEE, L_ANKLE_PITCH, L_ANKLE_ROLL, R_ARM_SWING, L_ARM_SWING
-	int dir[14]          = {   -1,        1,          1,         1,         -1,            1,          -1,        -1,         -1,         -1,         1,            1,           1,           -1      };
+	int dir[14]          = {   -1,        -1,          1,         1,         -1,            1,          -1,        -1,         -1,         -1,         1,            1,           1,           -1      };
     double initAngle[14] = {   0.0,       0.0,        0.0,       0.0,        0.0,          0.0,         0.0,       0.0,        0.0,        0.0,       0.0,          0.0,       -48.345,       41.313    };
 	int outValue[14];
 
@@ -555,8 +552,6 @@ void Walking::Process()
 	{
 		return; // Do not use angle;
 	}
-    angle[5] /= 2;
-    angle[11] /= 2;
 
     // Compute motor value
     for(int i=0; i<14; i++)
