@@ -69,17 +69,19 @@ void DARwInOPGaitManager::step(int step) {
   mWalking->m_Joint.SetEnableBodyWithoutHead(true, true);
   MotionStatus::m_CurrentJoints.SetEnableBodyWithoutHead(true);
   MotionManager::GetInstance()->SetEnable(true);
-  if (step != 8) {
-    cerr << "DARwInOPGaitManager: steps of 8ms are required" << endl;
-    return;
-  }
 #endif
   
   mWalking->X_MOVE_AMPLITUDE = mXAmplitude;
   mWalking->A_MOVE_AMPLITUDE = mAAmplitude;
   mWalking->Y_MOVE_AMPLITUDE = mYAmplitude;
   mWalking->A_MOVE_AIM_ON = mMoveAimOn;
+
+#ifdef CROSSCOMPILATION
+  int numberOfStepToProcess = 1;
+#else
   int numberOfStepToProcess = step / 8;
+#endif
+
   for (int i=0; i<numberOfStepToProcess; i++)
     mWalking->Process();
 #ifndef CROSSCOMPILATION
