@@ -9,6 +9,7 @@
 #ifndef SERVO_HPP
 #define SERVO_HPP
 
+#include <webots/Robot.hpp>
 #include <webots/Device.hpp>
 #include <map>
 
@@ -59,6 +60,7 @@ namespace webots {
       void setPresentLoad(int load);
       
       friend int Robot::step(int ms);
+      friend     Robot::Robot();
 
       static std::map<const std::string, int> mNamesToIDs;
       static std::map<const std::string, int> mNamesToLimUp;
