@@ -15,7 +15,7 @@ using namespace Robot;
 std::map<const std::string, int> Servo::mNamesToIDs;
 std::map<const std::string, int> Servo::mNamesToLimUp;
 std::map<const std::string, int> Servo::mNamesToLimDown;
-std::map<const std::string, int> mNamesToInitPos;
+std::map<const std::string, int> Servo::mNamesToInitPos;
 
 template <typename T> int sgn(T val) {
   if(val >= 0)
