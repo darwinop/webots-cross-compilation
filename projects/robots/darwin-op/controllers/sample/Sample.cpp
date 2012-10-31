@@ -195,7 +195,7 @@ void Sample::run() {
 
       // turn round
       mGaitManager->setXAmplitude(0.0);
-      mGaitManager->setAAmplitude(1.0);
+      mGaitManager->setAAmplitude(0.5);
       mGaitManager->step(mTimeStep);
       
       // move the head vertically
