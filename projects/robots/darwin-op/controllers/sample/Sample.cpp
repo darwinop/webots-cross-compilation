@@ -160,9 +160,9 @@ void Sample::run() {
       mEyeLED->set(0x1040C0);
       
       // compute the direction of the head
-      // the head move at maximum by 0.01 [rad] at each time step
-      x  = 0.01*x + px;
-      y  = 0.01*y + py;
+      // the head move at maximum by 0.015 [rad] at each time step
+      x  = 0.015*x + px;
+      y  = 0.015*y + py;
       px = x;
       py = y;
 
@@ -195,7 +195,7 @@ void Sample::run() {
 
       // turn round
       mGaitManager->setXAmplitude(0.0);
-      mGaitManager->setAAmplitude(0.5);
+      mGaitManager->setAAmplitude(0.3);
       mGaitManager->step(mTimeStep);
       
       // move the head vertically
