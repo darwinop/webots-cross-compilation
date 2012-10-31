@@ -29,9 +29,9 @@ namespace managers {
       virtual         ~DARwInOPGaitManager();
       bool             isCorrectlyInitialized() { return mCorrectlyInitialized; }
       
-      void             setXAmplitude(double x) { mXAmplitude = DGM_BOUND(x, -1.0, 1.0) * 15.0; } 
-      void             setYAmplitude(double x) { mYAmplitude = DGM_BOUND(x, -1.0, 1.0) * 15.0; }
-      void             setAAmplitude(double a) { mAAmplitude = DGM_BOUND(a, -1.0, 1.0) * 15.0; }
+      void             setXAmplitude(double x) { mXAmplitude = DGM_BOUND(x, -1.0, 1.0) * 20.0; } 
+      void             setYAmplitude(double y) { mYAmplitude = DGM_BOUND(y, -1.0, 1.0) * 40.0; }
+      void             setAAmplitude(double a) { mAAmplitude = DGM_BOUND(a, -1.0, 1.0) * 50.0; }
       void             setMoveAimOn(bool q) { mMoveAimOn = q; }
 
       void             start();
