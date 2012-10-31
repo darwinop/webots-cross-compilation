@@ -59,6 +59,7 @@ namespace webots {
       void setPresentLoad(int load);
       
       friend int Robot::step(int ms);
+      friend     Robot::Robot();
 
       static std::map<const std::string, int> mNamesToIDs;
       static std::map<const std::string, int> mNamesToLimUp;
