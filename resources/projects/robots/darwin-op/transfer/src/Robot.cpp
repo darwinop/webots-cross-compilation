@@ -40,29 +40,12 @@ int webots::Robot::step(int ms) {
   int stepDuration = actualTime - mPreviousStepTime;
   std::map<const std::string, int>::iterator servo_it;
   
-  //      Update speed of each servos,      //
-  // according to acceleration limit if set //
+// -------- Update speed of each servos, according to acceleration limit if set --------  //
   for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++  )
     ((Servo *) mDevices[(*servo_it).first])->updateSpeed(stepDuration);
   
-  // Read table from CM730 regarding body sensors //
-  //   read table from:  P_GYRO_Z_L  38 (0x26)    //
-  //         to: P_ACCEL_Z_H   49 (0x31)          //
-  int values[3];
-  unsigned char mControlTable[::Robot::CM730::MAXNUM_ADDRESS];
-
-  if(getCM730()->ReadTable(::Robot::CM730::ID_CM, ::Robot::CM730::P_GYRO_Z_L, ::Robot::CM730::P_VOLTAGE, mControlTable ,0) == ::Robot::CM730::SUCCESS) {
-    values[2] = ::Robot::CM730::MakeWord(mControlTable[::Robot::CM730::P_GYRO_Z_L], mControlTable[::Robot::CM730::P_GYRO_Z_H]);
-    values[1] = ::Robot::CM730::MakeWord(mControlTable[::Robot::CM730::P_GYRO_Y_L], mControlTable[::Robot::CM730::P_GYRO_Y_H]);
-    values[0] = ::Robot::CM730::MakeWord(mControlTable[::Robot::CM730::P_GYRO_X_L], mControlTable[::Robot::CM730::P_GYRO_X_H]);
-    ((Gyro *)mDevices["Gyro"])->setValues(values);
-    values[0] = ::Robot::CM730::MakeWord(mControlTable[::Robot::CM730::P_ACCEL_X_L], mControlTable[::Robot::CM730::P_ACCEL_X_H]);
-    values[1] = ::Robot::CM730::MakeWord(mControlTable[::Robot::CM730::P_ACCEL_Y_L], mControlTable[::Robot::CM730::P_ACCEL_Y_H]);
-    values[2] = ::Robot::CM730::MakeWord(mControlTable[::Robot::CM730::P_ACCEL_Z_L], mControlTable[::Robot::CM730::P_ACCEL_Z_H]);
-    ((Accelerometer *)mDevices["Accelerometer"])->setValues(values);
-  } 
   
-  // -------- Sync Write to actuators --------
+// -------- Sync Write to actuators --------  //
   const int msgLength = 9; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
 
   int param[20*msgLength];
@@ -89,16 +72,32 @@ int webots::Robot::step(int ms) {
   }
   getCM730()->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_servos , param);
   
-  // -------- Bulk Read to read the actuators states (position, speed and load) -------- //
+// -------- Bulk Read to read the actuators states (position, speed and load) and body sensors -------- //
   getCM730()->BulkRead();
 
+  // Servos
   for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++) {
     ((Servo *) mDevices[(*servo_it).first])->setPresentPosition( getCM730()->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_POSITION_L));
     ((Servo *) mDevices[(*servo_it).first])->setPresentSpeed( getCM730()->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_SPEED_L));
     ((Servo *) mDevices[(*servo_it).first])->setPresentLoad( getCM730()->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_LOAD_L));
   }
   
-  // Timing management //
+  int values[3];
+
+  // Gyro
+  values[0] = getCM730()->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_GYRO_X_L);
+  values[1] = getCM730()->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_GYRO_Y_L);
+  values[2] = getCM730()->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_GYRO_Z_L);
+  ((Gyro *)mDevices["Gyro"])->setValues(values);
+  
+  // Accelerometer
+  values[0] = getCM730()->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_ACCEL_X_L);
+  values[1] = getCM730()->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_ACCEL_Y_L);
+  values[2] = getCM730()->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_ACCEL_Z_L);
+  ((Accelerometer *)mDevices["Accelerometer"])->setValues(values);
+
+  
+// -------- Timing management -------- //
   if(stepDuration < getBasicTimeStep()) { // Step to short -> wait remaining time
     usleep((getBasicTimeStep() - stepDuration) * 1000);
     mPreviousStepTime = actualTime;
