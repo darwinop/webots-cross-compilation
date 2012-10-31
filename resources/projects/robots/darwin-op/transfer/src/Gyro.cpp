@@ -1,10 +1,7 @@
 #include <webots/Gyro.hpp>
 #include <webots/Robot.hpp>
 
-#include <CM730.h>
-
 using namespace webots;
-using namespace Robot;
 
 Gyro::Gyro(const std::string &name, const Robot *robot) :
   Device(name, robot)
