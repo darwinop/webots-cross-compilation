@@ -15,7 +15,7 @@ using namespace Robot;
 std::map<const std::string, int> Servo::mNamesToIDs;
 std::map<const std::string, int> Servo::mNamesToLimUp;
 std::map<const std::string, int> Servo::mNamesToLimDown;
-std::map<const std::string, int> mNamesToInitPos;
+std::map<const std::string, int> Servo::mNamesToInitPos;
 
 template <typename T> int sgn(T val) {
   if(val >= 0)
@@ -38,7 +38,7 @@ Servo::Servo(const std::string &name, const Robot *robot) :
   mTorqueLimit = 1023;  // Max torque
   mPresentPosition = mNamesToInitPos[getName()];
   mPresentSpeed = 0;
-  mPresentLoad = 0
+  mPresentLoad = 0;
 }
 
 Servo::~Servo() {
@@ -234,13 +234,13 @@ void Servo::setPosition(double position) {
   int value = MX28::Angle2Value(position*180.0/M_PI);
 
   if(value >= 0 && value <= MX28::MAX_VALUE) {
-    int error;
+
     //       Self-Collision Avoidance      //
     // Work only with a resolution of 4096 //
     if(value > std::max(mNamesToLimDown[getName()], mNamesToLimUp[getName()]))
-      value = std::max(mNamesToLimDown[getName()], mNamesToLimUp[getName()])
+      value = std::max(mNamesToLimDown[getName()], mNamesToLimUp[getName()]);
     else if(value < std::min(mNamesToLimDown[getName()], mNamesToLimUp[getName()]))
-      value = std::min(mNamesToLimDown[getName()], mNamesToLimUp[getName()])
+      value = std::min(mNamesToLimDown[getName()], mNamesToLimUp[getName()]);
       
     mGoalPosition = value;
   }
