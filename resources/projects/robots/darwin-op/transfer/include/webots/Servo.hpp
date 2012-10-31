@@ -9,6 +9,7 @@
 #ifndef SERVO_HPP
 #define SERVO_HPP
 
+#include <webots/Robot.hpp>
 #include <webots/Device.hpp>
 #include <map>
 
