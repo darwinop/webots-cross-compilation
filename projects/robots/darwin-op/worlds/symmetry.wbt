@@ -41,7 +41,7 @@ DirectionalLight {
 Table {
 }
 DARwInOP {
-  translation 0 1.084 0
+  translation 0 0.985 0
   rotation 0 1 0 1.5798
   controller "symmetry"
   cameraPixelSize 0

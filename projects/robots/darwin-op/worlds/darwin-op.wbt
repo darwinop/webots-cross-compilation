@@ -47,7 +47,7 @@ DEF BLUE_GOAL Goal {
 DEF BALL Ball {
 }
 DARwInOP {
-  translation -0.413972 0.346131 -0.396853
+  translation -0.413972 0.245 -0.396853
   rotation 0 1 0 1.0562
   controller "sample"
 }
