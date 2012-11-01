@@ -528,6 +528,7 @@ Robot {
     DEF DNeck Servo {
       translation 0 0.051 0
       rotation 0 1 0 0
+      position 0.00
       minPosition -1.81
       maxPosition 1.81
       children [
@@ -684,6 +685,7 @@ Robot {
         }
         DEF DHead Servo {
           rotation -1 0 0 -0.7854
+          position 0.19
           minPosition -0.36
           maxPosition 0.94
           children [
@@ -1337,6 +1339,7 @@ Robot {
     DEF DPelvYL Servo {
       translation 0.037 -0.1222 -0.005
       rotation 0 -1 0 0
+      position -0.02
       minPosition -0.69
       maxPosition 2.5
       children [
@@ -1488,6 +1491,7 @@ Robot {
         }
         DEF DPelvL Servo {
           rotation 0 0 -1 0
+          position -0.01
           minPosition -1
           maxPosition 0.93
           children [
@@ -1641,6 +1645,7 @@ Robot {
             }
             DEF DLegUpperL Servo {
               rotation -1 0 0 0
+              position 1.15
 	      minPosition -0.5
               maxPosition 1.68
               children [
@@ -1893,7 +1898,8 @@ Robot {
                 DEF DLegLowerL Servo {
                   translation -0 -0.093 0
                   rotation -1 0 0 0
-		  minPosition -2.03
+                  position -2.25
+		  minPosition -2.25
                   maxPosition 0.03
                   children [
                     DEF DLegLowerLShape Shape {
@@ -2066,6 +2072,7 @@ Robot {
                     DEF DAnkleL Servo {
                       translation 0 -0.093 0
                       rotation 1 0 0 0
+                      position -1.23
 		      minPosition -1.39
                       maxPosition 1.22
                       children [
@@ -2216,6 +2223,7 @@ Robot {
                         }
                         DEF DFootL Servo {
                           rotation 0 0 1 0
+                          position -0.02
 			  minPosition -1.02
                           maxPosition 0.6
                           children [
@@ -2508,6 +2516,7 @@ Robot {
     DEF DPelvYR Servo {
       translation -0.037 -0.1222 -0.005
       rotation 0 -1 0 0
+      position -0.01
       minPosition -2.42
       maxPosition 0.66
       children [
@@ -2659,6 +2668,7 @@ Robot {
         }
         DEF DPelvR Servo {
           rotation 0 0 -1 0
+          position 0.02
 	  minPosition -1.01
           maxPosition 1.01
           children [
@@ -2809,6 +2819,7 @@ Robot {
             }
             DEF DLegUpperR Servo {
               rotation 1 0 0 0
+              position -1.15
               minPosition -1.77
               maxPosition 0.45
               children [
@@ -3061,8 +3072,9 @@ Robot {
                 DEF DLegLowerR Servo {
                   translation -0 -0.093 0
                   rotation 1 0 0 0
+                  position 2.25
                   minPosition -0.02
-                  maxPosition 1.98
+                  maxPosition 2.25
                   children [
                     DEF DLegLowerRShape Shape {
                       appearance Appearance {
@@ -3234,6 +3246,7 @@ Robot {
                     DEF DAnkleR Servo {
                       translation 0 -0.093 0
                       rotation -1 0 0 0
+                      position 1.22
                       minPosition -1.24
                       maxPosition 1.38
                       children [
@@ -3384,6 +3397,7 @@ Robot {
                         }
                         DEF DFootR Servo {
                           rotation 0 0 1 0
+                          position 0.05
                           minPosition -0.68
                           maxPosition 1.04
                           children [
@@ -3676,6 +3690,7 @@ Robot {
     DEF DShoulderL Servo {
       translation 0.082 0 0
       rotation 1 0 0 0
+      position 0.72
       minPosition -3.14
       maxPosition 2.85
       children [
@@ -3844,6 +3859,7 @@ Robot {
         DEF DArmUpperL Servo {
           translation 0 -0.016 0
           rotation 0 0 -1 -0.7854
+          position 0.36
           minPosition -2.25
           maxPosition 0.77
           children [
@@ -4063,6 +4079,7 @@ Robot {
             DEF DArmLowerL Servo {
               translation 0 -0.06 0.016
               rotation 1 0 0 -1.5708
+              position -0.52
               minPosition -1.18
               maxPosition 1.63
               children [
@@ -4562,6 +4579,7 @@ Robot {
     DEF DShoulderR Servo {
       translation -0.082 0 0
       rotation -1 0 0 0
+      position -0.84
       minPosition -3.14
       maxPosition 3.14
       children [
@@ -4730,6 +4748,7 @@ Robot {
         DEF DArmUpperR Servo {
           translation 0 -0.016 0
           rotation 0 0 -1 0.7854
+          position -0.33
           minPosition -0.68
           maxPosition 2.3
           children [
@@ -4949,6 +4968,7 @@ Robot {
             DEF DArmLowerR Servo {
               translation 0 -0.06 0.016
               rotation -1 0 0 1.5708
+              position 0.51
               minPosition -1.65
               maxPosition 1.16
               children [
