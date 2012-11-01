@@ -54,7 +54,7 @@ int webots::Robot::step(int ms) {
   int value;
   
   for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ ) {
-    if(((Servo *) mDevices[(*servo_it).first])->getTorqueEnable()) {
+    if(((Servo *) mDevices[(*servo_it).first])->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable((*servo_it).second))) {
       param[n++] = (*servo_it).second;
       param[n++] = ((Servo *) mDevices[(*servo_it).first])->getPGain();
       param[n++] = 0; // Empty
