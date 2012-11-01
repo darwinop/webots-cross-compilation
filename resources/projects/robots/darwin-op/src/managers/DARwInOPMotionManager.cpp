@@ -150,6 +150,11 @@ void DARwInOPMotionManager::wait(int ms) {
 
 void DARwInOPMotionManager::achieveTarget(int msToAchieveTarget) {
   int stepNumberToAchieveTarget = msToAchieveTarget / mBasicTimeStep;
+  
+  for (int i=0; i<DMM_NSERVOS; i++) {
+    mCurrentPositions[i] = mServos[i]->getPosition();
+  }
+  
   while (stepNumberToAchieveTarget > 0) {
     for (int i=0; i<DMM_NSERVOS; i++) {
       double dX = mTargetPositions[i] - mCurrentPositions[i];
