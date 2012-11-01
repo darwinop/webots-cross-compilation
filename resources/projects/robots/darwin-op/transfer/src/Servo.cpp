@@ -103,8 +103,8 @@ void Servo::initStaticMap() {
     mNamesToLimDown["PelvL"]     = 1400;
     mNamesToLimDown["LegUpperR"] = 2340;
     mNamesToLimDown["LegUpperL"] = 1724;
-    mNamesToLimDown["LegLowerR"] = 3342;
-    mNamesToLimDown["LegLowerL"] =  722;
+    mNamesToLimDown["LegLowerR"] = 3513;
+    mNamesToLimDown["LegLowerL"] =  571;
     mNamesToLimDown["AnkleR"]    = 1239;
     mNamesToLimDown["AnkleL"]    = 2845;
     mNamesToLimDown["FootR"]     = 1603;
