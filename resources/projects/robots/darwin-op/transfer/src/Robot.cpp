@@ -24,7 +24,7 @@ webots::Robot::Robot() {
   if(mTimeStep < 16)
     printf("The time step selected of %dms is very small and will probably not be respected.\n A time step of at least 16ms is recommended.\n", mTimeStep);
     
-  getCM730()->MakeBulkReadPacket(); // Create the BulkReadPacket to read the actuators states in Robot::step
+  mCM730->MakeBulkReadPacket(); // Create the BulkReadPacket to read the actuators states in Robot::step
   
   // Unactive all Joints in the Motion Manager //
   std::map<const std::string, int>::iterator servo_it;
@@ -70,30 +70,30 @@ int webots::Robot::step(int ms) {
       changed_servos++;
     }
   }
-  getCM730()->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_servos , param);
+  mCM730->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_servos , param);
   
 // -------- Bulk Read to read the actuators states (position, speed and load) and body sensors -------- //
-  getCM730()->BulkRead();
+  mCM730->BulkRead();
 
   // Servos
   for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++) {
-    ((Servo *) mDevices[(*servo_it).first])->setPresentPosition( getCM730()->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_POSITION_L));
-    ((Servo *) mDevices[(*servo_it).first])->setPresentSpeed( getCM730()->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_SPEED_L));
-    ((Servo *) mDevices[(*servo_it).first])->setPresentLoad( getCM730()->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_LOAD_L));
+    ((Servo *) mDevices[(*servo_it).first])->setPresentPosition( mCM730->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_POSITION_L));
+    ((Servo *) mDevices[(*servo_it).first])->setPresentSpeed( mCM730->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_SPEED_L));
+    ((Servo *) mDevices[(*servo_it).first])->setPresentLoad( mCM730->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_LOAD_L));
   }
   
   int values[3];
 
   // Gyro
-  values[0] = getCM730()->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_GYRO_X_L);
-  values[1] = getCM730()->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_GYRO_Y_L);
-  values[2] = getCM730()->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_GYRO_Z_L);
+  values[0] = mCM730->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_GYRO_X_L);
+  values[1] = mCM730->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_GYRO_Y_L);
+  values[2] = mCM730->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_GYRO_Z_L);
   ((Gyro *)mDevices["Gyro"])->setValues(values);
   
   // Accelerometer
-  values[0] = getCM730()->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_ACCEL_X_L);
-  values[1] = getCM730()->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_ACCEL_Y_L);
-  values[2] = getCM730()->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_ACCEL_Z_L);
+  values[0] = mCM730->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_ACCEL_X_L);
+  values[1] = mCM730->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_ACCEL_Y_L);
+  values[2] = mCM730->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_ACCEL_Z_L);
   ((Accelerometer *)mDevices["Accelerometer"])->setValues(values);
 
   
