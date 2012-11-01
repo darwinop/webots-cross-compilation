@@ -1646,7 +1646,7 @@ Robot {
             DEF DLegUpperL Servo {
               rotation -1 0 0 0
               position 1.15
-	      minPosition -0.5
+              minPosition -0.5
               maxPosition 1.68
               children [
                 DEF DLegUpperLShape Group {
@@ -1899,7 +1899,7 @@ Robot {
                   translation -0 -0.093 0
                   rotation -1 0 0 0
                   position -2.25
-		  minPosition -2.25
+                  minPosition -2.25
                   maxPosition 0.03
                   children [
                     DEF DLegLowerLShape Shape {
@@ -2073,7 +2073,7 @@ Robot {
                       translation 0 -0.093 0
                       rotation 1 0 0 0
                       position -1.23
-		      minPosition -1.39
+                      minPosition -1.39
                       maxPosition 1.22
                       children [
                         DEF DAnkleLShape Shape {
@@ -2224,7 +2224,7 @@ Robot {
                         DEF DFootL Servo {
                           rotation 0 0 1 0
                           position -0.02
-			  minPosition -1.02
+                          minPosition -1.02
                           maxPosition 0.6
                           children [
                             DEF DFootLShape Group {
@@ -2669,7 +2669,7 @@ Robot {
         DEF DPelvR Servo {
           rotation 0 0 -1 0
           position 0.02
-	  minPosition -1.01
+          minPosition -1.01
           maxPosition 1.01
           children [
             DEF DPelvRShape Shape {
