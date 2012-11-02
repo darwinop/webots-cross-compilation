@@ -5,6 +5,7 @@
 #include "Camera.h"
 
 unsigned char *::webots::Camera::mImage = NULL;
+const int ::webots::Camera::mResolution[NBRESOLUTION][2] = { {320, 240}, {640, 360}, {640, 400}, {640, 480}, {768, 480}, {800, 600} };
 
 ::webots::Camera::Camera(const std::string &name, const Robot *robot) :
   Device(name, robot)
@@ -110,3 +111,10 @@ unsigned char ::webots::Camera::imageGetGrey(const unsigned char *image, int wid
   return image[3*(y*width + x)] / 3 + image[3*(y*width + x) + 1] / 3  + image[3*(y*width + x) + 2] / 3;
 }
 
+bool ::webots::Camera::checkResolution(int width, int height) {
+  for(int i=0; i < NBRESOLUTION; i++) {
+    if( (mResolution[i][0] == width) && (mResolution[i][1] == height) )
+      return true;
+  }
+  return false;
+}
