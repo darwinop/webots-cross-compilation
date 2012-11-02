@@ -42,8 +42,10 @@ Sample::Sample():
   mGyro = getGyro("Gyro");
   mGyro->enable(mTimeStep);
   
-  for (int i=0; i<NSERVOS; i++)
+  for (int i=0; i<NSERVOS; i++) {
     mServos[i] = getServo(servoNames[i]);
+    mServos[i]->enablePosition(mTimeStep);
+  }
   
   mMotionManager = new DARwInOPMotionManager(this);
   mGaitManager = new DARwInOPGaitManager(this, "config.ini");
@@ -102,10 +104,14 @@ bool Sample::getBallCenter(double &x, double &y) {
 
 // function containing the main feedback loop
 void Sample::run() {
+    // First step to update sensors values
+    myStep();
+	
   // set eye led to green
   mEyeLED->set(0x10C040);
   
   // play the hello motion
+  mMotionManager->playPage(1); // init position
   mMotionManager->playPage(57); // hello
   mMotionManager->playPage(1); // init position
   wait(200);
