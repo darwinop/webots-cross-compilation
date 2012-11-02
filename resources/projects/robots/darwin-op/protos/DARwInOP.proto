@@ -1645,7 +1645,7 @@ Robot {
             }
             DEF DLegUpperL Servo {
               rotation -1 0 0 0
-	      minPosition -0.5
+              minPosition -0.5
               maxPosition 1.68
               dampingConstant 0.02
               children [
@@ -1898,7 +1898,7 @@ Robot {
                 DEF DLegLowerL Servo {
                   translation -0 -0.093 0
                   rotation -1 0 0 0
-		  minPosition -2.03
+                  minPosition -2.03
                   maxPosition 0.03
                   dampingConstant 0.02
                   children [
@@ -2072,7 +2072,7 @@ Robot {
                     DEF DAnkleL Servo {
                       translation 0 -0.093 0
                       rotation 1 0 0 0
-		      minPosition -1.39
+                      minPosition -1.39
                       maxPosition 1.22
                       dampingConstant 0.02
                       children [
@@ -2223,7 +2223,7 @@ Robot {
                         }
                         DEF DFootL Servo {
                           rotation 0 0 1 0
-			  minPosition -1.02
+                          minPosition -1.02
                           maxPosition 0.6
                           dampingConstant 0.02
                           children [
@@ -2668,7 +2668,7 @@ Robot {
         }
         DEF DPelvR Servo {
           rotation 0 0 -1 0
-	  minPosition -1.01
+          minPosition -1.01
           maxPosition 1.01
           dampingConstant 0.02
           children [
