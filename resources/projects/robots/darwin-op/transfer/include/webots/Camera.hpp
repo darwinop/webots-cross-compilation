@@ -30,6 +30,7 @@ namespace webots {
       static unsigned char imageGetGreen(const unsigned char *image, int width, int x,int y);
       static unsigned char imageGetBlue(const unsigned char *image, int width, int x,int y);
       static unsigned char imageGetGrey(const unsigned char *image, int width, int x,int y);
+      static bool checkResolution(int width, int height);
     
     protected:
       static void            *CameraTimerProc(void *param);// thread function
@@ -38,6 +39,8 @@ namespace webots {
       static unsigned char   *mImage;
       pthread_t               mCameraThread;// thread structure
       bool                    mIsActive;
+      static const int        NBRESOLUTION = 6;
+      static const int        mResolution[NBRESOLUTION][2];
   };
 }
 
