@@ -270,6 +270,10 @@ void webots::Robot::LoadINISettings(minIni* ini, const std::string &section) {
   else
     printf("Can't read camera height from 'config.ini'\n");
 
-  if(!(::webots::Camera::checkResolution(::Robot::Camera::WIDTH, ::Robot::Camera::HEIGHT)))
+  if(!(::webots::Camera::checkResolution(::Robot::Camera::WIDTH, ::Robot::Camera::HEIGHT))) {
     printf("The resolution of %dx%d selected is not supported by the camera.\nPlease use one of the resolution recommended.\n", ::Robot::Camera::WIDTH, ::Robot::Camera::HEIGHT);
+    ::Robot::Camera::WIDTH = 320;
+    ::Robot::Camera::HEIGHT = 240;
+    printf("WARNING : Camera resolution reseted to 320x240 pixels.");
+  }
 }
