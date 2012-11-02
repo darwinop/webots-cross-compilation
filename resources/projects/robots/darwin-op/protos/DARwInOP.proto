@@ -530,6 +530,7 @@ Robot {
       rotation 0 1 0 0
       minPosition -1.81
       maxPosition 1.81
+      dampingConstant 0.02
       children [
         DEF DNeckShape Shape {
           appearance Appearance {
@@ -686,6 +687,7 @@ Robot {
           rotation -1 0 0 -0.7854
           minPosition -0.36
           maxPosition 0.94
+          dampingConstant 0.02
           children [
             DEF DHeadShape Group {
               children [
@@ -1339,6 +1341,7 @@ Robot {
       rotation 0 -1 0 0
       minPosition -0.69
       maxPosition 2.5
+      dampingConstant 0.02
       children [
         DEF DPelvYLShape Shape {
           appearance Appearance {
@@ -1490,6 +1493,7 @@ Robot {
           rotation 0 0 -1 0
           minPosition -1
           maxPosition 0.93
+          dampingConstant 0.02
           children [
             DEF DPelvLShape Shape {
               appearance Appearance {
@@ -1643,6 +1647,7 @@ Robot {
               rotation -1 0 0 0
 	      minPosition -0.5
               maxPosition 1.68
+              dampingConstant 0.02
               children [
                 DEF DLegUpperLShape Group {
                   children [
@@ -1895,6 +1900,7 @@ Robot {
                   rotation -1 0 0 0
 		  minPosition -2.03
                   maxPosition 0.03
+                  dampingConstant 0.02
                   children [
                     DEF DLegLowerLShape Shape {
                       appearance Appearance {
@@ -2068,6 +2074,7 @@ Robot {
                       rotation 1 0 0 0
 		      minPosition -1.39
                       maxPosition 1.22
+                      dampingConstant 0.02
                       children [
                         DEF DAnkleLShape Shape {
                           appearance Appearance {
@@ -2218,6 +2225,7 @@ Robot {
                           rotation 0 0 1 0
 			  minPosition -1.02
                           maxPosition 0.6
+                          dampingConstant 0.02
                           children [
                             DEF DFootLShape Group {
                               children [
@@ -2510,6 +2518,7 @@ Robot {
       rotation 0 -1 0 0
       minPosition -2.42
       maxPosition 0.66
+      dampingConstant 0.02
       children [
         DEF DPelvYRShape Shape {
           appearance Appearance {
@@ -2661,6 +2670,7 @@ Robot {
           rotation 0 0 -1 0
 	  minPosition -1.01
           maxPosition 1.01
+          dampingConstant 0.02
           children [
             DEF DPelvRShape Shape {
               appearance Appearance {
@@ -2811,6 +2821,7 @@ Robot {
               rotation 1 0 0 0
               minPosition -1.77
               maxPosition 0.45
+              dampingConstant 0.02
               children [
                 DEF DLegUpperRShape Group {
                   children [
@@ -3063,6 +3074,7 @@ Robot {
                   rotation 1 0 0 0
                   minPosition -0.02
                   maxPosition 1.98
+                  dampingConstant 0.02
                   children [
                     DEF DLegLowerRShape Shape {
                       appearance Appearance {
@@ -3236,6 +3248,7 @@ Robot {
                       rotation -1 0 0 0
                       minPosition -1.24
                       maxPosition 1.38
+                      dampingConstant 0.02
                       children [
                         DEF DAnkleRShape Shape {
                           appearance Appearance {
@@ -3386,6 +3399,7 @@ Robot {
                           rotation 0 0 1 0
                           minPosition -0.68
                           maxPosition 1.04
+                          dampingConstant 0.02
                           children [
                             DEF DFootRShape Group {
                               children [
@@ -3678,6 +3692,7 @@ Robot {
       rotation 1 0 0 0
       minPosition -3.14
       maxPosition 2.85
+      dampingConstant 0.02
       children [
         DEF DShoulderLShape Shape {
           appearance Appearance {
@@ -3846,6 +3861,7 @@ Robot {
           rotation 0 0 -1 -0.7854
           minPosition -2.25
           maxPosition 0.77
+          dampingConstant 0.02
           children [
             DEF DArmUpperLShape Group {
               children [
@@ -4065,6 +4081,7 @@ Robot {
               rotation 1 0 0 -1.5708
               minPosition -1.18
               maxPosition 1.63
+              dampingConstant 0.02
               children [
                 DEF DArmLowerLShape Group {
                   children [
@@ -4564,6 +4581,7 @@ Robot {
       rotation -1 0 0 0
       minPosition -3.14
       maxPosition 3.14
+      dampingConstant 0.02
       children [
         DEF DShoulderRShape Shape {
           appearance Appearance {
@@ -4732,6 +4750,7 @@ Robot {
           rotation 0 0 -1 0.7854
           minPosition -0.68
           maxPosition 2.3
+          dampingConstant 0.02
           children [
             DEF DArmUpperRShape Group {
               children [
@@ -4951,6 +4970,7 @@ Robot {
               rotation -1 0 0 1.5708
               minPosition -1.65
               maxPosition 1.16
+              dampingConstant 0.02
               children [
                 DEF DArmLowerRShape Group {
                   children [
