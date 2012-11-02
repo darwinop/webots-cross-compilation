@@ -252,8 +252,7 @@ void webots::Robot::initDarwinOP() {
   ::Robot::MotionManager::GetInstance()->Initialize(mCM730);
 }
 
-void webots::Robot::LoadINISettings(minIni* ini, const std::string &section)
-{
+void webots::Robot::LoadINISettings(minIni* ini, const std::string &section) {
   double value = INVALID_VALUE;
 
   if((value = ini->getd(section, "time_step", INVALID_VALUE)) != INVALID_VALUE)
