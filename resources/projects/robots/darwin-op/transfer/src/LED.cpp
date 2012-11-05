@@ -34,7 +34,7 @@ void LED::set(int value) {
     int rgb15 = (b5 << 10) | (g5 << 5) | r5;
   
     // set the led value (only if the color is different from actual color)
-    if((getName() == "EyeLed" && mEyesColor != rgb15) || (getName() == "HeadLed" && mHeadColor != rgb15))
+    if(mColor != rgb15)
       cm730->WriteWord(mNamesToIDs[getName()], rgb15, 0);
   }
   // BackPannel Led
@@ -89,10 +89,7 @@ void LED::initStaticMap() {
   }
 }
 
-void LED::setHeadColor(int color) {
-  mHeadColor = color;
+void LED::setColor(int color) {
+  mColor = color;
 }
 
-void LED::setEyesColor(int color) {
-  mEyesColor = color;
-}

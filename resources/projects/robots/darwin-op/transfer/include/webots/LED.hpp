@@ -24,11 +24,9 @@ namespace webots {
     private:
       static void   initStaticMap();
       static std::map<const std::string, int> mNamesToIDs;
-      void setHeadColor(int color);
-      void setEyesColor(int color);
+      void setColor(int color);
       
-      int mHeadColor;
-      int mEyesColor;
+      int mColor;
       
     friend int Robot::step(int ms);
   };

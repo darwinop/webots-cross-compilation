@@ -99,8 +99,8 @@ int webots::Robot::step(int ms) {
   // Led states
   values[0] = mCM730->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_LED_HEAD_L);
   values[1] = mCM730->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_LED_EYE_L);
-  ((LED *)mDevices["HeadLed"])->setHeadColor(values[0]);
-  ((LED *)mDevices["EyeLed"])->setEyesColor(values[1]);
+  ((LED *)mDevices["HeadLed"])->setColor(values[0]);
+  ((LED *)mDevices["EyeLed"])->setColor(values[1]);
 
   
 // -------- Timing management -------- //
