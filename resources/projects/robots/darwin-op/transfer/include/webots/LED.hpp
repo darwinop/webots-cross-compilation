@@ -9,6 +9,7 @@
 #ifndef LED_HPP
 #define LED_HPP
 
+#include <webots/Robot.hpp>
 #include <webots/Device.hpp>
 
 #include <map>
@@ -23,6 +24,13 @@ namespace webots {
     private:
       static void   initStaticMap();
       static std::map<const std::string, int> mNamesToIDs;
+      void setColor(int color);
+      static void setBackPanel(int state)
+      
+      int mColor;
+      static int mBackPanel;
+      
+    friend int Robot::step(int ms);
   };
 }
 
