@@ -25,8 +25,7 @@ void LED::set(int value) {
   int actualState = 0;
 
   //RGB Led
-  if(getName() == "EyeLed" || getName() == "HeadLed")
-  {
+  if(getName() == "EyeLed" || getName() == "HeadLed") {
     // convert RGB-24bits to RGB-15bits
     int r5 = ((value >> 16) & 0xFF) >> 3;
     int g5 = ((value >>  8) & 0xFF) >> 3;
@@ -37,45 +36,26 @@ void LED::set(int value) {
     if(mColor != rgb15)
       cm730->WriteWord(mNamesToIDs[getName()], rgb15, 0);
   }
+  
   // BackPannel Led
-  else if(getName() == "BackLedRed")
-  {
+  else if(getName() == "BackLedRed") {
 	if(value == 1)   	// Switch selected led on without changing the two others
-	{
-		cm730->ReadWord(CM730::ID_CM, CM730::P_LED_PANNEL, &actualState, 0);
-		cm730->WriteByte(CM730::P_LED_PANNEL, 0x01|actualState, NULL);
-	}
+	  cm730->WriteByte(CM730::P_LED_PANNEL, 0x01|mBackPanel, NULL);
+
 	else 			// Switch selected led off without changing the two others
-	{
-		cm730->ReadWord(CM730::ID_CM, CM730::P_LED_PANNEL, &actualState, 0);
-		cm730->WriteByte(CM730::P_LED_PANNEL, 0x06&actualState, NULL);
-	}
+	  cm730->WriteByte(CM730::P_LED_PANNEL, 0x06&mBackPanel, NULL);
   }
-  else if(getName() == "BackLedBlue")
-  {
+  else if(getName() == "BackLedBlue") {
 	if(value == 1)   	// Switch selected led on without changing the two others
-	{
-		cm730->ReadWord(CM730::ID_CM, CM730::P_LED_PANNEL, &actualState, 0);
-		cm730->WriteByte(CM730::P_LED_PANNEL, 0x02|actualState, NULL);
-	}
+	  cm730->WriteByte(CM730::P_LED_PANNEL, 0x02|mBackPanel, NULL);
 	else 			// Switch selected led off without changing the two others
-	{
-		cm730->ReadWord(CM730::ID_CM, CM730::P_LED_PANNEL, &actualState, 0);
-		cm730->WriteByte(CM730::P_LED_PANNEL, 0x05&actualState, NULL);
-	}
+	  cm730->WriteByte(CM730::P_LED_PANNEL, 0x05&mBackPanel, NULL);
   }
-  else if(getName() == "BackLedGreen")
-  {
+  else if(getName() == "BackLedGreen") {
 	if(value == 1)   	// Switch selected led on without changing the two others
-	{
-		cm730->ReadWord(CM730::ID_CM, CM730::P_LED_PANNEL, &actualState, 0);
-		cm730->WriteByte(CM730::P_LED_PANNEL, 0x04|actualState, NULL);
-	}
+	  cm730->WriteByte(CM730::P_LED_PANNEL, 0x04|mBackPanel, NULL);
 	else 			// Switch selected led off without changing the two others
-	{
-		cm730->ReadWord(CM730::ID_CM, CM730::P_LED_PANNEL, &actualState, 0);
-		cm730->WriteByte(CM730::P_LED_PANNEL, 0x03&actualState, NULL);
-	}
+	  cm730->WriteByte(CM730::P_LED_PANNEL, 0x03&mBackPanel, NULL);
   }
 }
 
@@ -93,3 +73,6 @@ void LED::setColor(int color) {
   mColor = color;
 }
 
+void LED::setBackPanel(int state) {
+  mBackPanel = state;
+}
