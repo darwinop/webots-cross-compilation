@@ -18,6 +18,7 @@ PROTO DARwInOP [
   field SFString   controller "void"
   field SFString   controllerArgs ""
   field SFBool     synchronization TRUE
+  field SFBool     selfCollision FALSE
   field SFString   name "DARwIn-OP"
   field SFColor    plasticColor 0.301961 0.301961 0.301961
   field SFVec2f    cameraWindowPosition 0 0
@@ -2403,10 +2404,10 @@ Robot {
                           ]
                           name "FootL"
                           boundingObject Transform {
-                            translation 0.011 -0.026 -0.001
+                            translation 0.011 -0.027 -0.001
                             children [
                               Box {
-                                size 0.08 0.016 0.12
+                                size 0.066 0.013 0.105
                               }
                             ]
                           }
@@ -2441,10 +2442,10 @@ Robot {
                   boundingObject Group {
                     children [
                       Transform {
-                        translation 0 -0.058 -0.008
+                        translation 0 -0.058 -0.001
                         children [
                           Box {
-                            size 0.064 0.038 0.057
+                            size 0.064 0.034 0.041
                           }
                         ]
                       }
@@ -2470,10 +2471,10 @@ Robot {
               ]
               name "LegUpperL"
               boundingObject Transform {
-                translation 0 -0.048 0.003
+                translation 0 -0.058 0.006
                 children [
                   Box {
-                    size 0.054 0.12 0.045
+                    size 0.053 0.035 0.042
                   }
                 ]
               }
@@ -2488,10 +2489,10 @@ Robot {
           ]
           name "PelvL"
           boundingObject Transform {
-            translation 0 -0.0105 -0.0205
+            translation 0 -0.0105 -0.023
             children [
               Box {
-                size 0.036 0.045 0.083
+                size 0.036 0.043 0.077
               }
             ]
           }
@@ -2506,10 +2507,10 @@ Robot {
       ]
       name "PelvYL"
       boundingObject Transform {
-        translation 0 0.0095 0.001
+        translation 0 0.017 0.001
         children [
           Box {
-            size 0.022 0.043 0.05
+            size 0.022 0.028 0.05
           }
         ]
       }
@@ -3583,10 +3584,10 @@ Robot {
                           ]
                           name "FootR"
                           boundingObject Transform {
-                            translation -0.011 -0.026 -0.001
+                            translation -0.011 -0.027 -0.001
                             children [
                               Box {
-                                size 0.08 0.016 0.12
+                                size 0.066 0.013 0.105
                               }
                             ]
                           }
@@ -3621,10 +3622,10 @@ Robot {
                   boundingObject Group {
                     children [
                       Transform {
-                        translation 0 -0.058 -0.008
+                        translation 0 -0.058 -0.001
                         children [
                           Box {
-                            size 0.064 0.038 0.057
+                            size 0.064 0.034 0.041
                           }
                         ]
                       }
@@ -3650,10 +3651,10 @@ Robot {
               ]
               name "LegUpperR"
               boundingObject Transform {
-                translation 0 -0.048 0.003
+                translation 0 -0.058 0.006
                 children [
                   Box {
-                    size 0.054 0.12 0.045
+                    size 0.053 0.035 0.042
                   }
                 ]
               }
@@ -3668,10 +3669,10 @@ Robot {
           ]
           name "PelvR"
           boundingObject Transform {
-            translation 0 -0.0105 -0.0205
+            translation 0 -0.0105 -0.023
             children [
               Box {
-                size 0.036 0.045 0.083
+                size 0.036 0.043 0.077
               }
             ]
           }
@@ -3686,10 +3687,10 @@ Robot {
       ]
       name "PelvYR"
       boundingObject Transform {
-        translation 0 0.0095 0.001
+        translation 0 0.017 0.001
         children [
           Box {
-            size 0.022 0.043 0.05
+            size 0.022 0.028 0.05
           }
         ]
       }
@@ -4549,10 +4550,10 @@ Robot {
           boundingObject Group {
             children [
               Transform {
-                translation 0 -0.013 0
+                translation 0 -0.019 0
                 children [
                   Box {
-                    size 0.036 0.055 0.04
+                    size 0.036 0.044 0.04
                   }
                 ]
               }
@@ -5441,10 +5442,10 @@ Robot {
           boundingObject Group {
             children [
               Transform {
-                translation 0 -0.013 0
+                translation 0 -0.019 0
                 children [
                   Box {
-                    size 0.036 0.055 0.04
+                    size 0.036 0.044 0.04
                   }
                 ]
               }
@@ -5500,7 +5501,7 @@ Robot {
         translation 0 -0.029 -0.038
         children [
           Box {
-            size 0.126 0.045 0.076
+            size 0.114 0.045 0.076
           }
         ]
       }
@@ -5535,5 +5536,6 @@ Robot {
   controller IS controller
   controllerArgs IS controllerArgs
   synchronization IS synchronization
+  selfCollision IS selfCollision
 }
 }
