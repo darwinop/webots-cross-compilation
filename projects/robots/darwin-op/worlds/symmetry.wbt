@@ -41,12 +41,13 @@ DirectionalLight {
 Table {
 }
 DARwInOP {
-  translation 0 0.985 0
-  rotation 0 1 0 1.5798
+  translation 0 0.976 0
+  rotation 0.0593 0.9964 -0.0599 1.58336
   controller "symmetry"
   cameraPixelSize 0
   cameraWidth 360
   cameraHeight 240
+  selfCollision TRUE
 }
 Floor {
   size 11 14
