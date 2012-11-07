@@ -58,6 +58,13 @@ void Symmetry::wait(int ms) {
 // function containing the main feedback loop
 void Symmetry::run() {
   
+  cout << "-------Symmetry example of DARwIn-OP-------" << endl;
+  cout << "The right arm is free while the left one mimic it." << endl;
+  cout << "In order to move the left arm, select the robot with the mouse," << endl;
+  cout << "press ctr+alt and select the right arm." << endl;
+  cout << "Now you just have to move the mouse without releasing it." << endl;
+  cout << "This example illustrate also the selfCollision which is activated by default" << endl;
+  
   double position[3] = {0,0,0};
   
   mServos[0]->setMotorForce(0.0);
