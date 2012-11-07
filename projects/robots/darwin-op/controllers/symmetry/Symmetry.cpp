@@ -59,7 +59,7 @@ void Symmetry::wait(int ms) {
 void Symmetry::run() {
   
   cout << "-------Symmetry example of DARwIn-OP-------" << endl;
-  cout << "The right arm is free while the left one mimic it.\n" << endl;
+  cout << "The right arm is free while the left one mimic it." << endl;
   cout << "In order to move the left arm, select the robot with the mouse," << endl;
   cout << "press ctr+alt and select the right arm." << endl;
   cout << "Now you just have to move the mouse without releasing it." << endl;
