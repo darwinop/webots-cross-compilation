@@ -58,6 +58,13 @@ void Symmetry::wait(int ms) {
 // function containing the main feedback loop
 void Symmetry::run() {
   
+  printf("-------Symmetry example of DARwIn-OP-------\n");
+  printf("The right arm is free while the left one mimic it.\n");
+  printf("In order to move the left arm, select the robot with the mouse,\n");
+  printf("press ctr+alt and select the right arm.\n");
+  printf("Now you just have to move the mouse without releasing it.\n");
+  printf("This example illustrate also the selfCollision which is activated by default\n");
+  
   double position[3] = {0,0,0};
   
   mServos[0]->setMotorForce(0.0);
