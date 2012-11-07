@@ -104,8 +104,13 @@ bool Sample::getBallCenter(double &x, double &y) {
 
 // function containing the main feedback loop
 void Sample::run() {
-    // First step to update sensors values
-    myStep();
+	
+  printf("---------------Demo of DARwIn-OP---------------\n");
+  printf("This demo illustrate all the possibilities available for the DARwIn-OP.\n");
+  printf("Including Motion play, walking algorithm and image processing.\n");
+	
+  // First step to update sensors values
+  myStep();
 	
   // set eye led to green
   mEyeLED->set(0x10C040);
