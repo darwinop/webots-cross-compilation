@@ -105,9 +105,9 @@ bool Sample::getBallCenter(double &x, double &y) {
 // function containing the main feedback loop
 void Sample::run() {
 	
-  printf("---------------Demo of DARwIn-OP---------------\n");
-  printf("This demo illustrate all the possibilities available for the DARwIn-OP.\n");
-  printf("Including Motion play, walking algorithm and image processing.\n");
+  cout << printf("---------------Demo of DARwIn-OP---------------" << endl;
+  cout << printf("This demo illustrate all the possibilities available for the DARwIn-OP." << endl;
+  cout << printf("Including Motion play, walking algorithm and image processing." << endl;
 	
   // First step to update sensors values
   myStep();
