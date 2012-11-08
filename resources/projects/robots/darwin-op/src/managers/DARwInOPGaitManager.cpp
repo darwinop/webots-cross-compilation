@@ -33,7 +33,8 @@ DARwInOPGaitManager::DARwInOPGaitManager(webots::Robot *robot, const std::string
   mXAmplitude(0.0),
   mAAmplitude(0.0),
   mYAmplitude(0.0),
-  mMoveAimOn(false)
+  mMoveAimOn(false),
+  mBalanceEnable(true)
 {
   if (!mRobot) {
     cerr << "DARwInOPGaitManager: The robot instance is required" << endl;

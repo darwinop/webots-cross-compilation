@@ -33,6 +33,7 @@ namespace managers {
       void             setYAmplitude(double y) { mYAmplitude = DGM_BOUND(y, -1.0, 1.0) * 40.0; }
       void             setAAmplitude(double a) { mAAmplitude = DGM_BOUND(a, -1.0, 1.0) * 50.0; }
       void             setMoveAimOn(bool q) { mMoveAimOn = q; }
+      void             setBalanceEnable(bool q) { mBalanceEnable = q; }
 
       void             start();
       void             step(int ms);
@@ -46,6 +47,7 @@ namespace managers {
       double           mAAmplitude;
       double           mYAmplitude;
       bool             mMoveAimOn;
+      bool             mBalanceEnable;
 
 #ifndef CROSSCOMPILATION
       double           valueToPosition(unsigned short value);
