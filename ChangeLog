@@ -5,9 +5,9 @@ Webots 7.x.x
 
     Added a new example, called symmetry
     Modified gait section in the 'config.ini' file
-    Modified gait manager  in order to be closer from the one from the real robot
+    Modified gait manager in order to be closer from the one from the real robot
     Changed initial position of all servos in order to be like for the real robot, now the initial position is sit down
-    Added a small damping to each sercos in the proto
+    Added a small damping to each servos in the proto
     Changed most of the BoundingBoxes
     Added the possibility to enable the self collision check
     Added description in the example 'sample' and 'symmetry'
@@ -31,9 +31,9 @@ Released on October 26th, 2012 (revision 11978)
     Added Three BackLeds in the proto
     Added minPosition & maxPosition for each servos in the proto
     Revised maxForce for each servos in the proto
-    Added the inertiaMatrix to all physics node in the proto
+    Added the inertiaMatrix to all physics nodes in the proto
     Revised some centerOfMass in the proto
-    Fixed bug with the mottion manager in simulation, it is now possible to play motion that are stored in more than one page
+    Fixed bug with the mottion manager in simulation, it is now possible to play motions that are stored in more than one page
 
   Cross-Compilation:
 
@@ -47,7 +47,7 @@ Released on October 26th, 2012 (revision 11978)
     Fixed wrong initialization of the linuxMotionTimer
     Changed enabling and disabling of the joint in the gait and motion manager
     Modified getWidth() & getHeight() in the module camera in order to change dynamically the value
-    Added a minimalist sefl collision avoidance in setPosition of the servos module
+    Added a minimalist self collision avoidance in setPosition of the servos module
     Modified timming management in robot step
     Changed the reading of the sensors value, everything is read in one packet (by using ReadTable function of the CM730) in the robot::step, gain of time.
 
