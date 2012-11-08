@@ -55,6 +55,7 @@ for dirname, dirnames, filenames in os.walk(scriptdirectoryfullpath):
     # remove exceptions
     if "README" in filerelativepath: continue
     if ".git" in filerelativepath: continue
+    if "ChangeLog" in filerelativepath: continue
     if os.path.basename(sys.argv[0]) in filerelativepath: continue
 
     # copy the file
