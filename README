@@ -77,7 +77,11 @@ E. Run the same controller on the DARwIn-OP
      $ cd /darwin/Linux/project/webots/controllers/sample
      $ make -f Makefile.darwin-op
 
+----- Known issues ----- 
 
+- 1. In simulation, in the DARwInOPGaitManager, the lateral balance do not work as expected.
+     It is recommended to set balance_hip_roll_gain and balance_ankle_roll_gain to 0.0,
+     this must be done in the file 'config.ini' attached to the controller.
 
 ----- Contributors -----
 
