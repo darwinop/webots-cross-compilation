@@ -2,6 +2,7 @@
 
 #include <webots/Robot.hpp>
 #include <webots/Servo.hpp>
+#include <webots/Gyro.hpp>
 #include <MX28.h>
 #include <Walking.h>
 #include <minIni.h>
@@ -9,6 +10,8 @@
 #ifdef CROSSCOMPILATION
 #include <managers/DARwInOPMotionTimerManager.hpp>
 #include <MotionManager.h>
+#else
+#include <MotionStatus.h>
 #endif
 
 #include <iostream>
@@ -76,15 +79,21 @@ void DARwInOPGaitManager::step(int step) {
   mWalking->A_MOVE_AMPLITUDE = mAAmplitude;
   mWalking->Y_MOVE_AMPLITUDE = mYAmplitude;
   mWalking->A_MOVE_AIM_ON = mMoveAimOn;
+  mWalking->BALANCE_ENABLE = mBalanceEnable;
 
 #ifdef CROSSCOMPILATION
-  int numberOfStepToProcess = 1;
+  mWalking->Process();
 #else
   int numberOfStepToProcess = step / 8;
+
+  for (int i=0; i<numberOfStepToProcess; i++) {
+	const double *gyro = mRobot->getGyro("Gyro")->getValues();
+	MotionStatus::RL_GYRO = gyro[0] - 512;  // 512 = central value, skip calibration step of the MotionManager,
+	MotionStatus::FB_GYRO = gyro[1] - 512;  // because the influence of the calibration is imperceptible.
+    mWalking->Process();
+  }
 #endif
 
-  for (int i=0; i<numberOfStepToProcess; i++)
-    mWalking->Process();
 #ifndef CROSSCOMPILATION
   for (int i=0; i<DGM_NSERVOS; i++)
     mServos[i]->setPosition(valueToPosition(mWalking->m_Joint.GetValue(i+1)));
