@@ -87,9 +87,9 @@ void DARwInOPGaitManager::step(int step) {
   int numberOfStepToProcess = step / 8;
 
   for (int i=0; i<numberOfStepToProcess; i++) {
-	const double *gyro = mRobot->getGyro("Gyro")->getValues();
-	MotionStatus::RL_GYRO = gyro[0] - 512;  // 512 = central value, skip calibration step of the MotionManager,
-	MotionStatus::FB_GYRO = gyro[1] - 512;  // because the influence of the calibration is imperceptible.
+    const double *gyro = mRobot->getGyro("Gyro")->getValues();
+    MotionStatus::RL_GYRO = gyro[0] - 512;  // 512 = central value, skip calibration step of the MotionManager,
+    MotionStatus::FB_GYRO = gyro[1] - 512;  // because the influence of the calibration is imperceptible.
     mWalking->Process();
   }
 #endif
