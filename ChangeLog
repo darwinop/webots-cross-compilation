@@ -1,0 +1,54 @@
+
+Webots 7.x.x
+
+  Simulation :
+
+    Added a new example, called symmetry
+    Modified gait section in the 'config.ini' file
+    Modified gait manager  in order to be closer from the one from the real robot
+    Changed initial position of all servos in order to be like for the real robot, now the initial position is sit down
+    Added a small damping to each sercos in the proto
+    Changed most of the BoundingBoxes
+    Added the possibility to enable the self collision check
+    Added description in the example 'sample' and 'symmetry'
+
+  Cross-Compilation:
+    
+    Changed the reading of the servos states, everything is now done in robot::step in one packet (by using BulkRead function of the CM730), gain of time
+    Changed the writing of the servos settings, everything is now done in robot::step in one packet (by using SyncWrite function of the CM730), gain of time
+    Added the possibility to set the time step in the 'config.ini' file
+    Modified gait manager in order to be independant from the time step
+    Suppressed the readTable function to read the sensors value, and read of the sensors value thanks to the BulkRead
+    Added the possibility to set height and with of the camera in the 'config.ini' file
+    
+
+Webots 7.0.1
+
+Released on October 26th, 2012 (revision 11978)
+
+  Simulation :
+
+    Added Three BackLeds in the proto
+    Added minPosition & maxPosition for each servos in the proto
+    Revised maxForce for each servos in the proto
+    Added the inertiaMatrix to all physics node in the proto
+    Revised some centerOfMass in the proto
+    Fixed bug with the mottion manager in simulation, it is now possible to play motion that are stored in more than one page
+
+  Cross-Compilation:
+
+    Revised accelerometer and gyro reading
+    Fixed namespace issue in the module camera
+    Fixed inversion of color for the rgb led
+    Added a speacker module
+    Added setMotorForce & getPosition in the servos module
+    Fixed inversion of motion file in the motion manager
+    Added setVelocity, setForce, setAcceleration, setControlP & getMotorForceFeedback in servos module
+    Fixed wrong initialization of the linuxMotionTimer
+    Changed enabling and disabling of the joint in the gait and motion manager
+    Modified getWidth() & getHeight() in the module camera in order to change dynamically the value
+    Added a minimalist sefl collision avoidance in setPosition of the servos module
+    Modified timming management in robot step
+    Changed the reading of the sensors value, everything is read in one packet (by using ReadTable function of the CM730) in the robot::step, gain of time.
+
+Webots 6.4.5
