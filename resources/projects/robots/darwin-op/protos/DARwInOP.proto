@@ -498,7 +498,7 @@ Robot {
     }
     Accelerometer {
       translation 0 -0.0684064 -0.01
-      rotation 1 0 0 1.5708
+      rotation -1.22475e-7 0.707105 0.707108 3.14159
       name "Accelerometer"
       lookupTable [
         -39.24 0 0
