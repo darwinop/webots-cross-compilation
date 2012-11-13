@@ -12,6 +12,8 @@ Webots 7.x.x
     Added the possibility to enable the self collision check
     Added description in the example 'sample' and 'symmetry'
     Added balance to the gait manager
+    Added acceleration and maxVelocity field for each servo
+    Corrected Accelerometer orientation (inversion of axes X and Z)
 
   Cross-Compilation:
     
