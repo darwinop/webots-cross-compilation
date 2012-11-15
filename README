@@ -82,6 +82,9 @@ E. Run the same controller on the DARwIn-OP
 - 1. In simulation, in the DARwInOPGaitManager, the lateral balance do not work as expected.
      It is recommended to set balance_hip_roll_gain and balance_ankle_roll_gain to 0.0,
      this must be done in the file 'config.ini' attached to the controller.
+- 2. In simulation the P gain of the servo affects the speed but on the real robot it affects
+     the torque. This can cause differences between simulation and reality in some specific cases.
+     Especially when P is small.
 
 ----- Contributors -----
 
