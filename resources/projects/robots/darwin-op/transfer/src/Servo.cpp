@@ -198,6 +198,9 @@ void Servo::setMotorForce(double motor_force){
 
 void Servo::setControlP(double p){
 
+  if(p < 3)
+    printf("WARNING : A small value of P can cause differences between simulation and reality.");
+
   if(p >= 0)
   {
     int value = p * 8; // Seems to be good, but has to be verified
