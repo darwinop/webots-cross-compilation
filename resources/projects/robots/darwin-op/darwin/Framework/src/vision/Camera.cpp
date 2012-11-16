@@ -1,7 +1,7 @@
 /*
  *   Camera.cpp
  *
- *   Author: ROBOTIS
+ *   Author:
  *
  */
 
