@@ -170,9 +170,9 @@ void Servo::setForce(double force){
       printf("Can't read firmware version from Dynamixel ID %d!\n", JointData::ID_HEAD_PAN);
     else if(27 <= firm_ver){
       if(force > 0)
-        mGoalPosition = mNamesToLimUp[getName()];
-      else
         mGoalPosition = mNamesToLimDown[getName()];
+      else
+        mGoalPosition = mNamesToLimUp[getName()];
      }
      else
        printf("Servo::setForce not available for this version of Dynamixel firmware, please update it.\n");
