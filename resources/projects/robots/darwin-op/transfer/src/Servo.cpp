@@ -240,10 +240,10 @@ void Servo::setPosition(double position) {
 
     //       Self-Collision Avoidance      //
     // Work only with a resolution of 4096 //
-    if(value > std::max(mNamesToLimDown[getName()], mNamesToLimUp[getName()]))
-      value = std::max(mNamesToLimDown[getName()], mNamesToLimUp[getName()]);
-    else if(value < std::min(mNamesToLimDown[getName()], mNamesToLimUp[getName()]))
-      value = std::min(mNamesToLimDown[getName()], mNamesToLimUp[getName()]);
+    if(value > mNamesToLimUp[getName()])
+      value = mNamesToLimUp[getName()];
+    else if(value < smNamesToLimDown[getName()])
+      value = mNamesToLimDown[getName()];
       
     mGoalPosition = value;
   }
