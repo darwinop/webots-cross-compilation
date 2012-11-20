@@ -1,4 +1,17 @@
+Webots 7.0.3
+
+  Simulation :
+
+    Corrected center of mass of LegLowerL and LegLowerR
+
+  Cross-Compilation:
+    
+    Fixed inversion of sign of the value returned by Servo::getMotorForceFeedback
+    Fixed the direction of the force applied by Servo::setForce which was wrong for some servos
+
 Webots 7.0.2
+
+Released on November 16th, 2012 (revision 12294) 
 
   Simulation :
 
