@@ -45,7 +45,6 @@ DEF BLUE_GOAL Goal {
   postColor 0.152941 0.505882 0.733333
 }
 DEF BALL Ball {
-  translation 0 0.0325 -0.01
 }
 DARwInOP {
   translation -0.413972 0.236 -0.396853
