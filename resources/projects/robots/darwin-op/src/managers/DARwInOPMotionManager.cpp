@@ -153,7 +153,7 @@ void DARwInOPMotionManager::achieveTarget(int msToAchieveTarget) {
   bool stepNeeded = false;
   
   for (int i=0; i<DMM_NSERVOS; i++) {
-    if(mServos[i]->getPositionSamplingRate() <= 0) {
+    if(mServos[i]->getPositionSamplingPeriod() <= 0) {
       cerr << "The position feedback of servo "<<  servoNames[i] << " is not enabled. DARwInOPMotionManager need to read the position of all servos. The position will be automatically enable."<< endl;
       mServos[i]->enablePosition(mBasicTimeStep);
       stepNeeded = true;
