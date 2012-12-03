@@ -73,7 +73,7 @@ int webots::Robot::step(int ms) {
   mCM730->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_servos , param);
   
 // -------- Bulk Read to read the actuators states (position, speed and load) and body sensors -------- //
-  if(!(::Robot::MotionManager::GetEnable())) // If MotionManager is enable, no need to execute the BulkRead, the MotionManager has allready done it.
+  if(!(::Robot::MotionManager::GetInstance()->GetEnable())) // If MotionManager is enable, no need to execute the BulkRead, the MotionManager has allready done it.
     mCM730->BulkRead();
 
   // Servos
