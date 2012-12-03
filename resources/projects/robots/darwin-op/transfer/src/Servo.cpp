@@ -242,7 +242,7 @@ void Servo::setPosition(double position) {
     // Work only with a resolution of 4096 //
     if(value > mNamesToLimUp[getName()])
       value = mNamesToLimUp[getName()];
-    else if(value < smNamesToLimDown[getName()])
+    else if(value < mNamesToLimDown[getName()])
       value = mNamesToLimDown[getName()];
       
     mGoalPosition = value;
