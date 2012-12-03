@@ -25,7 +25,7 @@ namespace webots {
       static void   initStaticMap();
       static std::map<const std::string, int> mNamesToIDs;
       void setColor(int color);
-      static void setBackPanel(int state)
+      static void setBackPanel(int state);
       
       int mColor;
       static int mBackPanel;
