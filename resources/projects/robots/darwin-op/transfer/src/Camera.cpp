@@ -73,6 +73,7 @@ void *::webots::Camera::CameraTimerProc(void *param) {
     ::Robot::LinuxCamera::GetInstance()->CaptureFrame();
     memcpy(mImage, ::Robot::LinuxCamera::GetInstance()->fbuffer->m_RGBFrame->m_ImageData, ::Robot::LinuxCamera::GetInstance()->fbuffer->m_RGBFrame->m_ImageSize);
   }
+  return NULL;
 }
 
 int ::webots::Camera::getWidth() const {
