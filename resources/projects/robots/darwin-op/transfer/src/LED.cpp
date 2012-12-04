@@ -22,7 +22,6 @@ LED::~LED() {
 void LED::set(int value) {
 	
   CM730 *cm730 = getRobot()->getCM730();
-  int actualState = 0;
 
   //RGB Led
   if(getName() == "EyeLed" || getName() == "HeadLed") {
