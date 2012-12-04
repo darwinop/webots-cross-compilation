@@ -3,11 +3,14 @@ Webots 7.0.3
   Simulation :
 
     Corrected center of mass of LegLowerL and LegLowerR
+    Added field staticFriction and adapted field dampingConstant for each servos
+    Added a warning if the MotionManager is used without having enabled all the servos position and auto enable them
 
   Cross-Compilation:
     
     Fixed inversion of sign of the value returned by Servo::getMotorForceFeedback
     Fixed the direction of the force applied by Servo::setForce which was wrong for some servos
+
 
 Webots 7.0.2
 
