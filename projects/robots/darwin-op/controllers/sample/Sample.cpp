@@ -118,7 +118,7 @@ void Sample::run() {
   // play the hello motion
   mMotionManager->playPage(1); // init position
   mMotionManager->playPage(57); // hello
-  mMotionManager->playPage(1); // init position
+  mMotionManager->playPage(9); // walkready position
   wait(200);
 
   // play the motion preparing the robot to walk
@@ -154,14 +154,14 @@ void Sample::run() {
     if (fup > acc_step) {
       mMotionManager->playPage(1); // init position
       mMotionManager->playPage(10); // f_up
-      mMotionManager->playPage(1); // init position    
+      mMotionManager->playPage(9); // walkready position
       fup = 0;
     }
     // the back face is down
     else if (fdown > acc_step) {
       mMotionManager->playPage(1); // init position
       mMotionManager->playPage(11); // b_up
-      mMotionManager->playPage(1); // init position
+      mMotionManager->playPage(9); // walkready position
       fdown = 0;
     }
     // if the ball is in the field of view,
@@ -193,6 +193,7 @@ void Sample::run() {
           mMotionManager->playPage(13); // left kick
         else
           mMotionManager->playPage(12); // right kick
+        mMotionManager->playPage(9); // walkready position
         px = 0.0;
         py = 0.0;
       }
