@@ -20,9 +20,13 @@ CXX_SOURCES = \
   $(DARWIN_FRAMEWORK_PATH)/src/motion/MotionStatus.cpp \
   $(DARWIN_FRAMEWORK_PATH)/src/motion/modules/Action.cpp \
   $(DARWIN_FRAMEWORK_PATH)/src/motion/modules/Walking.cpp \
+  $(DARWIN_FRAMEWORK_PATH)/src/vision/ImgProcess.cpp \
+  $(DARWIN_FRAMEWORK_PATH)/src/vision/ColorFinder.cpp \
+  $(DARWIN_FRAMEWORK_PATH)/src/vision/Image.cpp \
   $(MANAGERS_SOURCES_PATH)/DARwInOPDirectoryManager.cpp \
   $(MANAGERS_SOURCES_PATH)/DARwInOPMotionManager.cpp \
-  $(MANAGERS_SOURCES_PATH)/DARwInOPGaitManager.cpp
+  $(MANAGERS_SOURCES_PATH)/DARwInOPGaitManager.cpp \
+  $(MANAGERS_SOURCES_PATH)/DARwInOPVisionManager.cpp
 C_SOURCES = \
   $(DARWIN_FRAMEWORK_PATH)/src/minIni/minIni.c
 SOURCES = $(C_SOURCES) $(CXX_SOURCES)
