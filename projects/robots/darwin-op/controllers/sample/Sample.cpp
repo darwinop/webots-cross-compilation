@@ -6,6 +6,7 @@
 #include <webots/Gyro.hpp>
 #include <managers/DARwInOPMotionManager.hpp>
 #include <managers/DARwInOPGaitManager.hpp>
+#include <managers/DARwInOPVisionManager.hpp>
 
 #include <cstdlib>
 #include <cmath>
@@ -49,6 +50,7 @@ Sample::Sample():
   
   mMotionManager = new DARwInOPMotionManager(this);
   mGaitManager = new DARwInOPGaitManager(this, "config.ini");
+  mVisionManager = new DARwInOPVisionManager(mCamera->getWidth(), mCamera->getHeight(), 30, 15, 50, 10, 0.01, 30);
 }
 
 Sample::~Sample() {
@@ -77,27 +79,15 @@ bool Sample::getBallCenter(double &x, double &y) {
   static int height = mCamera->getHeight();
   
   const unsigned char *im = mCamera->getImage();
-  int x0 = -1;
-  int y0 = -1;
-  for (int j=0; j<height; j++) {
-    for (int i=0; i<width; i++) {
-      int r = Camera::imageGetRed  (im, width, i, j);
-      int g = Camera::imageGetGreen(im, width, i, j);
-      int b = Camera::imageGetBlue (im, width, i, j);
-      if (r>200 && g>110 && g<205 && b<40) {
-        x0 = i;
-        y0 = j;
-      }
-    }
-  }
+  bool find = mVisionManager->getBallCenter(x, y, im);
   
-  if (x0==-1 && y0==-1) {
+  if(!find) {
     x = 0.0;
     y = 0.0;
     return false;
   } else {
-    x = 2.0 * x0 / width  - 1.0;
-    y = 2.0 * y0 / height - 1.0;
+    x = 2.0 * x / width  - 1.0;
+    y = 2.0 * y / height - 1.0;
     return true;
   }
 }
@@ -211,7 +201,7 @@ void Sample::run() {
       mGaitManager->step(mTimeStep);
       
       // move the head vertically
-      mServos[19]->setPosition(-0.7*sin(2.0*getTime()));
+      mServos[19]->setPosition(0.7*sin(2.0*getTime()));
     }
     
     // step

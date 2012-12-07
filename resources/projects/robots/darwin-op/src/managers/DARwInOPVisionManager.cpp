@@ -6,7 +6,7 @@ using namespace std;
 
 
 DARwInOPVisionManager::DARwInOPVisionManager(int width, int height, int hue, int hueTolerance, int minSaturation, int minValue, int minPercent, int maxPercent) {
-  mfinder = new ColorFinder(hue, hueTolerance, minSaturation, minSaturation, minPercent, maxPercent);
+  mfinder = new ColorFinder(hue, hueTolerance, minSaturation, minValue, minPercent, maxPercent);
   mbuffer = new FrameBuffer(width, height);
 }
 
