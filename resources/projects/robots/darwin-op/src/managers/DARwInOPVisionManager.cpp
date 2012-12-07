@@ -1,14 +1,7 @@
 #include <managers/DARwInOPVisionManager.hpp>
 
-//#include <webots/Robot.hpp>
-
-
-//#include <iostream>
-//#include <cmath>
-
 using namespace Robot;
 using namespace managers;
-//using namespace webots;
 using namespace std;
 
 
@@ -39,8 +32,8 @@ bool DARwInOPVisionManager::getBallCenter(double &x, double &y, const unsigned c
     y = 0.0;
     return false;
   } else {
-    x = pos.X; //2.0 * pos.X / mCamera->getWidth()  - 1.0;
-    y = pos.Y; //2.0 * pos.Y / mCamera->getHeight() - 1.0;
+    x = pos.X;
+    y = pos.Y;
     return true;
   }
 }

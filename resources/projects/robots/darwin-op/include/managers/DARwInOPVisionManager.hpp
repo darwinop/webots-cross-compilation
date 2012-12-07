@@ -12,12 +12,6 @@
 #ifndef DARWINOP_VISION_MANAGER_HPP
 #define DARWINOP_VISION_MANAGER_HPP
 
-
-//namespace webots {
-  //class Robot;
-  //class Servo;
-//}
-
 namespace Robot {
   class ColorFinder;
   class FrameBuffer;

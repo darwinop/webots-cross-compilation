@@ -75,7 +75,7 @@ void VisualTracking::run() {
         mServos[18]->setPosition(mServos[18]->getPosition() - 0.2);
       else if(x < 0.4 * mCamera->getWidth())
         mServos[18]->setPosition(mServos[18]->getPosition() + 0.2);
-     // Vertical
+      // Vertical
       if(y > 0.6 * mCamera->getHeight())
         mServos[19]->setPosition(mServos[19]->getPosition() - 0.1);
       else if(y < 0.4 * mCamera->getHeight())
