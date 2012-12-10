@@ -69,8 +69,7 @@ void Sample::wait(int ms) {
     myStep();
 }
 
-// simple and not robust ball detection algorithm
-// finding the last pixel which seems like the ball color
+// Ball detection based on the ball color using the Vision Manager
 // - return: indicates if the algorithm found the ball
 // - args: return the position of the ball [-1.0, 1.0]
 
