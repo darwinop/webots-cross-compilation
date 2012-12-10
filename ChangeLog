@@ -4,6 +4,7 @@ Webots 7.0.4
 
     Added Vision Manager in order to use the main image processing tools of the Framework in simulation
     Added example Visual Tracking
+    Updated example Sample to use Manager Vision
 
   Cross-Compilation:
     
