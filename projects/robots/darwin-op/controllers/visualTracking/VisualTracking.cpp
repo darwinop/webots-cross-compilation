@@ -36,7 +36,7 @@ VisualTracking::VisualTracking():
     mServos[i]->enablePosition(mTimeStep);
   }
   
-  mVisionManager = new DARwInOPVisionManager(mCamera->getWidth(), mCamera->getHeight(), 350, 15, 50, 10, 0.02, 30);
+  mVisionManager = new DARwInOPVisionManager(mCamera->getWidth(), mCamera->getHeight(), 355, 15, 60, 15, 0.1, 30);
 }
 
 VisualTracking::~VisualTracking() {
@@ -50,6 +50,8 @@ void VisualTracking::myStep() {
 
 // function containing the main feedback loop
 void VisualTracking::run() {
+  double horizontal = 0.0;
+  double vertical = 0.0;
 	
   cout << "---------------Visual Tracking---------------" << endl;
   cout << "This example illustrate the possibilities of the vision manager." << endl;
@@ -72,16 +74,18 @@ void VisualTracking::run() {
     if(ballInFieldOfView) {
       // Horizontal
       if(x > 0.6 * mCamera->getWidth())
-        mServos[18]->setPosition(mServos[18]->getPosition() - 0.2);
+        horizontal -= 0.05;
       else if(x < 0.4 * mCamera->getWidth())
-        mServos[18]->setPosition(mServos[18]->getPosition() + 0.2);
+        horizontal += 0.05;
       // Vertical
       if(y > 0.6 * mCamera->getHeight())
-        mServos[19]->setPosition(mServos[19]->getPosition() - 0.1);
+        vertical -= 0.02;
       else if(y < 0.4 * mCamera->getHeight())
-        mServos[19]->setPosition(mServos[19]->getPosition() + 0.1);
+        vertical += 0.02;
     }
     
+    mServos[18]->setPosition(horizontal);
+    mServos[19]->setPosition(vertical);
     
     // step
     myStep();

@@ -21,7 +21,7 @@ void ::webots::Camera::enable(int ms) {
   disable();
   ::Robot::LinuxCamera::GetInstance()->Initialize(0);
   ::Robot::LinuxCamera::GetInstance()->SetCameraSettings(::Robot::CameraSettings());
-  mImage = (unsigned char *) malloc (3*getWidth()*getHeight());
+  mImage = (unsigned char *) malloc (4*getWidth()*getHeight());
 
 //Thread start
   int error;
@@ -70,8 +70,8 @@ const unsigned char *::webots::Camera::getImage() const {
 
 void *::webots::Camera::CameraTimerProc(void *param) {
   while(1) {
-    ::Robot::LinuxCamera::GetInstance()->CaptureFrame();
-    memcpy(mImage, ::Robot::LinuxCamera::GetInstance()->fbuffer->m_RGBFrame->m_ImageData, ::Robot::LinuxCamera::GetInstance()->fbuffer->m_RGBFrame->m_ImageSize);
+    ::Robot::LinuxCamera::GetInstance()->CaptureFrameWb();
+    memcpy(mImage, ::Robot::LinuxCamera::GetInstance()->fbuffer->m_BGRAFrame->m_ImageData, ::Robot::LinuxCamera::GetInstance()->fbuffer->m_BGRAFrame->m_ImageSize);
   }
   return NULL;
 }
