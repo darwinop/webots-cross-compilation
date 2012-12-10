@@ -7,6 +7,7 @@ using namespace webots;
 using namespace Robot;
 
 std::map<const std::string, int> LED::mNamesToIDs;
+int LED::mBackPanel = 0;
 
 #define LED_BOUND(x,a,b) (((x)<(a))?(a):((x)>(b))?(b):(x))
 
