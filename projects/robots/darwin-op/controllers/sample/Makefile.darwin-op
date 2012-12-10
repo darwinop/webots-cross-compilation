@@ -25,7 +25,8 @@ CXX_SOURCES = \
   $(WEBOTS_DARWINOP_PROJECT_ROOT)/src/managers/DARwInOPDirectoryManager.cpp \
   $(WEBOTS_DARWINOP_PROJECT_ROOT)/src/managers/DARwInOPMotionManager.cpp \
   $(WEBOTS_DARWINOP_PROJECT_ROOT)/src/managers/DARwInOPMotionTimerManager.cpp \
-  $(WEBOTS_DARWINOP_PROJECT_ROOT)/src/managers/DARwInOPGaitManager.cpp
+  $(WEBOTS_DARWINOP_PROJECT_ROOT)/src/managers/DARwInOPGaitManager.cpp \
+  $(WEBOTS_DARWINOP_PROJECT_ROOT)/src/managers/DARwInOPVisionManager.cpp
 
 # -------------------------------------------------------------
 

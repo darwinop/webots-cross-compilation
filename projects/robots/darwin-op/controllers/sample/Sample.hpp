@@ -14,6 +14,7 @@
 namespace managers {
   class DARwInOPMotionManager;
   class DARwInOPGaitManager;
+  class DARwInOPVisionManager;
 }
 
 namespace webots {
@@ -49,6 +50,7 @@ namespace webots {
       
       managers::DARwInOPMotionManager *mMotionManager;
       managers::DARwInOPGaitManager   *mGaitManager;
+      managers::DARwInOPVisionManager *mVisionManager;
   };
 };
 
