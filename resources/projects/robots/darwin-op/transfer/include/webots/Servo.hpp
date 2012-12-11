@@ -16,6 +16,7 @@
 namespace webots {
   class Servo: public Device  {
     public:
+      enum { WB_SERVO_ROTATIONAL = 0 };
                     Servo(const std::string &name, const Robot *robot); //Use Robot::getServo() instead
       virtual      ~Servo();
       virtual void  setAcceleration(double force);
@@ -29,6 +30,11 @@ namespace webots {
       virtual void  disableMotorForceFeedback();
       double getMotorForceFeedback() const;
       double getPosition() const;
+      double getTargetPosition();
+      double getMinPosition();
+      double getMaxPosition();
+      int           getSamplingPeriod();
+      int           getType() const;
       virtual void  setPosition(double position);
       
               void  updateSpeed(int ms);

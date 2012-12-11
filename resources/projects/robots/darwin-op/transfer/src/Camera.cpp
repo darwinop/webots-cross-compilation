@@ -88,10 +88,6 @@ double ::webots::Camera::getFov() const {
   return 1.0123;
 }
 
-int ::webots::Camera::getType() const {
-  return 'c';
-}
-
 double ::webots::Camera::getNear() const {
   return 0.0;
 }
@@ -119,3 +115,16 @@ bool ::webots::Camera::checkResolution(int width, int height) {
   }
   return false;
 }
+
+int ::webots::Camera::getSamplingPeriod() {
+  if(getRobot()->getBasicTimeStep() < 30)
+    return 30;
+  else
+    return getRobot()->getBasicTimeStep();
+}
+
+int ::webots::Camera::getType() const {
+  return WB_CAMERA_COLOR;
+}
+
+

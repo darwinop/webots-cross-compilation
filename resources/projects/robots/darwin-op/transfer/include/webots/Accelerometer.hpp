@@ -20,6 +20,7 @@ namespace webots {
       virtual void  enable(int ms);
       virtual void  disable();
       const double *getValues() const;
+      int           getSamplingPeriod();
 
     private:
       double        mValues[3];
