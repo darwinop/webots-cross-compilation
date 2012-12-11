@@ -37,3 +37,16 @@ bool DARwInOPVisionManager::getBallCenter(double &x, double &y, const unsigned c
     return true;
   }
 }
+
+bool DARwInOPVisionManager::isDetected(int x, int y) {
+  
+  if(x > mfinder->m_result->m_Width || y > mfinder->m_result->m_Height)
+    return false;
+  
+  int i = y * mfinder->m_result->m_Width + x;
+  
+  if(mfinder->m_result->m_ImageData[i] == 1)
+    return true;
+  else
+    return false;
+}
