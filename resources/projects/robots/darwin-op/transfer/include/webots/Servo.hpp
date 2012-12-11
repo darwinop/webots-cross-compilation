@@ -30,6 +30,8 @@ namespace webots {
       double getMotorForceFeedback() const;
       double getPosition() const;
       double getTargetPosition();
+      double getMinPosition();
+      double getMaxPosition();
       int           getSamplingPeriod();
       virtual void  setPosition(double position);
       

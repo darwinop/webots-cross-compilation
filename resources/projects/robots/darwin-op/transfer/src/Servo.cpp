@@ -325,3 +325,11 @@ int Servo::getSamplingPeriod() {
 double Servo::getTargetPosition() {
   return mGoalPosition;
 }
+
+double getMinPosition() {
+  return (MX28::Value2Angle(mNamesToLimDown[getName()]) * (M_PI/180.0));
+}
+
+double getMaxPosition() {
+  return (MX28::Value2Angle(mNamesToLimUp[getName()]) * (M_PI/180.0));
+}
