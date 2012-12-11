@@ -321,3 +321,7 @@ void Servo::setPresentLoad(int load) {
 int Servo::getSamplingPeriod() {
   return getRobot()->getBasicTimeStep();
 }
+
+double Servo::getTargetPosition() {
+  return mGoalPosition;
+}
