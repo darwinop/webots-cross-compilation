@@ -24,6 +24,7 @@ namespace managers {
                        DARwInOPVisionManager(int width, int height, int hue, int hueTolerance, int minSaturation, int minValue, int minPercent, int maxPercent);
       virtual         ~DARwInOPVisionManager();
       bool             getBallCenter(double &x, double &y, const unsigned char * image);
+      bool             isDetected(int x, int y);
 
     private:
       ColorFinder                     *mfinder;
