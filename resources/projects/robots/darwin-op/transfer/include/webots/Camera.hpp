@@ -15,6 +15,7 @@
 namespace webots {
   class Camera: public Device  {
     public:
+      enum { WB_CAMERA_COLOR = 99 };
                    Camera(const std::string &name, const Robot *robot); //Use Robot::getCamera() instead
       virtual     ~Camera();
 

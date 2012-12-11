@@ -88,10 +88,6 @@ double ::webots::Camera::getFov() const {
   return 1.0123;
 }
 
-int ::webots::Camera::getType() const {
-  return 'c';
-}
-
 double ::webots::Camera::getNear() const {
   return 0.0;
 }
