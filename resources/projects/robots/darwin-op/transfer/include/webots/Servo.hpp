@@ -29,6 +29,7 @@ namespace webots {
       virtual void  disableMotorForceFeedback();
       double getMotorForceFeedback() const;
       double getPosition() const;
+      int           getSamplingPeriod();
       virtual void  setPosition(double position);
       
               void  updateSpeed(int ms);

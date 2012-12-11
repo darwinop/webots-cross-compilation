@@ -317,3 +317,7 @@ void Servo::setPresentSpeed(int speed) {
 void Servo::setPresentLoad(int load) {
   mPresentLoad = load;
 }
+
+int Servo::getSamplingPeriod() {
+  return getRobot()->getBasicTimeStep();
+}
