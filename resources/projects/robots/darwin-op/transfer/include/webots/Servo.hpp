@@ -33,6 +33,7 @@ namespace webots {
       double getMinPosition();
       double getMaxPosition();
       int           getSamplingPeriod();
+      int           getType() const;
       virtual void  setPosition(double position);
       
               void  updateSpeed(int ms);

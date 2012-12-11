@@ -127,3 +127,8 @@ int ::webots::Camera::getSamplingPeriod() {
     return getRobot()->getBasicTimeStep();
 }
 
+int ::webots::Camera::getType() const {
+  return WB_CAMERA_COLOR;
+}
+
+

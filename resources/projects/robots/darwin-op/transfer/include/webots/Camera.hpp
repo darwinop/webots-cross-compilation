@@ -24,7 +24,7 @@ namespace webots {
       int getWidth() const;
       int getHeight() const;
       double getFov() const;
-      int getType() const;
+      int    getType() const;
       double getNear() const;
       int    getSamplingPeriod();
       static unsigned char imageGetRed(const unsigned char *image, int width, int x,int y);

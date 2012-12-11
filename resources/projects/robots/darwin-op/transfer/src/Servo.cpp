@@ -326,10 +326,14 @@ double Servo::getTargetPosition() {
   return mGoalPosition;
 }
 
-double getMinPosition() {
+double Servo::getMinPosition() {
   return (MX28::Value2Angle(mNamesToLimDown[getName()]) * (M_PI/180.0));
 }
 
-double getMaxPosition() {
+double Servo::getMaxPosition() {
   return (MX28::Value2Angle(mNamesToLimUp[getName()]) * (M_PI/180.0));
+}
+
+int Servo::getType() const {
+  return WB_SERVO_ROTATIONAL;
 }
