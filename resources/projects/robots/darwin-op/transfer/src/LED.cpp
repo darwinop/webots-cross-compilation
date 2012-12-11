@@ -77,7 +77,7 @@ void LED::setBackPanel(int state) {
 }
 
 int LED::get() {
-  if(getName() == "EyeLed" || getName() == "HeadLed") {
+  if(getName() == "EyeLed" || getName() == "HeadLed")
     return mColor;
   else if(getName() == "BackLedRed")
     return (0x01&mBackPanel);
