@@ -15,6 +15,7 @@
 namespace webots {
   class Camera: public Device  {
     public:
+      enum { WB_CAMERA_COLOR = 99 };
                    Camera(const std::string &name, const Robot *robot); //Use Robot::getCamera() instead
       virtual     ~Camera();
 
@@ -24,8 +25,9 @@ namespace webots {
       int getWidth() const;
       int getHeight() const;
       double getFov() const;
-      int getType() const;
+      int    getType() const;
       double getNear() const;
+      int    getSamplingPeriod();
       static unsigned char imageGetRed(const unsigned char *image, int width, int x,int y);
       static unsigned char imageGetGreen(const unsigned char *image, int width, int x,int y);
       static unsigned char imageGetBlue(const unsigned char *image, int width, int x,int y);
