@@ -26,8 +26,3 @@ $(TARGET): $(OBJS) ../../../lib/darwin.a
 	
 clean:
 	rm -f $(OBJS) $(TARGET)
-
-
-
-
-
