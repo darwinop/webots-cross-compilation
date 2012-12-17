@@ -98,6 +98,11 @@ void DARwInOPMotionManager::playPage(int id) {
     return;
   
 #ifdef CROSSCOMPILATION
+
+  // Refresh all joints value before to enable them //
+  for(int i=0; i<DMM_NSERVOS; i++)
+    mAction->m_Joint.SetValue(i+1, MX28::Angle2Value(mRobot->getServo(servoNames[i])->getPosition()*(180/M_PI)));          MX28::Value2Angle(mAction->m_Joint.GetValue(i+1))*(M_PI/180));
+
   mAction->m_Joint.SetEnableBody(true, true);
   MotionStatus::m_CurrentJoints.SetEnableBody(true);
   MotionManager::GetInstance()->SetEnable(true);
