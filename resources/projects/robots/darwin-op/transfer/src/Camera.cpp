@@ -23,29 +23,13 @@ void ::webots::Camera::enable(int ms) {
   ::Robot::LinuxCamera::GetInstance()->SetCameraSettings(::Robot::CameraSettings());
   mImage = (unsigned char *) malloc (4*getWidth()*getHeight());
 
-//Thread start
-  int error;
-  struct sched_param param;
-  pthread_attr_t attr;
-  
-  pthread_attr_init(&attr);
-  
-  error = pthread_attr_setschedpolicy(&attr, SCHED_RR);
-  if(error != 0)
-    printf("error = %d\n",error);
-  error = pthread_attr_setinheritsched(&attr,PTHREAD_EXPLICIT_SCHED);
-  if(error != 0)
-    printf("error = %d\n",error);
-  
-  memset(&param, 0, sizeof(param));
-  param.sched_priority = 31;// RT
-  error = pthread_attr_setschedparam(&attr, &param);
-  if(error != 0)
-    printf("error = %d\n",error);
+  int error = 0;
 
   // create and start the thread
-  if((error = pthread_create(&this->mCameraThread, &attr, this->CameraTimerProc, this))!= 0)
+  if((error = pthread_create(&this->mCameraThread, NULL, this->CameraTimerProc, this))!= 0) {
+    printf("Camera thread error = %d\n",error);
     exit(-1);
+  }
 
   mIsActive = true;
 }
