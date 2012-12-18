@@ -5,6 +5,8 @@ Webots 7.0.4
     Added Vision Manager in order to use the main image processing tools of the Framework in simulation
     Added example Visual Tracking
     Updated example Sample to use Manager Vision
+    Corrected wrong link between Head and Eye LED
+    Added the two backLED representations of Head and Eye LED (these backLED are not controllable)
 
   Cross-Compilation:
     
@@ -13,11 +15,11 @@ Webots 7.0.4
 
 Webots 7.0.3
 
-Released on December
+Released on December 6th, 2012 (revision 12573) 
 
   Simulation :
 
-    Corrected center of mass of LegLowerL and LegLowerR
+    Corrected center of mass of LegLowerL and LegLowerR (thanks to Chase)
     Added field staticFriction and adapted field dampingConstant for each servos
     Added a warning if the MotionManager is used without having enabled all the servos position and auto enable them
 
