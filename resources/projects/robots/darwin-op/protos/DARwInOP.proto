@@ -1159,7 +1159,7 @@ Robot {
               children [
                 DEF DEyeLEDShape Shape {
                   appearance Appearance {
-                    material DEF DLEDMaterial Material {
+                    material DEF DEyeLEDMaterial Material {
                       ambientIntensity 0
                       diffuseColor 0.7 0.7 0.7
                     }
@@ -1275,7 +1275,10 @@ Robot {
               children [
                 DEF DHeadLEDShape Shape {
                   appearance Appearance {
-                    material USE DLEDMaterial
+                    material DEF DHeadLEDMaterial Material {
+                      ambientIntensity 0
+                      diffuseColor 0.7 0.7 0.7
+                    }
                   }
                   geometry IndexedFaceSet {
                     coord Coordinate {
@@ -5545,6 +5548,32 @@ Robot {
         inertiaMatrix [9.7758165e-06 1.0511104e-05 5.4767980e-06, -1.6911839e-06 4.5174329e-07 3.3406955e-07]
       }
       maxForce 2.5
+    }
+    DEF DHeadBackLED Transform {
+      translation -0.01 -0.01 -0.076
+      children [
+        Shape {
+          appearance Appearance {
+            material USE DHeadLEDMaterial
+          }
+          geometry Box {
+            size 0.002 0.005 0.002
+          }
+        }
+      ]
+    }
+    DEF DEyeBackLED Transform {
+      translation -0.015 -0.01 -0.076
+      children [
+        Shape {
+          appearance Appearance {
+            material USE DEyeLEDMaterial
+          }
+          geometry Box {
+            size 0.002 0.005 0.002
+          }
+        }
+      ]
     }
   ]
   boundingObject Group {
