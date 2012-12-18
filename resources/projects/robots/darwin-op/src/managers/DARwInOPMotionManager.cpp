@@ -98,10 +98,10 @@ void DARwInOPMotionManager::playPage(int id) {
     return;
   
 #ifdef CROSSCOMPILATION
-
+  int i = 0;
   // Refresh all joints value before to enable them //
-  for(int i=0; i<DMM_NSERVOS; i++)
-    mAction->m_Joint.SetValue(i+1, MX28::Angle2Value(mRobot->getServo(servoNames[i])->getPosition()*(180/M_PI)));          MX28::Value2Angle(mAction->m_Joint.GetValue(i+1))*(M_PI/180));
+  for(i=0; i<DMM_NSERVOS; i++)
+    mAction->m_Joint.SetValue(i+1, MX28::Angle2Value(mRobot->getServo(servoNames[i])->getPosition()*(180/M_PI)));
 
   mAction->m_Joint.SetEnableBody(true, true);
   MotionStatus::m_CurrentJoints.SetEnableBody(true);
@@ -112,7 +112,7 @@ void DARwInOPMotionManager::playPage(int id) {
     usleep(mBasicTimeStep*1000);
     
   // Reset Goal Position of all servos after a motion //
-  for(int i=0; i<DMM_NSERVOS; i++)
+  for(i=0; i<DMM_NSERVOS; i++)
     mRobot->getServo(servoNames[i])->setPosition(MX28::Value2Angle(mAction->m_Joint.GetValue(i+1))*(M_PI/180));
     
   // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
@@ -123,7 +123,7 @@ void DARwInOPMotionManager::playPage(int id) {
   Action::PAGE page;
   if (mAction->LoadPage(id, &page)) {
     // cout << "Play motion " << setw(2) << id << ": " << page.header.name << endl;
-    for(int i=0; i<page.header.repeat; i++) {
+    for(i=0; i<page.header.repeat; i++) {
       for(int j=0; j<page.header.stepnum; j++) {
          for(int k=0; k<DMM_NSERVOS; k++)
            mTargetPositions[k] = valueToPosition(page.step[j].position[k+1]);
