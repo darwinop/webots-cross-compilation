@@ -7,6 +7,8 @@ Webots 7.0.4
     Updated example Sample to use Manager Vision
     Corrected wrong link between Head and Eye LED
     Added the two backLED representations of Head and Eye LED (these backLED are not controllable)
+    Replaced motion 57 by motion 24 in the example 'sample' at the beginning
+
 
   Cross-Compilation:
     
