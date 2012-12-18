@@ -106,7 +106,7 @@ void Sample::run() {
   
   // play the hello motion
   mMotionManager->playPage(1); // init position
-  mMotionManager->playPage(57); // hello
+  mMotionManager->playPage(24); // hello
   mMotionManager->playPage(9); // walkready position
   wait(200);
 
