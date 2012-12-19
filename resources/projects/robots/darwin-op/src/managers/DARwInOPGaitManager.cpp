@@ -16,6 +16,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <cstdlib>
 
 using namespace Robot;
 using namespace managers;
@@ -37,13 +38,15 @@ DARwInOPGaitManager::DARwInOPGaitManager(webots::Robot *robot, const std::string
   mAAmplitude(0.0),
   mYAmplitude(0.0),
   mMoveAimOn(false),
-  mBalanceEnable(true)
+  mBalanceEnable(true),
+  mIsWalking(false)
 {
   if (!mRobot) {
     cerr << "DARwInOPGaitManager: The robot instance is required" << endl;
     mCorrectlyInitialized = false;
     return;
   }
+  mBasicTimeStep = mRobot->getBasicTimeStep();
 
 #ifndef CROSSCOMPILATION
   for (int i=0; i<DGM_NSERVOS; i++)
@@ -75,16 +78,24 @@ void DARwInOPGaitManager::step(int step) {
   MotionManager::GetInstance()->SetEnable(true);
 #endif
   
-  mWalking->X_MOVE_AMPLITUDE = mXAmplitude;
-  mWalking->A_MOVE_AMPLITUDE = mAAmplitude;
-  mWalking->Y_MOVE_AMPLITUDE = mYAmplitude;
-  mWalking->A_MOVE_AIM_ON = mMoveAimOn;
-  mWalking->BALANCE_ENABLE = mBalanceEnable;
+  if(mIsWalking) {
+    mWalking->X_MOVE_AMPLITUDE = mXAmplitude;
+    mWalking->A_MOVE_AMPLITUDE = mAAmplitude;
+    mWalking->Y_MOVE_AMPLITUDE = mYAmplitude;
+    mWalking->A_MOVE_AIM_ON = mMoveAimOn;
+    mWalking->BALANCE_ENABLE = mBalanceEnable;
+  }
 
 #ifdef CROSSCOMPILATION
   mWalking->Process();
 #else
   int numberOfStepToProcess = step / 8;
+
+  if(mRobot->getGyro("Gyro")->getSamplingPeriod() <= 0) {
+    cerr << "The Gyro is not enable. DARwInOPGaitManager need the Gyro tu run. The GYro  will be automatically enable."<< endl;
+    mRobot->getGyro("Gyro")->enable(mBasicTimeStep);
+    myStep();
+  }
 
   for (int i=0; i<numberOfStepToProcess; i++) {
     const double *gyro = mRobot->getGyro("Gyro")->getValues();
@@ -101,7 +112,10 @@ void DARwInOPGaitManager::step(int step) {
 }
 
 void DARwInOPGaitManager::stop() {
+  mIsWalking = false;
   mWalking->Stop();
+  while(mWalking->IsRunning())
+    this->step(8);
 #ifdef CROSSCOMPILATION
   // Reset Goal Position of all servos (except Head) after walking //
   for(int i=0; i<(DGM_NSERVOS-2); i++)
@@ -115,6 +129,7 @@ void DARwInOPGaitManager::stop() {
 }
 
 void DARwInOPGaitManager::start() {
+  mIsWalking = true;
   mWalking->Start();
 }
 
@@ -123,5 +138,11 @@ double DARwInOPGaitManager::valueToPosition(unsigned short value) {
   double degree = MX28::Value2Angle(value);
   double position = degree / 180.0 * M_PI;
   return position;
+}
+
+void DARwInOPGaitManager::myStep() {
+  int ret = mRobot->step(mBasicTimeStep);
+  if (ret == -1)
+    exit(EXIT_SUCCESS);
 }
 #endif
