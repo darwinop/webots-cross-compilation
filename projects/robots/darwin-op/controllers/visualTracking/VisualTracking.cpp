@@ -31,10 +31,9 @@ VisualTracking::VisualTracking():
   mCamera = getCamera("Camera");
   mCamera->enable(mTimeStep);
   
-  for (int i=0; i<NSERVOS; i++) {
+  for (int i=0; i<NSERVOS; i++)
     mServos[i] = getServo(servoNames[i]);
-    mServos[i]->enablePosition(mTimeStep);
-  }
+
   
   mVisionManager = new DARwInOPVisionManager(mCamera->getWidth(), mCamera->getHeight(), 355, 15, 60, 15, 0.1, 30);
 }
