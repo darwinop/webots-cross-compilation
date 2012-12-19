@@ -32,7 +32,7 @@ Sample::Sample():
   
   mEyeLED = getLED("EyeLed");
   mHeadLED = getLED("HeadLed");
-  mHeadLED->set(0x10C040);
+  mHeadLED->set(0x00FF00);
   mBackLedRed = getLED("BackLedRed");
   mBackLedGreen = getLED("BackLedGreen");
   mBackLedBlue = getLED("BackLedBlue");
@@ -102,7 +102,7 @@ void Sample::run() {
   myStep();
 	
   // set eye led to green
-  mEyeLED->set(0x10C040);
+  mEyeLED->set(0x00FF00);
   
   // play the hello motion
   mMotionManager->playPage(1); // init position
@@ -157,7 +157,7 @@ void Sample::run() {
     // go in the direction of the ball and kick it
     else if (ballInFieldOfView) {
       // set eye led to blue
-      mEyeLED->set(0x1040C0);
+      mEyeLED->set(0x0000FF);
       
       // compute the direction of the head
       // the head move at maximum by 0.015 [rad] at each time step
@@ -175,14 +175,16 @@ void Sample::run() {
       
       // if the ball is close enough
       // kick the ball with the right foot
-      if (y > 0.6) {
+      if (y > 0.25) {
+        mGaitManager->stop();
         // set eye led to green
-        mEyeLED->set(0x10C040);
+        mEyeLED->set(0x00FF00);
         if (x<0.0)
           mMotionManager->playPage(13); // left kick
         else
           mMotionManager->playPage(12); // right kick
         mMotionManager->playPage(9); // walkready position
+        mGaitManager->start();
         px = 0.0;
         py = 0.0;
       }
@@ -192,7 +194,7 @@ void Sample::run() {
     // search it by turning round and moving vertically the head 
     else {
       // set eye led to red
-      mEyeLED->set(0xC01040);
+      mEyeLED->set(0xFF0000);
 
       // turn round
       mGaitManager->setXAmplitude(0.0);

@@ -99,14 +99,11 @@ void DARwInOPMotionManager::playPage(int id) {
   
 #ifdef CROSSCOMPILATION
   int i = 0;
-  // Refresh all joints value before to enable them //
-  for(i=0; i<DMM_NSERVOS; i++)
-    mAction->m_Joint.SetValue(i+1, MX28::Angle2Value(mRobot->getServo(servoNames[i])->getPosition()*(180/M_PI)));
-
+  
   mAction->m_Joint.SetEnableBody(true, true);
   MotionStatus::m_CurrentJoints.SetEnableBody(true);
   MotionManager::GetInstance()->SetEnable(true);
-  
+  usleep(8000);
   Action::GetInstance()->Start(id);
   while(Action::GetInstance()->IsRunning())
     usleep(mBasicTimeStep*1000);
@@ -123,7 +120,7 @@ void DARwInOPMotionManager::playPage(int id) {
   Action::PAGE page;
   if (mAction->LoadPage(id, &page)) {
     // cout << "Play motion " << setw(2) << id << ": " << page.header.name << endl;
-    for(i=0; i<page.header.repeat; i++) {
+    for(int i=0; i<page.header.repeat; i++) {
       for(int j=0; j<page.header.stepnum; j++) {
          for(int k=0; k<DMM_NSERVOS; k++)
            mTargetPositions[k] = valueToPosition(page.step[j].position[k+1]);
