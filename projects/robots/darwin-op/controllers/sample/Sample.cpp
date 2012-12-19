@@ -175,7 +175,8 @@ void Sample::run() {
       
       // if the ball is close enough
       // kick the ball with the right foot
-      if (y > 0.6) {
+      if (y > 0.25) {
+        mGaitManager->stop();
         // set eye led to green
         mEyeLED->set(0x10C040);
         if (x<0.0)
@@ -183,6 +184,7 @@ void Sample::run() {
         else
           mMotionManager->playPage(12); // right kick
         mMotionManager->playPage(9); // walkready position
+        mGaitManager->start();
         px = 0.0;
         py = 0.0;
       }
