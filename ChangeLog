@@ -8,6 +8,8 @@ Webots 7.0.4
     Corrected wrong link between Head and Eye LED
     Added the two backLED representations of Head and Eye LED (these backLED are not controllable)
     Replaced motion 57 by motion 24 in the example 'sample' at the beginning
+    Improved Gait manager to wait the end of the step before to stop walking
+    Modified example Sample to be compatible with cross-compilation
 
 
   Cross-Compilation:
