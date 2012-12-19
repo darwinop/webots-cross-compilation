@@ -16,6 +16,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <cstdlib>
 
 using namespace Robot;
 using namespace managers;
@@ -44,6 +45,7 @@ DARwInOPGaitManager::DARwInOPGaitManager(webots::Robot *robot, const std::string
     mCorrectlyInitialized = false;
     return;
   }
+  mBasicTimeStep = mRobot->getBasicTimeStep();
 
 #ifndef CROSSCOMPILATION
   for (int i=0; i<DGM_NSERVOS; i++)
@@ -86,6 +88,12 @@ void DARwInOPGaitManager::step(int step) {
 #else
   int numberOfStepToProcess = step / 8;
 
+  if(mRobot->getGyro("Gyro")->getSamplingPeriod() <= 0) {
+    cerr << "The Gyro is not enable. DARwInOPGaitManager need the Gyro tu run. The GYro  will be automatically enable."<< endl;
+    mRobot->getGyro("Gyro")->enable(mBasicTimeStep);
+    myStep();
+  }
+
   for (int i=0; i<numberOfStepToProcess; i++) {
     const double *gyro = mRobot->getGyro("Gyro")->getValues();
     MotionStatus::RL_GYRO = gyro[0] - 512;  // 512 = central value, skip calibration step of the MotionManager,
@@ -123,5 +131,11 @@ double DARwInOPGaitManager::valueToPosition(unsigned short value) {
   double degree = MX28::Value2Angle(value);
   double position = degree / 180.0 * M_PI;
   return position;
+}
+
+void DARwInOPGaitManager::myStep() {
+  int ret = mRobot->step(mBasicTimeStep);
+  if (ret == -1)
+    exit(EXIT_SUCCESS);
 }
 #endif
