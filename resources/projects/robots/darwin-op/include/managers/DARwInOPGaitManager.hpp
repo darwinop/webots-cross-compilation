@@ -43,13 +43,16 @@ namespace managers {
       webots::Robot   *mRobot;
       bool             mCorrectlyInitialized;
       Walking         *mWalking;
+      int              mBasicTimeStep;
       double           mXAmplitude;
       double           mAAmplitude;
       double           mYAmplitude;
       bool             mMoveAimOn;
       bool             mBalanceEnable;
+      bool             mIsWalking;
 
 #ifndef CROSSCOMPILATION
+      void             myStep();
       double           valueToPosition(unsigned short value);
       webots::Servo   *mServos[DGM_NSERVOS];
 #endif

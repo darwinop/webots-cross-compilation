@@ -38,7 +38,8 @@ DARwInOPGaitManager::DARwInOPGaitManager(webots::Robot *robot, const std::string
   mAAmplitude(0.0),
   mYAmplitude(0.0),
   mMoveAimOn(false),
-  mBalanceEnable(true)
+  mBalanceEnable(true),
+  mIsWalking(false)
 {
   if (!mRobot) {
     cerr << "DARwInOPGaitManager: The robot instance is required" << endl;
@@ -77,11 +78,13 @@ void DARwInOPGaitManager::step(int step) {
   MotionManager::GetInstance()->SetEnable(true);
 #endif
   
-  mWalking->X_MOVE_AMPLITUDE = mXAmplitude;
-  mWalking->A_MOVE_AMPLITUDE = mAAmplitude;
-  mWalking->Y_MOVE_AMPLITUDE = mYAmplitude;
-  mWalking->A_MOVE_AIM_ON = mMoveAimOn;
-  mWalking->BALANCE_ENABLE = mBalanceEnable;
+  if(mIsWalking) {
+    mWalking->X_MOVE_AMPLITUDE = mXAmplitude;
+    mWalking->A_MOVE_AMPLITUDE = mAAmplitude;
+    mWalking->Y_MOVE_AMPLITUDE = mYAmplitude;
+    mWalking->A_MOVE_AIM_ON = mMoveAimOn;
+    mWalking->BALANCE_ENABLE = mBalanceEnable;
+  }
 
 #ifdef CROSSCOMPILATION
   mWalking->Process();
@@ -109,7 +112,10 @@ void DARwInOPGaitManager::step(int step) {
 }
 
 void DARwInOPGaitManager::stop() {
+  mIsWalking = false;
   mWalking->Stop();
+  while(mWalking->IsRunning())
+    this->step(8);
 #ifdef CROSSCOMPILATION
   // Reset Goal Position of all servos (except Head) after walking //
   for(int i=0; i<(DGM_NSERVOS-2); i++)
@@ -123,6 +129,7 @@ void DARwInOPGaitManager::stop() {
 }
 
 void DARwInOPGaitManager::start() {
+  mIsWalking = true;
   mWalking->Start();
 }
 
