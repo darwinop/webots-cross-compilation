@@ -1,11 +1,11 @@
-// File:          Sample.hpp
+// File:          Soccer.hpp
 // Date:          20th of September 2011
-// Description:   Sample showing how to use the middleware between webots and
+// Description:   Simple soccer player showing how to use the middleware between webots and
 //                the darwin-op framework
 // Author:        fabien.rohrer@cyberbotics.com
 
-#ifndef SAMPLE_HPP
-#define SAMPLE_HPP
+#ifndef SOCCER_HPP
+#define SOCCER_HPP
 
 #define NSERVOS 20
 
@@ -25,10 +25,10 @@ namespace webots {
   class Gyro;
   class Speaker;
   
-  class Sample : public Robot {
+  class Soccer : public Robot {
     public:
-                                       Sample();
-      virtual                         ~Sample();
+                                       Soccer();
+      virtual                         ~Soccer();
       void                             run();
       
     private:

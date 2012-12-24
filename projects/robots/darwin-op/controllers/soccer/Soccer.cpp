@@ -1,4 +1,4 @@
-#include "Sample.hpp"
+#include "Soccer.hpp"
 #include <webots/Servo.hpp>
 #include <webots/LED.hpp>
 #include <webots/Camera.hpp>
@@ -25,7 +25,7 @@ static const char *servoNames[NSERVOS] = {
   "FootR"     /*ID17*/, "FootL"     /*ID18*/, "Neck"      /*ID19*/, "Head"      /*ID20*/
 };
 
-Sample::Sample():
+Soccer::Soccer():
     Robot()
 {
   mTimeStep = getBasicTimeStep();
@@ -53,10 +53,10 @@ Sample::Sample():
   mVisionManager = new DARwInOPVisionManager(mCamera->getWidth(), mCamera->getHeight(), 30, 15, 50, 10, 0.01, 30);
 }
 
-Sample::~Sample() {
+Soccer::~Soccer() {
 }
 
-void Sample::myStep() {
+void Soccer::myStep() {
   int ret = step(mTimeStep);
   if (ret == -1)
     exit(EXIT_SUCCESS);
@@ -73,7 +73,7 @@ void Sample::wait(int ms) {
 // - return: indicates if the algorithm found the ball
 // - args: return the position of the ball [-1.0, 1.0]
 
-bool Sample::getBallCenter(double &x, double &y) {
+bool Soccer::getBallCenter(double &x, double &y) {
   static int width  = mCamera->getWidth();
   static int height = mCamera->getHeight();
   
@@ -92,7 +92,7 @@ bool Sample::getBallCenter(double &x, double &y) {
 }
 
 // function containing the main feedback loop
-void Sample::run() {
+void Soccer::run() {
 	
   cout << "---------------Demo of DARwIn-OP---------------" << endl;
   cout << "This demo illustrate all the possibilities available for the DARwIn-OP." << endl;
