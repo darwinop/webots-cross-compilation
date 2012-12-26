@@ -21,7 +21,7 @@ WEBOTS_DARWINOP_PROJECT_ROOT = /darwin/Linux/project/webots
 # source filenames
 CXX_SOURCES = \
   main.cpp \
-  Sample.cpp \
+  Soccer.cpp \
   $(WEBOTS_DARWINOP_PROJECT_ROOT)/src/managers/DARwInOPDirectoryManager.cpp \
   $(WEBOTS_DARWINOP_PROJECT_ROOT)/src/managers/DARwInOPMotionManager.cpp \
   $(WEBOTS_DARWINOP_PROJECT_ROOT)/src/managers/DARwInOPMotionTimerManager.cpp \
