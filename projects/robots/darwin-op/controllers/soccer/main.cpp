@@ -11,7 +11,7 @@ using namespace webots;
 
 int main(int argc, char **argv)
 {
-  Sample* controller = new Sample();
+  Soccer* controller = new Soccer();
   controller->run();
   delete controller;
   return EXIT_FAILURE;

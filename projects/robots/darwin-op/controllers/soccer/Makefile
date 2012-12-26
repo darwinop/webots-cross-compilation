@@ -44,7 +44,7 @@ PROTECTED_RESOURCES_PATH = $(subst $(space),\ ,$(strip $(subst \,/,$(RESOURCES_P
 CFLAGS = -I"$(RESOURCES_PATH)/include" -I"$(RESOURCES_PATH)/darwin/Framework/include"
 LIBRARIES = "$(RESOURCES_PATH)/lib/managers.a"
 LINK_DEPENDENCIES = $(PROTECTED_RESOURCES_PATH)/lib/managers.a
-CPP_SOURCES = main.cpp Sample.cpp
+CPP_SOURCES = main.cpp Soccer.cpp
 
 ### Do not modify: this includes Webots global Makefile.include
 space :=
