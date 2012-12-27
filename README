@@ -52,6 +52,10 @@ D. Run the simulation
 
 E. Run the same controller on the DARwIn-OP
 
+- 0. On the DARwIn-OP, merge $GIT_REPOSITORY/resources/projects/robots/darwin-op/darwin/ with existing DARwIn-OP source code in /darwin/ directory
+
+     $ cp -R $GIT_REPOSITORY/resources/projects/robots/darwin-op/darwin/* /darwin/ 
+
 - 1. On the DARwIn-OP, create a /darwin/Linux/project/webots directory
 
 - 2. Copy-paste the "include", "lib", "transfer", and "src" directories of the $GIT_REPOSITORY/resources/projects/robots/darwin-op
