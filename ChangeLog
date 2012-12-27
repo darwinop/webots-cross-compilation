@@ -16,6 +16,8 @@ Webots 7.0.4
   Cross-Compilation:
     
     Vision Manager is also available on the real robot
+    Improved start of the controller, servo movements smoother at startup
+    Added LED indications (red : robot is initializing / green : robot is ready, controller will start)
 
 
 Webots 7.0.3
