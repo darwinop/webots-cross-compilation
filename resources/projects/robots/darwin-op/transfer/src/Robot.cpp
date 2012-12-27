@@ -55,6 +55,10 @@ webots::Robot::Robot() {
   mCM730->SyncWrite(::Robot::MX28::P_GOAL_POSITION_L, msgLength, changed_servos , param);
   usleep(2000000); // wait a moment to reach start position
 
+  // Switch LED to GREEN
+  mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_HEAD_L, 1984, 0);
+  mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_EYE_L, 1984, 0);
+
 }
 
 webots::Robot::~Robot() {
@@ -282,6 +286,10 @@ void webots::Robot::initDarwinOP() {
   }
   
   ::Robot::MotionManager::GetInstance()->Initialize(mCM730);
+
+  // Switch LED to RED
+  mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_HEAD_L, 63, 0);
+  mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_EYE_L, 63, 0);
 }
 
 void webots::Robot::LoadINISettings(minIni* ini, const std::string &section) {
