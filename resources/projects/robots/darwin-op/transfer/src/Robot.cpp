@@ -18,6 +18,7 @@ webots::Robot::Robot() {
   initDevices();
   gettimeofday(&mStart, NULL);
   mPreviousStepTime = 0.0;
+
   // Load TimeStep from the file "config.ini"
   minIni ini("config.ini");
   LoadINISettings(&ini, "Robot Config");
@@ -28,8 +29,36 @@ webots::Robot::Robot() {
   
   // Unactive all Joints in the Motion Manager //
   std::map<const std::string, int>::iterator servo_it;
-  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ )
+  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ ) {
     ::Robot::MotionStatus::m_CurrentJoints.SetEnable((*servo_it).second, 0);
+    ::Robot::MotionStatus::m_CurrentJoints.SetValue((*servo_it).second, ((Servo *) mDevices[(*servo_it).first])->getGoalPosition());
+  }
+
+
+  // Make each servos go to the start position slowly
+  const int msgLength = 5; // id + Goal Position (L + H) + Moving speed (L + H)
+  int value=0, changed_servos=0, n=0;
+  int param[20*msgLength];
+  
+  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ ) {
+    if(((Servo *) mDevices[(*servo_it).first])->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable((*servo_it).second))) {
+      param[n++] = (*servo_it).second;  // id
+      value = ((Servo *) mDevices[(*servo_it).first])->getGoalPosition(); // Start position
+      param[n++] = ::Robot::CM730::GetLowByte(value);
+      param[n++] = ::Robot::CM730::GetHighByte(value);
+      value = 100; // small speed 100 => 11.4 rpm => 1.2 rad/s
+      param[n++] = ::Robot::CM730::GetLowByte(value);
+      param[n++] = ::Robot::CM730::GetHighByte(value);
+      changed_servos++;
+    }
+  }
+  mCM730->SyncWrite(::Robot::MX28::P_GOAL_POSITION_L, msgLength, changed_servos , param);
+  usleep(2000000); // wait a moment to reach start position
+
+  // Switch LED to GREEN
+  mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_HEAD_L, 1984, 0);
+  mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_EYE_L, 1984, 0);
+
 }
 
 webots::Robot::~Robot() {
@@ -257,6 +286,10 @@ void webots::Robot::initDarwinOP() {
   }
   
   ::Robot::MotionManager::GetInstance()->Initialize(mCM730);
+
+  // Switch LED to RED
+  mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_HEAD_L, 63, 0);
+  mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_EYE_L, 63, 0);
 }
 
 void webots::Robot::LoadINISettings(minIni* ini, const std::string &section) {
