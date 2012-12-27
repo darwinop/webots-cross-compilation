@@ -49,5 +49,5 @@ DEF BALL Ball {
 DARwInOP {
   translation -0.413972 0.236 -0.396853
   rotation 0.1023 0.9930 -0.0596 1.06235
-  controller "sample"
+  controller "soccer"
 }
