@@ -118,9 +118,9 @@ void FieldPlayer::run() {
 
       // go forwards and turn according to the head rotation
       if (y < 0.1) // ball far away, go quickly
-        mGaitManager->setXAmplitude(1.0 * xFactor);
+        gaitManager->setXAmplitude(1.0 * xFactor);
       else // ball close, go slowly
-        mGaitManager->setXAmplitude(0.5 * xFactor);
+        gaitManager->setXAmplitude(0.5 * xFactor);
       gaitManager->setAAmplitude(- aFactor * x);
       gaitManager->step(SIMULATION_STEP);
       
