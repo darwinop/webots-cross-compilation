@@ -120,7 +120,7 @@ void Soccer::run() {
   int fup = 0;
   int fdown = 0;
   const double acc_tolerance = 80.0;
-  const double acc_step = 100;
+  const double acc_step = 20;
   
   while (true) {
     double x, y;
@@ -167,16 +167,22 @@ void Soccer::run() {
       py = y;
 
       // go forwards and turn according to the head rotation
-      mGaitManager->setXAmplitude(1.0);
+      if (y < 0.1) // ball far away, go quickly
+        mGaitManager->setXAmplitude(1.0);
+      else // ball close, go slowly
+        mGaitManager->setXAmplitude(0.5);
       mGaitManager->setAAmplitude(-x);
       mGaitManager->step(mTimeStep);
+      
+      // Move head
       mServos[18]->setPosition(-x);
       mServos[19]->setPosition(-y);
       
       // if the ball is close enough
       // kick the ball with the right foot
-      if (y > 0.25) {
+      if (y > 0.35) {
         mGaitManager->stop();
+        wait(500);
         // set eye led to green
         mEyeLED->set(0x00FF00);
         if (x<0.0)
