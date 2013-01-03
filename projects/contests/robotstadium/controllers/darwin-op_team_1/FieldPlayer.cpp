@@ -77,7 +77,7 @@ void FieldPlayer::run() {
     double x, y;
     bool ballInFieldOfView = getBallCenter(x, y);
     const double *acc = accelerometer->getValues();
-    const double xFactor = 1.0;
+    const double xFactor = 0.5;
     const double aFactor = 0.5;
     
     // count how many steps the accelerometer
@@ -130,7 +130,7 @@ void FieldPlayer::run() {
       
       // if the ball is close enough
       // kick the ball with the right foot
-      if (y > 0.35) {
+      if (y > 0.4) {
         sleepSteps(5);
         if (x < 0.0)
           motionManager->playPage(13); // left kick
