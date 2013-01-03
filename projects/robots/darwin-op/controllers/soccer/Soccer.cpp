@@ -62,7 +62,7 @@ void Soccer::myStep() {
     exit(EXIT_SUCCESS);
 }
 
-void Sample::wait(int ms) {
+void Soccer::wait(int ms) {
   double startTime = getTime();
   double s = (double) ms / 1000.0;
   while (s + startTime >= getTime())

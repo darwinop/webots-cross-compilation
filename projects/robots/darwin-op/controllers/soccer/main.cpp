@@ -3,7 +3,7 @@
 // Description:   Manage the entree point function
 // Author:        fabien.rohrer@cyberbotics.com
 
-#include "Sample.hpp"
+#include "Soccer.hpp"
 
 #include <cstdlib>
 
