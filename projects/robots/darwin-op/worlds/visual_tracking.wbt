@@ -43,7 +43,7 @@ Table {
 DARwInOP {
   translation 0 0.976 0
   rotation 0.0593024 0.996441 -0.0599025 1.58336
-  controller "visualTracking"
+  controller "visual_tracking"
   selfCollision TRUE
   cameraPixelSize 0.5
   cameraWidth 360
