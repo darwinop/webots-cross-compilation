@@ -77,7 +77,7 @@ void FieldPlayer::run() {
     double x, y;
     bool ballInFieldOfView = getBallCenter(x, y);
     const double *acc = accelerometer->getValues();
-    const double xFactor = 0.5;
+    const double xFactor = 1.0;
     const double aFactor = 0.5;
     
     // count how many steps the accelerometer
