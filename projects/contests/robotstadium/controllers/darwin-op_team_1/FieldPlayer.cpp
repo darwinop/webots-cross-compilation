@@ -57,7 +57,7 @@ void FieldPlayer::run() {
   int fup = 0;
   int fdown = 0;
   const double acc_tolerance = 80.0;
-  const double acc_step = 100;
+  const double acc_step = 20;
   
   bool wasWaiting = false;
 
@@ -117,15 +117,21 @@ void FieldPlayer::run() {
       py = y;
 
       // go forwards and turn according to the head rotation
-      gaitManager->setXAmplitude(xFactor);
+      if (y < 0.1) // ball far away, go quickly
+        mGaitManager->setXAmplitude(1.0 * xFactor);
+      else // ball close, go slowly
+        mGaitManager->setXAmplitude(0.5 * xFactor);
       gaitManager->setAAmplitude(- aFactor * x);
       gaitManager->step(SIMULATION_STEP);
+      
+      // Move head
       servos[18]->setPosition(-x);
       servos[19]->setPosition(-y);
       
       // if the ball is close enough
       // kick the ball with the right foot
-      if (y > 0.6) {
+      if (y > 0.35) {
+        sleepSteps(5);
         if (x < 0.0)
           motionManager->playPage(13); // left kick
         else
