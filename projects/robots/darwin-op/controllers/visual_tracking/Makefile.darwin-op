@@ -12,7 +12,7 @@
 # TO MODIFY:
 
 # name of the binary to generate
-TARGET = visualTracking
+TARGET = visual_tracking
 
 # pathes
 DARWINOP_ROOT = /darwin
