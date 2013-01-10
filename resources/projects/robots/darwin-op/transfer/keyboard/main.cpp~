@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <libgen.h>
+#include <fcntl.h>
+#include <stdlib.h>
+
+#include <ncurses.h>
+#include <termios.h>
+#include <sys/types.h>
+#include <sys/time.h>
+
+#define KEYBOARD_END 312
+#define KEYBOARD_HOME 313
+#define KEYBOARD_LEFT 314
+#define KEYBOARD_UP 315
+#define KEYBOARD_RIGHT 316
+#define KEYBOARD_DOWN 317
+#define KEYBOARD_PAGEUP 366
+#define KEYBOARD_PAGEDOWN 367
+#define KEYBOARD_NUMPAD_HOME 375
+#define KEYBOARD_NUMPAD_LEFT 376
+#define KEYBOARD_NUMPAD_UP 377
+#define KEYBOARD_NUMPAD_RIGHT 378
+#define KEYBOARD_NUMPAD_DOWN 379
+#define KEYBOARD_NUMPAD_END 382
+#define KEYBOARD_KEY 0x0000ffff
+#define KEYBOARD_SHIFT 0x00010000
+#define KEYBOARD_CONTROL 0x00020000
+#define KEYBOARD_ALT 0x00040000
+
+int kbhit(void);
+int keyCombination(void);
+
+int main(void) {
+  initscr();
+  cbreak();
+  int c, outPipe;
+  const char outputPipeName[] = "/darwin/Linux/project/webots/transfer/keyboard/Pipe.fifo";
+
+  // Create and open output pipe
+  remove(outputPipeName);
+  if(mkfifo(outputPipeName, 0777) != 0)
+    printf("Impossible to create pipe.\n");
+  if((outPipe = open(outputPipeName, O_WRONLY)) == -1)
+    printf("Cannot open output pipe\n");
+
+  while(1) {
+    while(kbhit()) {
+      c = getch();
+      if(c == 27)
+        c = keyCombination();
+      //printf("key %d \n", c);
+      write(outPipe, &c, sizeof(c));
+    }
+    c = 0;
+    write(outPipe, &c, sizeof(c));
+    usleep(1000000);
+  }
+  return 0;
+}
+
+
+int keyCombination() {
+  if(kbhit()) {
+  int c = getch();
+    if(c == 91) {
+      if(kbhit()) {
+        c = getch();
+        switch(c) {
+          case 53 : c = getch(); return KEYBOARD_PAGEUP;
+          case 54 : c = getch(); return KEYBOARD_PAGEDOWN;
+          case 65 : return KEYBOARD_UP;
+          case 66 : return KEYBOARD_DOWN;
+          case 67 : return KEYBOARD_RIGHT;
+          case 68 : return KEYBOARD_LEFT;
+        }
+      }
+    }
+    else if(c == 79) {
+      if(kbhit()) {
+        c = getch();
+        switch(c) {
+          case 70 : return KEYBOARD_END;
+          case 72 : return KEYBOARD_HOME;
+        }
+      }
+    }
+  }
+  return 27;
+}
+ 
+int kbhit (void)
+{
+  struct timeval tv;
+  fd_set rdfs;
+ 
+  tv.tv_sec = 0;
+  tv.tv_usec = 0;
+ 
+  FD_ZERO(&rdfs);
+  FD_SET (STDIN_FILENO, &rdfs);
+ 
+  select(STDIN_FILENO+1, &rdfs, NULL, NULL, &tv);
+  return FD_ISSET(STDIN_FILENO, &rdfs);
+ 
+}
