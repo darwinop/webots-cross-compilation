@@ -29,8 +29,6 @@ PROTO DARwInOP [
   field SFColor    waistBandColor 0 0 1
   field SFInt32    channel 0
   field SFBool     showRobotWindow FALSE
-  field SFString   robotWindow ""
-  field SFString   remoteControl ""
 ]
 {
 Robot {
@@ -5630,7 +5628,7 @@ Robot {
   synchronization IS synchronization
   selfCollision IS selfCollision
   showRobotWindow IS showRobotWindow
-  robotWindow IS robotWindow
-  remoteControl IS remoteControl
+  robotWindow ""
+  remoteControl ""
 }
 }
