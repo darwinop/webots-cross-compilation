@@ -12,6 +12,7 @@ Webots 7.0.4
     Modified example Sample to be compatible with cross-compilation
     Renamed example 'Sample' in example 'Soccer'.
     Added showRobotWindow field
+    Added example Walk
 
 
   Cross-Compilation:
