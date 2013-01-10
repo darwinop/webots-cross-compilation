@@ -19,6 +19,7 @@ Webots 7.0.4
     Vision Manager is also available on the real robot
     Improved start of the controller, servo movements smoother at startup
     Added LED indications (red : robot is initializing / green : robot is ready, controller will start)
+    Added keyboard functions (a small window appears now on the real robot to catch keyboard inputs when enabling it)
 
 
 Webots 7.0.3

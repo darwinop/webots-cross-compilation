@@ -15,12 +15,16 @@
 
 #include <minIni.h>
 
+#include <pthread.h>
+
 #define NSERVOS 20
 
 namespace Robot {
   class CM730;
   class LinuxCM730;
 }
+
+class Keyboard;
 
 namespace webots {
   class Device;
@@ -46,14 +50,23 @@ namespace webots {
       LED                 *getLED(const std::string &name) const;
       Servo               *getServo(const std::string &name) const;
       Speaker             *getSpeaker(const std::string &name) const;
+      virtual void         keyboardEnable(int ms);
+      virtual void         keyboardDisable();
+      virtual int          keyboardGetKey();
       
       ::Robot::CM730      *getCM730() const { return mCM730; }
+
+    protected:
+      static void         *KeyboardTimerProc(void *param);// thread function
 
     private:
       void                 initDevices();
       void                 initDarwinOP();
       void                 LoadINISettings(minIni* ini, const std::string &section);
       Device              *getDevice(const std::string &name) const;
+      Keyboard            *mKeyboard;
+      bool                 mKeyboardEnable;
+      pthread_t            mKeyboardThread; // thread structure
 
       int                  mTimeStep;
       ::Robot::LinuxCM730 *mLinuxCM730;
