@@ -5,6 +5,7 @@
  * Author:       david.mansolino@epfl.ch
  * Modifications:
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <X11/Xlib.h>
@@ -47,29 +48,6 @@ void Keyboard::createWindow() {
   
   XMapWindow(display, window);
   XFlush(display);
-  
-  /*Pixmap bitmap; // this variable will contain the ID of the newly created pixmap.
-  unsigned int bitmap_width, bitmap_height; // these variables will contain the dimensions of the loaded bitmap.
-  int hotspot_x, hotspot_y; // these variables will contain the location of the hot-spot of the loaded bitmap.
-
-  // load the bitmap found in the file "icon.bmp", create a pixmap containing its data in the server, and put its ID in the 'bitmap' variable.
-  int rc = XReadBitmapFile(Display, window, "keyboard.xbm", &bitmap_width, &bitmap_height, &bitmap, &hotspot_x, &hotspot_y);
-  switch (rc) { // check for failure or success.
-    case BitmapOpenFailed:
-      fprintf(stderr, "XReadBitmapFile - could not open file 'icon.bmp'.\n");
-      break;
-    case BitmapFileInvalid:
-      fprintf(stderr, "XReadBitmapFile - file '%s' doesn't contain a valid bitmap.\n", "icon.bmp");
-      break;
-    case BitmapNoMemory:
-      fprintf(stderr, "XReadBitmapFile - not enough memory.\n");
-      break;
-    case BitmapSuccess:
-      GC gc = XCreateGC(display, window, 0, NULL); // this variable will contain the handle to the returned graphics context.
-      // draw the previously loaded bitmap on the given window
-      XCopyPlane(display, bitmap, window, gc, 0, 0, 400, 225, 0, 0, 1);
-      break;
-  }*/
   
   XSelectInput(display, window, KeyPressMask |  KeyRelease);
 }
