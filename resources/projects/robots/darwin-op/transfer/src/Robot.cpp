@@ -7,9 +7,9 @@
 #include <webots/Device.hpp>
 #include <webots/Speaker.hpp>
 #include "LinuxDARwIn.h"
+#include "keyboard.hpp"
 
 #include <unistd.h>
-
 #include <libgen.h>
 
 
@@ -18,6 +18,8 @@ webots::Robot::Robot() {
   initDevices();
   gettimeofday(&mStart, NULL);
   mPreviousStepTime = 0.0;
+  mKeyboardEnable = false;
+  mKeyboard = new Keyboard();
 
   // Load TimeStep from the file "config.ini"
   minIni ini("config.ini");
@@ -133,7 +135,10 @@ int webots::Robot::step(int ms) {
   ((LED *)mDevices["EyeLed"])->setColor(values[1]);
   LED::setBackPanel(values[2]);
 
-  
+// -------- Keyboard Reset ----------- //
+  if(mKeyboardEnable == true)
+    mKeyboard->resetKeyPressed();
+
 // -------- Timing management -------- //
   if(stepDuration < getBasicTimeStep()) { // Step to short -> wait remaining time
     usleep((getBasicTimeStep() - stepDuration) * 1000);
@@ -285,6 +290,18 @@ void webots::Robot::initDarwinOP() {
     exit(EXIT_FAILURE);
   }
   
+  // Read firmware version
+  int firm_ver = 0;
+  if(mCM730->ReadByte(::Robot::JointData::ID_HEAD_PAN, ::Robot::MX28::P_VERSION, &firm_ver, 0)  != ::Robot::CM730::SUCCESS) {
+    fprintf(stderr, "Can't read firmware version from Dynamixel ID %d!\n", ::Robot::JointData::ID_HEAD_PAN);
+    exit(EXIT_FAILURE);
+  }
+  
+  if(firm_ver < 27) {
+    fprintf(stderr, "Firmware version of Dynamixel is too old, please update them.\nMore information available in the User guide.\n");
+    exit(EXIT_FAILURE);
+  }
+
   ::Robot::MotionManager::GetInstance()->Initialize(mCM730);
 
   // Switch LED to RED
@@ -316,4 +333,49 @@ void webots::Robot::LoadINISettings(minIni* ini, const std::string &section) {
     ::Robot::Camera::HEIGHT = 240;
     printf("WARNING : Camera resolution reseted to 320x240 pixels.");
   }
+}
+
+void webots::Robot::keyboardEnable(int ms) {
+  if(mKeyboardEnable == false) {
+    // Starting keyboard listenning in a thread 
+    int error = 0;
+  
+    mKeyboard->createWindow();
+
+    // create and start the thread
+    if((error = pthread_create(&this->mKeyboardThread, NULL, this->KeyboardTimerProc, this))!= 0) {
+      printf("Keyboard thread error = %d\n",error);
+      exit(-1);
+    }
+  }
+  
+  mKeyboardEnable = true;
+}
+
+void *::webots::Robot::KeyboardTimerProc(void *param) {
+  ((Robot*)param)->mKeyboard->startListenKeyboard();
+  return NULL;
+}
+
+void webots::Robot::keyboardDisable() {
+  if(mKeyboardEnable == true) {
+    int error=0;
+    // End the thread
+    if((error = pthread_cancel(this->mKeyboardThread))!= 0) {
+      printf("Keyboard thread error = %d\n",error);
+      exit(-1);
+    }
+  mKeyboard->closeWindow();
+  mKeyboard->resetKeyPressed();
+  }
+
+  mKeyboardEnable = false;
+}
+
+int webots::Robot::keyboardGetKey() {
+  if(mKeyboardEnable == true) {
+    return mKeyboard->getKeyPressed();
+  }
+  else
+    return 0;
 }

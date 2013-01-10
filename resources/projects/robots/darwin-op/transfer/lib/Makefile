@@ -26,12 +26,14 @@ CXX_SOURCES = \
   ../src/Camera.cpp \
   ../src/Speaker.cpp
 OBJECTS = $(CXX_SOURCES:.cpp=.o)
-INCLUDE_DIRS = -I$(DARWINOP_ROOT)/Linux/include -I$(DARWINOP_ROOT)/Framework/include -I../include
+INCLUDE_DIRS = -I$(DARWINOP_ROOT)/Linux/include -I$(DARWINOP_ROOT)/Framework/include -I../include -I../keyboard
 
 AR = ar
 ARFLAGS = cr
 CXX = g++
 CXXFLAGS += -c -O2 -DLINUX -Wall $(INCLUDE_DIRS)
+LIBS += "../keyboard/keyboard.a" "/usr/lib/libX11.so.6"
+LINK_DEPENDENCIES = ../keyboard/keyboard.a
 DARWINOP_STATIC_LIBRARY = $(DARWINOP_ROOT)/Linux/lib/darwin.a
 
 all: $(TARGET)
@@ -43,5 +45,5 @@ $(DARWINOP_STATIC_LIBRARY):
 	make -C $(DARWINOP_ROOT)/Linux/build
 
 $(TARGET): $(DARWINOP_STATIC_LIBRARY) $(OBJECTS)
-	$(AR) $(ARFLAGS) $(TARGET) $(OBJECTS) $(DARWINOP_STATIC_LIBRARY)
+	$(AR) $(ARFLAGS) $(TARGET) $(OBJECTS) $(DARWINOP_STATIC_LIBRARY) $(LIBS) $(LINK_DEPENDENCIES)
 	chmod 755 $(TARGET)
