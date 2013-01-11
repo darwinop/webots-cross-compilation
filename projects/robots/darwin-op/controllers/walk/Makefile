@@ -41,7 +41,7 @@
 
 RESOURCES_PATH = $(WEBOTS_HOME)/resources/projects/robots/darwin-op
 PROTECTED_RESOURCES_PATH = $(subst $(space),\ ,$(strip $(subst \,/,$(RESOURCES_PATH))))
-CFLAGS = -I"$(RESOURCES_PATH)/include" -g
+CFLAGS = -I"$(RESOURCES_PATH)/include"
 LIBRARIES = "$(RESOURCES_PATH)/lib/managers.a"
 LINK_DEPENDENCIES = $(PROTECTED_RESOURCES_PATH)/lib/managers.a
 CPP_SOURCES = main.cpp walk.cpp
@@ -50,4 +50,4 @@ CPP_SOURCES = main.cpp walk.cpp
 space :=
 space +=
 WEBOTS_HOME_PATH=$(subst $(space),\ ,$(strip $(subst \,/,$(WEBOTS_HOME))))
-include $(WEBOTS_HOME_PATH)/resources/projects/default/controllers/Makefile.include
+include $(WEBOTS_HOME_PATH)/resources/Makefile.include
