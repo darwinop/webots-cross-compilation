@@ -70,7 +70,7 @@ void walk::run() {
 	
   cout << "-------Walk example of DARwIn-OP-------" << endl;
   cout << "This example illustrate the gait manager" << endl;
-  cout << "Press Page Up/Down key of the keyboards to make the robot start/stop to walk" << endl;
+  cout << "Press space bar of the keyboard to make the robot start/stop walking" << endl;
   cout << "Use the arrow keyboard to move the robot when walking" << endl;
 	
   // First step to update sensors values
