@@ -89,16 +89,18 @@ void DARwInOPGaitManager::step(int step) {
 #ifndef CROSSCOMPILATION
   int numberOfStepToProcess = step / 8;
 
-  if(mRobot->getGyro("Gyro")->getSamplingPeriod() <= 0) {
-    cerr << "The Gyro is not enable. DARwInOPGaitManager need the Gyro tu run. The GYro  will be automatically enable."<< endl;
+  if(mBalanceEnable && (mRobot->getGyro("Gyro")->getSamplingPeriod() <= 0)) {
+    cerr << "The Gyro is not enable. DARwInOPGaitManager need the Gyro tu run the balance algorithm. The GYro  will be automatically enable."<< endl;
     mRobot->getGyro("Gyro")->enable(mBasicTimeStep);
     myStep();
   }
 
   for (int i=0; i<numberOfStepToProcess; i++) {
-    const double *gyro = mRobot->getGyro("Gyro")->getValues();
-    MotionStatus::RL_GYRO = gyro[0] - 512;  // 512 = central value, skip calibration step of the MotionManager,
-    MotionStatus::FB_GYRO = gyro[1] - 512;  // because the influence of the calibration is imperceptible.
+	if(mBalanceEnable) {
+      const double *gyro = mRobot->getGyro("Gyro")->getValues();
+      MotionStatus::RL_GYRO = gyro[0] - 512;  // 512 = central value, skip calibration step of the MotionManager,
+      MotionStatus::FB_GYRO = gyro[1] - 512;  // because the influence of the calibration is imperceptible.
+    }
     mWalking->Process();
   }
 
