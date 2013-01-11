@@ -96,7 +96,7 @@ void DARwInOPGaitManager::step(int step) {
   }
 
   for (int i=0; i<numberOfStepToProcess; i++) {
-	if(mBalanceEnable) {
+    if(mBalanceEnable) {
       const double *gyro = mRobot->getGyro("Gyro")->getValues();
       MotionStatus::RL_GYRO = gyro[0] - 512;  // 512 = central value, skip calibration step of the MotionManager,
       MotionStatus::FB_GYRO = gyro[1] - 512;  // because the influence of the calibration is imperceptible.
