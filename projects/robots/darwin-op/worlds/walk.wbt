@@ -42,7 +42,7 @@ Floor {
   size 1000 1000
   scale 500 500
   texture [
-    "../texture/grass.png"
+    "textures/grass.png"
   ]
 }
 HemisphericalSkyDome {
