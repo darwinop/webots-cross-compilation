@@ -138,6 +138,8 @@ int Keyboard::getKeyPressed() {
 	  mKeyPressed[c] = VALIDATED_STILL_PRESSED;
 	  if(c > 0 && c < 10) // 1->10 for special caracters
 	    return SpecialKey[c];
+	  else if(c > 96 && c < 123)
+	    return (c - 32);
 	  else
 	    return c;
 	}
@@ -145,6 +147,8 @@ int Keyboard::getKeyPressed() {
       mKeyPressed[c] = VALIDATED;
 	  if(c > 0 && c < 10) // 1->10 for special caracters
 	    return SpecialKey[c];
+	  else if(c > 96 && c < 123)
+	    return (c - 32);
 	  else
 	    return c;
 	}
