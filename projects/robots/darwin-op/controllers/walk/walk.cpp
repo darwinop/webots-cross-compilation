@@ -82,6 +82,7 @@ void walk::run() {
   
   // main loop
   int key = 0;
+  bool isWalking = false;
   
   while (true) {
     checkIfFallen();
@@ -92,9 +93,17 @@ void walk::run() {
     // get keyboard key
     while((key = keyboardGetKey()) != 0) {
       switch(key) {
-        case KEYBOARD_PAGEUP : mGaitManager->start();
-          break;
-        case KEYBOARD_PAGEDOWN : mGaitManager->stop();
+        case ' ' : // Space bar 
+          if(isWalking) {
+            mGaitManager->stop(); 
+            isWalking = false; 
+            wait(200);
+          }
+          else {
+            mGaitManager->start(); 
+            isWalking = true; 
+            wait(200);
+          }
           break;
         case KEYBOARD_UP : mGaitManager->setXAmplitude(1.0);
           break;
