@@ -49,6 +49,7 @@ void Keyboard::createWindow() {
   display = XOpenDisplay(NULL);
   window = XCreateSimpleWindow(display, RootWindow(display, 0), 1, 1, 500, 250, 0, BlackPixel (display, 0), WhitePixel(display, 0));
   XStoreName(display, window, "Webots Cross-Compilation : Keyboard inputs");
+  GC gc = XCreateGC(display, window, 0, NULL); // this variable will contain the handle to the returned graphics context.
   
   // Set this window as not resizable
   XSizeHints * normal_hints = XAllocSizeHints();
@@ -58,6 +59,12 @@ void Keyboard::createWindow() {
   normal_hints->max_height = height;
   normal_hints->flags = PMaxSize | PMinSize;
   XSetWMSizeHints(display, window, normal_hints, XInternAtom(display, "WM_NORMAL_HINTS", 0));
+  
+  // Set text in the window
+  const char text1[256] = "This window is used to catch keyboard inputs by the controller.";
+  const char text2[256] = "Please do not close it, it will be closed automatically at the end of controller.";
+  XDrawString(display, window, gc, 50, height/2 - 10, text1, 63);
+  XDrawString(display, window, gc, 10, height/2 + 10, text2, 81);
   
   // Show window
   XMapWindow(display, window);
