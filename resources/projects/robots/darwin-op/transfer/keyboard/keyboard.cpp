@@ -48,7 +48,7 @@ void Keyboard::createWindow() {
   // Open a new Window
   display = XOpenDisplay(NULL);
   window = XCreateSimpleWindow(display, RootWindow(display, 0), 1, 1, width, height, 0, BlackPixel (display, 0), WhitePixel(display, 0));
-  XStoreName(display, window, "Webots Cross-Compilation : Keyboard inputs");
+  XStoreName(display, window, "Webots Cross-Compilation : Keyboard inputs"); // Set window title
   GC gc = XCreateGC(display, window, 0, NULL); // this variable will contain the handle to the returned graphics context.
   
   // Set this window as not resizable
