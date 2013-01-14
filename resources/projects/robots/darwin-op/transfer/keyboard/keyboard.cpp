@@ -42,13 +42,46 @@ void Keyboard::resetKeyPressed() {
 }
 
 void Keyboard::createWindow() {
-  display = XOpenDisplay(NULL);
-  window = XCreateSimpleWindow(display, RootWindow(display, 0), 1, 1, 500, 250, 0, BlackPixel (display, 0), WhitePixel(display, 0));
-  XStoreName(display, window, "Webots Cross-Compilation : Keyboard inputs");
+  int width = 500;
+  int height = 250;
   
+  // Open a new Window
+  display = XOpenDisplay(NULL);
+  window = XCreateSimpleWindow(display, RootWindow(display, 0), 1, 1, width, height, 0, BlackPixel (display, 0), WhitePixel(display, 0));
+  XStoreName(display, window, "Webots Cross-Compilation : Keyboard inputs"); // Set window title
+  GC gc = XCreateGC(display, window, 0, NULL); // this variable will contain the handle to the returned graphics context.
+  
+  // Set this window as not resizable
+  XSizeHints * normal_hints = XAllocSizeHints();
+  normal_hints->min_width = width;
+  normal_hints->max_width = width;
+  normal_hints->min_height = height;
+  normal_hints->max_height = height;
+  normal_hints->flags = PMaxSize | PMinSize;
+  XSetWMSizeHints(display, window, normal_hints, XInternAtom(display, "WM_NORMAL_HINTS", 0));
+  
+  // Show window
   XMapWindow(display, window);
   XFlush(display);
   
+  // Could be used to add an image
+  Pixmap bitmap; // this variable will contain the ID of the newly created pixmap.
+  unsigned int bitmap_width, bitmap_height; // these variables will contain the dimensions of the loaded bitmap.
+  int hotspot_x, hotspot_y; // these variables will contain the location of the hot-spot of the loaded bitmap.
+  XReadBitmapFile(display, window, "/darwin/Linux/project/webots/transfer/keyboard/keyboard.xbm", &bitmap_width, &bitmap_height, &bitmap, &hotspot_x, &hotspot_y);
+  XCopyPlane(display, bitmap, window, gc, 0, 0, bitmap_width, bitmap_height, 0, 0, 1);
+  
+  // Set text in the window
+  const char text1[256] = "This window is used to catch keyboard inputs by the controller.";
+  const char text2[256] = "Please do not close it, it will be closed automatically at the end of controller.";
+  XDrawString(display, window, gc, 50, height/2 - 10, text1, 63);
+  XDrawString(display, window, gc, 10, height/2 + 10, text2, 81);
+  
+  /* flush all pending requests to the X server. */
+  XFlush(display);
+  XSync(display, False);
+  
+  // Select Events
   XSelectInput(display, window, KeyPressMask |  KeyRelease);
 }
 
