@@ -42,13 +42,28 @@ void Keyboard::resetKeyPressed() {
 }
 
 void Keyboard::createWindow() {
+  int width = 500;
+  int height = 250;
+  
+  // Open a new Window
   display = XOpenDisplay(NULL);
   window = XCreateSimpleWindow(display, RootWindow(display, 0), 1, 1, 500, 250, 0, BlackPixel (display, 0), WhitePixel(display, 0));
   XStoreName(display, window, "Webots Cross-Compilation : Keyboard inputs");
   
+  // Set this window as not resizable
+  XSizeHints * normal_hints = XAllocSizeHints();
+  normal_hints->min_width = width;
+  normal_hints->max_width = width;
+  normal_hints->min_height = height;
+  normal_hints->max_height = height;
+  normal_hints->flags = PMaxSize | PMinSize;
+  XSetWMSizeHints(display, window, normal_hints, XInternAtom(display, "WM_NORMAL_HINTS", 0));
+  
+  // Show window
   XMapWindow(display, window);
   XFlush(display);
   
+  // Select Events
   XSelectInput(display, window, KeyPressMask |  KeyRelease);
 }
 
