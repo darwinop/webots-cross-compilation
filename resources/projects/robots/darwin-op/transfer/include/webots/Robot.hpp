@@ -37,6 +37,28 @@ namespace webots {
   
   class Robot {
     public:
+    
+      enum {
+        KEYBOARD_END=312,
+        KEYBOARD_HOME,
+        KEYBOARD_LEFT,
+        KEYBOARD_UP,
+        KEYBOARD_RIGHT,
+        KEYBOARD_DOWN,
+        KEYBOARD_PAGEUP=366,
+        KEYBOARD_PAGEDOWN,
+        KEYBOARD_NUMPAD_HOME=375,
+        KEYBOARD_NUMPAD_LEFT,
+        KEYBOARD_NUMPAD_UP,
+        KEYBOARD_NUMPAD_RIGHT,
+        KEYBOARD_NUMPAD_DOWN,
+        KEYBOARD_NUMPAD_END=382,
+        KEYBOARD_KEY=0x0000ffff,
+        KEYBOARD_SHIFT=0x00010000,
+        KEYBOARD_CONTROL=0x00020000,
+        KEYBOARD_ALT=0x00040000
+      };
+      
                            Robot();
       virtual             ~Robot();
       virtual int          step(int ms);
