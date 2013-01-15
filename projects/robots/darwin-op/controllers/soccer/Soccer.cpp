@@ -204,7 +204,7 @@ void Soccer::run() {
 
       // turn round
       mGaitManager->setXAmplitude(0.0);
-      mGaitManager->setAAmplitude(0.3);
+      mGaitManager->setAAmplitude(-0.3);
       mGaitManager->step(mTimeStep);
       
       // move the head vertically
