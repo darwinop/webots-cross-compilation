@@ -19,6 +19,19 @@
 Display *display;
 Window   window;
 XEvent   Report;
+GC gc;
+unsigned int width = 500;
+unsigned int height = 250;
+
+Window root_return;
+int x_return, y_return;
+unsigned int border_width_return;
+unsigned int depth_return;
+
+const char text1[128] = "This window is used to catch keyboard inputs by the controller.";
+const char text2[128] = "Please do not close it and do notunfocus it.";
+const char text3[128] = "It will be closed automatically when the controller terminate.";
+
 int SpecialKey[10] = { 0, WB_ROBOT_KEYBOARD_HOME, WB_ROBOT_KEYBOARD_LEFT, WB_ROBOT_KEYBOARD_UP, WB_ROBOT_KEYBOARD_RIGHT, WB_ROBOT_KEYBOARD_DOWN, WB_ROBOT_KEYBOARD_PAGEUP, WB_ROBOT_KEYBOARD_PAGEDOWN, WB_ROBOT_KEYBOARD_END };
 
 Keyboard::Keyboard() {
@@ -42,21 +55,18 @@ void Keyboard::resetKeyPressed() {
 }
 
 void Keyboard::createWindow() {
-  int width = 500;
-  int height = 250;
-  
   // Open a new Window
   display = XOpenDisplay(NULL);
   window = XCreateSimpleWindow(display, RootWindow(display, 0), 1, 1, width, height, 0, BlackPixel (display, 0), WhitePixel(display, 0));
   XStoreName(display, window, "Webots Cross-Compilation : Keyboard inputs"); // Set window title
-  GC gc = XCreateGC(display, window, 0, NULL); // this variable will contain the handle to the returned graphics context.
+  gc = XCreateGC(display, window, 0, NULL); // this variable will contain the handle to the returned graphics context.
   
-  // Set this window as not resizable
+  // Set window max and min size
   XSizeHints * normal_hints = XAllocSizeHints();
-  normal_hints->min_width = width;
-  normal_hints->max_width = width;
-  normal_hints->min_height = height;
-  normal_hints->max_height = height;
+  normal_hints->min_width = 400;
+  normal_hints->max_width = 1000;
+  normal_hints->min_height = 100;
+  normal_hints->max_height = 600;
   normal_hints->flags = PMaxSize | PMinSize;
   XSetWMSizeHints(display, window, normal_hints, XInternAtom(display, "WM_NORMAL_HINTS", 0));
   
@@ -68,21 +78,21 @@ void Keyboard::createWindow() {
   Pixmap bitmap; // this variable will contain the ID of the newly created pixmap.
   unsigned int bitmap_width, bitmap_height; // these variables will contain the dimensions of the loaded bitmap.
   int hotspot_x, hotspot_y; // these variables will contain the location of the hot-spot of the loaded bitmap.
-  XReadBitmapFile(display, window, "/darwin/Linux/project/webots/transfer/keyboard/keyboard.xbm", &bitmap_width, &bitmap_height, &bitmap, &hotspot_x, &hotspot_y);
-  XCopyPlane(display, bitmap, window, gc, 0, 0, bitmap_width, bitmap_height, 0, 0, 1);
+  int rc = XReadBitmapFile(display, window, "/home/david/X11-3/keyboard/keyboard.xbm", &bitmap_width, &bitmap_height, &bitmap, &hotspot_x, &hotspot_y);
+  if(rc == BitmapSuccess)
+    XCopyPlane(display, bitmap, window, gc, 0, 0, bitmap_width, bitmap_height, 0, 0, 1);
   
   // Set text in the window
-  const char text1[256] = "This window is used to catch keyboard inputs by the controller.";
-  const char text2[256] = "Please do not close it, it will be closed automatically at the end of controller.";
-  XDrawString(display, window, gc, 50, height/2 - 10, text1, 63);
-  XDrawString(display, window, gc, 10, height/2 + 10, text2, 81);
+  XDrawString(display, window, gc, 10 + (width - 400) / 2, height/2 - 30, text1, 63);
+  XDrawString(display, window, gc, 70 + (width - 400) / 2, height/2, text2, 44);
+  XDrawString(display, window, gc, 10 + (width - 400) / 2, height/2 + 30, text3, 62);
   
   /* flush all pending requests to the X server. */
   XFlush(display);
   XSync(display, False);
-  
+
   // Select Events
-  XSelectInput(display, window, KeyPressMask |  KeyRelease);
+  XSelectInput(display, window, ExposureMask | KeyPressMask |  KeyReleaseMask);
 }
 
 void Keyboard::closeWindow() {
@@ -95,6 +105,16 @@ void Keyboard::startListenKeyboard() {
   while (1)  {
     XNextEvent(display, &Report);
     switch(Report.type) {
+		
+      case Expose : { 
+        XGetGeometry(display, window, &root_return, &x_return, &y_return, &width, &height, &border_width_return, &depth_return);
+        XClearWindow(display, window);
+        XDrawString(display, window, gc, 10 + (width - 400) / 2, height/2 - 30, text1, 63);
+        XDrawString(display, window, gc, 70 + (width - 400) / 2, height/2, text2, 44);
+        XDrawString(display, window, gc, 10 + (width - 400) / 2, height/2 + 30, text3, 62);
+        XFlush(display);
+        XSync(display, False);
+        } break;
 		
 	  case KeyPress : 
 	    if(XLookupKeysym(&Report.xkey, 0) < 123)
