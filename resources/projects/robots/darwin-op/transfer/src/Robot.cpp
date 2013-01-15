@@ -27,7 +27,7 @@ webots::Robot::Robot() {
   if(mTimeStep < 16)
     printf("The time step selected of %dms is very small and will probably not be respected.\n A time step of at least 16ms is recommended.\n", mTimeStep);
     
-  mCM730->MakeBulkReadPacket(); // Create the BulkReadPacket to read the actuators states in Robot::step
+  mCM730->MakeBulkReadPacketWb(); // Create the BulkReadPacket to read the actuators states in Robot::step
   
   // Unactive all Joints in the Motion Manager //
   std::map<const std::string, int>::iterator servo_it;
