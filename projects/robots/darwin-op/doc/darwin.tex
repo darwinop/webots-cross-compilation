@@ -55,10 +55,74 @@ xleftmargin=0.8cm
 \end{titlepage}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newpage
+
+\thispagestyle{empty}
+\setcounter{page}{0}
+
+\begin{center}
+\vspace{5cm}
+\Huge{DARwIn-OP with Webots User Guide}\\
+\vspace{0.5cm}
+\normalsize{release 1.0.0}\\
+
+\vspace{3cm}
+\LARGE{Copyright \copyright 2013 Cyberbotics Ltd.}\\
+\vspace{0.5cm}
+\large{All Rights Reserved}\\
+
+\vspace{2cm}
+\normalsize{\textbf{www.cyberbotics.com}}\\
+
+\vspace{4cm}
+\LARGE{Authors}\\
+\vspace{0.5cm}
+\normalsize{Fabien Rohrer}\\
+\small{fabien.rohrer@cyberbotics.com}\\
+\vspace{0.2cm}
+\normalsize{\&}\\
+\vspace{0.2cm}
+\normalsize{David Mansolino}\\
+\small{david.mansolino@epfl.ch}\\
+
+\vspace{4cm}
+\Large{\today}
+
+\end{center}
+
+% Abstract
+\newpage
+\thispagestyle{empty}
+\setcounter{page}{0}
+
+\renewcommand{\abstractname}{\huge{Foreword}}
+\begin{abstract}
+\vspace{3cm}
+This document will explain you how it is possible to use Webots to simulate the DARwIn-OP robot.\\
+
+In the followings chapters all the possibilities of the simulation model of the DARwIn-op will be presented and the examples coming with Webots will be explained.\\
+
+Then in the next chapters the possibilities of interaction with the real robot (real-time sensors viewing, cross-compilation, controller installation ...) will be explained.\\
+
+We hope that you will enjoy working with Webots 7, and that it will greatly simplify your work with the DARwIn-OP.\\
+
+
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\thispagestyle{empty}
+\setcounter{page}{0}
+
 \begin{spacing}{0.9}
 \tableofcontents
 \thispagestyle{empty}
 \end{spacing}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newpage
@@ -78,7 +142,7 @@ The DARwIn-OP robot has been fully integrated into Webots in collaboration with 
 \begin{description}
 \item[Simulation ] You will be able to test your controller in simulation, without any risk of damaging the robot. You will also be able to run automatically a lot of different simulations in a very small amount of time (to tune up your parameters for example), which would be impossible to do with the real robot.
 \item[Cross compilation ] When your controller is fine enough in simulation, you will be able to send and run it on the real robot without changing anything to your code, just by pressing one simple button.
-\item[Remote control ] To debug or understand your controller's behavior, you will be able to see in real time the state of all the sensors and actuators on the computer. This is available both in simulation and on the real robot, and here again this is done in just one click.
+\item[Remote control ] To debug or understand your controller's behavior, you will be able to see in real time the state of all the sensors and actuators on the computer. This is available both in simulation and on the real robot, and here again this is done in just one click. You will also be able to run your controller on the computer, but instead of sending commands to and reading sensor data from the simulated robot, it sends commands to and reads sensor data from the real robot.
 \item[Easy of use ] Webots greatly simplifies the programming of the robot. Indeed, Webots API is much more simple to understand and use than ROBOTIS API, moreover a very complete documentation is available for Webots.
 \end{description}
 
@@ -127,7 +191,7 @@ ID & Name & ID & Name & ID & Name & ID & Name\\
 \end{center}
 \end{table}
 
-The corresponding position of each servos can be seen in annex \ref{sec:servopos}.\\
+The corresponding position of each servos can be seen in figure \ref{Actuator}.\\
 Each of the 20 servos have the following configuration:
 \begin{table}[H]
 \begin{center}
@@ -149,8 +213,21 @@ staticFriction & 0.025 & $N*m$ \\
 \end{center}
 \end{table}
 
+
+\newpage
+\vspace{5cm}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=16cm]{DARwIn-OP_Actuator.png}
+\caption{Position of the servos}
+\label{Actuator}
+\end{center}
+\end{figure}
 For more information on the use of all of these sensors/actuators refer to the \textit{Reference Manual} of Webots \,\footnote{ Reference Manual available at : \url{http://www.cyberbotics.com/reference/}}.\\
 
+
+
+\newpage
 The physical model is very realistic and self collision check is available. To activate the self collision expand DARwIn-OP in the scene tree and set selfCollision field to true (see figure \ref{selfCollision}). Use the self collision check only if you need it, because it is very computationally costly and can therefore significantly slow down the simulation speed.\\
 
 \begin{figure}[H]
@@ -392,6 +469,8 @@ Try also to use the other RGB LED, this is done simply be exchanging \textit{mHe
 
 Here again this example is well suited for cross-compilation. You can adjust the color of the ball by changing the value in the constructor of DARwInOPVisionManager if your ball is of another color.\\
 
+This example can also be used as a tool to tune the parameters of the vision manager in order to fit your application.\\
+
 
 \newpage
 \subsection{Walk}
@@ -408,15 +487,16 @@ This example illustrate the use of the gait and motion manager, the use of the k
 
 At the beginning of the controller, the motion manager is used to make the robot stand up, then the controller enter an infinite loop.
 The first things done in the loop is to check if the robot has not fallen, this is done by using the accelerometer. Then if the robot has fallen, the motion manager is used in order to make the robot to stand up. 
-Then the keyboard is read, if the key \textit{Page Up} is pressed it make the robot start to walk, contrary if key \textit{Page Down} is pressed the robot stop to walk.
+Then the keyboard is read, if the space bar is pressed the robot start/stop to walk.
 Then the keys up/down/right/left are used to make the robot turn and move forward/backward, severals key can be used in the same time.\\
 
-Try to add some more action by using more key. You can for example use the keys \textit{KEYBOARD\_NUMPAD\_LEFT} and \textit{KEYBOARD\_NUMPAD\_RIGHT} to make a left/right shoot (page 13 and 12 in motion manager).\\
+Try to add some more action by using more key. You can for example use the keys \textit{KEYBOARD\_NUMPAD\_LEFT} and \textit{KEYBOARD\_NUMPAD\_RIGHT} to make a left/right shoot (page 13 and 12 in motion manager). You can also use normal keys like 'A' instead if you prefer.\\
 
 You can also use another key to make the robot walk quicker or slower (change the XAmplitude sent to the gait manager, value accepted must be between -1 and 1).\\
 
 This example work in cross-compilation but you will need to connect an usb keyboard to the robot. It is recommended to test this example with remote control in order to use the computer's keyboard instead.\\
 
+This example can also be used to explore and test all the parameters of the gait.\\
 
 \newpage
 \subsection{Soccer}
@@ -433,7 +513,7 @@ This is a very complete example which used the three managers and almost all of 
 
 The controller is a very simple soccer player. It used most of the tools used in the previous example. We recommend you to study it by yourself and of course to improve it.\\
 
-To extend your controller you can add new files to the project, but do not forget to also add them to the makefile (add the cpp files to the \textit{CXX\_SOURCES} section).\\
+To extend your controller you can add new files to the project, but do not forget to also add them to the makefile (add the cpp files to the \textit{CXX\_SOURCES} section). This example is also a good starting point for a more complexed controller.\\
 
 This example work in cross-compilation. But we recommend you to test it on a soft ground and away from any source of danger (stairs, hot surface ...), because the robot will move a lot and it is not excluded that it fall sometimes.\\
 
@@ -445,7 +525,7 @@ This example work in cross-compilation. But we recommend you to test it on a sof
 
 When double clicking on the robot, a new window appears. This window is called \textit{Robot Window}, it has severals tabs who permits to do a lot of different things. The first four tabs concerns only the simulation and they will be describe here, the last tab is used to interact with the real robot and will therefore be describe in the next sections.\\
 
-In the case PEU probable of something going wrong with the \textit{Robot Window} (freeze, bad behavior, ...) you can at any time restart it by pressing the revert button of the simulation.\\
+In the unlikely case of something going wrong with the \textit{Robot Window} (freeze, bad behavior, ...) you can at any time restart it by pressing the revert button of the simulation.\\
 
 \paragraph*{Accelerometers} 
 This tab can be used to investigate the values of the accelerometer while the controller is running. If the checkbox is checked, the values of the accelerometer are shown and plotted on the graph in real time. Four different types of graph can be plot. The first three are one axis in function of an other, and the last one, plot the value of the three axes in function of the time. The corresponding colors are the following :\\
@@ -566,8 +646,8 @@ Then the controller code itself is send to the robot. All the directory of the c
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=5cm]{start_position.png}
-\label{start_position}
 \caption{Start position of the robot. The robot is sit down (same start position that in simulation).}
+\label{start_position}
 \end{center}
 \end{figure}
 
@@ -645,12 +725,51 @@ mSpeaker->playFile("/darwin/Data/mp3/FileName.mp3"); // this file is already on 
 
 The annex \ref{sec:audioFile} reference all the audio files available.\\
 
+\newpage
+\subsection{Using keyboard}
+
+The use of the keyboard is also available in cross-compilation. To use a keyboard you just have to connect an usb keyboard to the robot thanks to one of the two usb ports at the back of the robot (any wireless keyboard will also works).\\
+
+Then when enabling the keyboard in your controller, a small window like the one in figure \ref{keyboardWindow} will appear on the real robot screen (if any connected).\\
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=10cm]{keyboardWindow.png}
+\caption{Small window used to capture the keyboard inputs in cross-compilation.}
+\label{keyboardWindow}
+\end{center}
+\end{figure}
+
+This little window is used to capture the inputs of the keyboard. Please do not close this window or set the focus to another window (by clicking on another window) or you wont be able to read the keyboard inputs anymore.\\
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newpage
 \section{Remote control}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newpage
+\section{Known Bugs}
+
+\subsection{Lateral balance}
+In simulation, in the DARwInOPGaitManager, the lateral balance do not work as expected. It is recommended to set \textit{balance\_hip\_roll\_gain} and \textit{balance\_ankle\_roll\_gain} to 0.0, this must be done in the file 'config.ini' attached to the controller.\\
+
+\subsection{Controller P}
+In simulation the P gain of the servo affects the speed but on the real robot it affects the torque. This can cause differences between simulation and reality in some specific cases. Especially when P is small.\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\section{Bibliography}
+
+For any informations (documentation, support, store ...) about Webots, please visit Cyberbotics website : \url{http://www.cyberbotics.com}\\
+
+Each time a new version of Webots is released the latest files of DARwIn-OP with Webots project are included, but you can at any times find the latest files of the project in the corresponding Github : \url{https://github.com/darwinop/webots-cross-compilation}\\
+
+For any informations about the DARwIn-OP robot please visit ROBOTIS website : \url{http://support.robotis.com/ko/product/darwin-op.htm}\\
+
+DARwIn-OP being open source you can also find all the source files of the project here : \url{http://sourceforge.net/projects/darwinop}\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -965,19 +1084,6 @@ Yes go.mp3 & 1 & 24.1 \\
 \label{tab::audioFile}
 \end{center}
 \end{table}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Position of each servos} \label{sec:servopos}
-\vspace{5cm}
-
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=16cm]{DARwIn-OP_Actuator.png}
-\label{Actuator}
-\end{center}
-\end{figure}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
