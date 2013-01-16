@@ -101,11 +101,11 @@ xleftmargin=0.8cm
 \renewcommand{\abstractname}{\huge{Foreword}}
 \begin{abstract}
 \vspace{3cm}
-This document will explain you how it is possible to use Webots to simulate the DARwIn-OP robot.\\
+This document will explain you how it is possible to use Webots to simulate, remote-control and program the DARwIn-OP robot.\\
 
-In the followings chapters all the possibilities of the simulation model of the DARwIn-op will be presented and the examples coming with Webots will be explained.\\
+In the first chapters, all the features of the simulation model of the DARwIn-op will be presented and the examples included in Webots will be explained.\\
 
-Then in the next chapters the possibilities of interaction with the real robot (real-time sensors viewing, cross-compilation, controller installation ...) will be explained.\\
+Then, in the following chapters, the possibilities of interaction with the real robot (real-time sensors viewing, cross-compilation and controller installation) will be explained.\\
 
 We hope that you will enjoy working with Webots 7, and that it will greatly simplify your work with the DARwIn-OP.\\
 
@@ -129,21 +129,21 @@ We hope that you will enjoy working with Webots 7, and that it will greatly simp
 \section{DARwIn-OP}
 The Darwin-op is an open source miniature humanoid robot platform with advanced computational power. The name DARwIn-OP means Dynamic Anthropomorphic Robot with Intelligence-Open Platform. It is developed and manufactured by ROBOTIS (a Korean robot manufacturer) in collaboration with the University of Pennsylvania.\\
 
-The DARwIn-OP is mainly used be university and research center for educational and research purpose. It has a total of 20 degrees of freedoms:
+The DARwIn-OP is mainly used by universities and research centers for educational and research purpose. It has a total of 20 degrees of freedoms:
 \begin{itemize}
-\item 2 for the head.
-\item 3 for each arm.
-\item 6 for each leg.
+\item 2 in the head.
+\item 3 in each arm.
+\item 6 in each leg.
 \end{itemize}
 
-This robot is very interesting because of it's low price and because it is open source (both hardware and software). For example this robot is often used for the RoboCup and even win it sometimes.\\
+This robot is available at a fairly low price and is based on open source components (both hardware and software). It has been used in the RoboCup international competition with some success.\\
 
 The DARwIn-OP robot has been fully integrated into Webots in collaboration with ROBOTIS. By using DARwIn-OP in conjunction with Webots you will have the following benefits compared to the use of ROBOTIS API directly on the real robot:
 \begin{description}
-\item[Simulation ] You will be able to test your controller in simulation, without any risk of damaging the robot. You will also be able to run automatically a lot of different simulations in a very small amount of time (to tune up your parameters for example), which would be impossible to do with the real robot.
-\item[Cross compilation ] When your controller is fine enough in simulation, you will be able to send and run it on the real robot without changing anything to your code, just by pressing one simple button.
-\item[Remote control ] To debug or understand your controller's behavior, you will be able to see in real time the state of all the sensors and actuators on the computer. This is available both in simulation and on the real robot, and here again this is done in just one click. You will also be able to run your controller on the computer, but instead of sending commands to and reading sensor data from the simulated robot, it sends commands to and reads sensor data from the real robot.
-\item[Easy of use ] Webots greatly simplifies the programming of the robot. Indeed, Webots API is much more simple to understand and use than ROBOTIS API, moreover a very complete documentation is available for Webots.
+\item[Simulation ] You will be able to test your controller in simulation, without any risk of damaging the robot. You will also be able to run automatically a lot of different simulations in a very small amount of time (to tune up parameters for example), which would be impossible to do with the real robot.
+\item[Cross compilation ] When your controller is doing fine in simulation, you will be able to send and run it on the real robot without changing anything to your code, just by pressing a button in the robot window.
+\item[Remote control ] To debug or understand your controller's behavior, you will be able to see in real time the state of all the sensors and actuators on the computer screen. This is available both in simulation and on the real robot, and here again this is done in just one click. You will also be able to run your controller on the computer, but instead of sending commands to and reading sensor data from the simulated robot, it sends commands to and reads sensor data from the real robot.
+\item[Ease of use ] Webots greatly simplifies the programming of the robot. Indeed, Webots API is simple to understand and to use and come with a complete documentation.
 \end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -151,20 +151,20 @@ The DARwIn-OP robot has been fully integrated into Webots in collaboration with 
 \newpage
 \section{Simulation model}
 
-The simulation model of DARwIn-OP has been made as close as possible to the real one. It is equiped with the following sensors and actuators :
+The simulation model of DARwIn-OP was design to be as close as possible to the real one. It is equiped with the following sensors and actuators :
 \begin{itemize}
 \item 20 servos
 \item 5 LEDs (including 2 RGB ones)
 \item A 3 axes accelerometer
-\item A 3 axes gyroscop
+\item A 3 axes gyroscope
 \item A camera
 \end{itemize}
 
-The accelerometer return values between 0 and 1024 corresponding to values between -3 [g] to +3 [g] like on the real robot. For the gyro, it return again values between 0 and 1024, corresponding to values between -1600 [deg/sec] and +1600 [deg/sec], here again in respect of the values of the real robot. Their respective names are \textit{Accelerometer} and \textit{Gyro}.
+The accelerometer returns values between 0 and 1024 corresponding to values between -3 [g] to +3 [g] like on the real robot. For the gyro, it returns also values between 0 and 1024, corresponding to values between -1600 [deg/sec] and +1600 [deg/sec], here again similarly to the values returned by the real robot. Their respective names are \textit{Accelerometer} and \textit{Gyro}.
 
 The camera is a RGBA camera and has a basic resolution of 160x120 pixels, but it can be changed to any value. The horizontal field of view is 1.0123 [rad].\\
 
-Concerning the LEDs, their is 2 RBG LEDs, called \textit{HeadLed} and \textit{EyeLed}, these two LEDs are each made of two separated parts, one on the head of the robots and one other small part on the back panel of the robot. There is also three other LEDs no RGB on the back panel of the robot, they are called \textit{BackLedGreen}, \textit{BackLedBlue} and \textit{BackLedRed}.\\
+Each of the 2 RBG LEDs, called \textit{HeadLed} and \textit{EyeLed}, is split in two separated parts, one on the head of the robot and one other small part on the back panel of the robot. There are also three other standard LEDs on the back panel of the robot, they are called \textit{BackLedGreen}, \textit{BackLedBlue} and \textit{BackLedRed}.\\
 
 The name of the 20 servos are the following :
 
@@ -191,8 +191,8 @@ ID & Name & ID & Name & ID & Name & ID & Name\\
 \end{center}
 \end{table}
 
-The corresponding position of each servos can be seen in figure \ref{Actuator}.\\
-Each of the 20 servos have the following configuration:
+The corresponding position of each servo can be seen in figure \ref{Actuator}.\\
+Each of the 20 servos has the following configuration:
 \begin{table}[H]
 \begin{center}
 \begin{tabular}{ | c | c | c | }
@@ -223,7 +223,7 @@ staticFriction & 0.025 & $N*m$ \\
 \label{Actuator}
 \end{center}
 \end{figure}
-For more information on the use of all of these sensors/actuators refer to the \textit{Reference Manual} of Webots \,\footnote{ Reference Manual available at : \url{http://www.cyberbotics.com/reference/}}.\\
+For more information on the use of all of these sensors/actuators refer to the \textit{Reference Manual} of Webots \,\footnote{ Reference Manual available at: \url{http://www.cyberbotics.com/reference/}}.\\
 
 
 
@@ -250,12 +250,12 @@ The following sensors/actuators are not present on the simulation model :
 \newpage
 \section{Managers}
 
-A library has been made in order to implement all the key functionalities of Robotis Framework in simulation. This library is divided in three parts called managers which implement each a module of the Framework. The first one called \textit{Gait} permits to use the walking algorithm of Robotis Framework. The second one called \textit{Motion} allows to play predefined motions stored in the file \textit{motion\_4096.bin}. The last one called \textit{Vision}, contains some image processing tools, useful for example to find a ball.\\
+A library is provided in order to implement all the key functionalities of Robotis Framework in simulation. This library is divided in three parts called managers. Each manager implements a module of the Framework. The first one called \textit{Gait} manager allows you to use the walking algorithm of the Robotis Framework. The second one called \textit{Motion} manager allows you to play predefined motions stored in the \textit{motion\_4096.bin} file. The last one called \textit{Vision} manager, contains some image processing tools, useful for example to find a colored ball in the camera image.\\
 
 \subsection{Gait Manager}
-This manager implement the class \textit{DARwInOPGaitManager} and allows to use the walking algorithm of the Framework.\\
+This manager implements the \textit{DARwInOPGaitManager} class and allows you to use the walking algorithm of the Framework.\\
 
-A lot of parameters are available in the Framework algorithm for gait tunning. But in order to make this manager easy to use, only a subset of the parameters can be set with this manager. The other parameters are set by default on value that are known to works fine. It is however possible to change them if needed, by changing the default value that are stored in a configuration file \textit{*.ini}. In annex \ref{sec:walkParameter} all the parameters of the gait are explained. For this reasons the constructor of DARwInOPGaitManager is the following :\\
+A lot of parameters are available in the Framework algorithm to tune the gait. But in order to make this manager easy to use, only a subset of the parameters can be set. The other parameters are set to default values that are known to works fine. It is however possible to change them if needed, by changing the default values that are stored in a \textit{*.ini} configuration file. In appendix \ref{sec:walkParameter}, all the parameters of the gait are explained. The C++ constructor of DARwInOPGaitManager object is the following :\\
 
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
@@ -263,7 +263,7 @@ A lot of parameters are available in the Framework algorithm for gait tunning. B
 DARwInOPGaitManager(webots::Robot *robot, const std::string &iniFilename);
 \end{lstlisting}
 
-The first parameter is the robot on which the algorithm must be applied and the second is the file name in which are stored the default parameters. The following method are available in order to modify the main parameters in your controller :\\
+The first parameter is the robot on which the algorithm applies and the second is the file name in which the default parameters are stored. The following method are available in order to modify the main parameters in your controller :\\
 
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
@@ -277,11 +277,11 @@ void setBalanceEnable(bool q);
 
 These are the open parameters, they have the following impact on the gait:\\
 \begin{itemize}
-\item X influence the length of the foot step forward, it can take any value between -1 and 1.
-\item Y influence the length of the foot step in the side direction, it can take any value between -1 and 1.
-\item A influence the angle of the gait and permit also to rotate during the walk, it can take any value between 0 and 1.
-\item If MoveAimOn is set, it allowed to rotate around something in particular by inversing the sense of rotation, it can be very useful to turn around a ball in order to kick it in the right direction for example.
-\item If BalanceEnable is set, the gyroscope is used in order to prevent the robot from falling while walking.
+\item X influences the length of the foot step forward, it can take any value between -1 and 1.
+\item Y influences the length of the foot step in the side direction, it can take any value between -1 and 1.
+\item A influences the angle of the gait and allows also the robot to rotate during the walk, it can take any value between 0 and 1.
+\item If MoveAimOn is set, it allows the robot to rotate around something by inversing the sense of rotation, it can be very useful to turn around a ball in order to kick it in the right direction for example.
+\item If BalanceEnable is set, the gyroscope is used in the control loop to make the walking gait more robust.
 \end{itemize}
 
 Finally the following method can be used in order to run the algorithm:\\
@@ -294,21 +294,21 @@ void stop();
 \end{lstlisting}
 Start and stop need to be used to stop/start the algorithm and step is used to run \textit{ms} milliseconds of the algorithm.\\
 
-It must be noticed that the gait manager need to know the position of each servos and the values of the gyro to run. It is therefore essential to enable the gyro and the position feedback of each servos before to use it, if it is not the case, a warning will appear and they will automatically be enabled.\\
+Note that, in order to run, the gait manager needs to know the position of each servo and the values of the gyro. It is therefore essential to enable the gyro and the position feedback of each servo before to use it, if it is not the case, a warning will appear and they will automatically be enabled.\\
 
 \subsection{Motion Manager}
-This manager implement the class \textit{DARwInOPMotionManager} and allows to play predefined motion stored in the file \textit{motion\_4096.bin}, the main motions and the corresponding id of the motion file are explained in annex \ref{sec:Motions}.\\
+This manager implement the \textit{DARwInOPMotionManager} class and allows you to play a predefined motion stored in the \textit{motion\_4096.bin} file. The main motions and their corresponding ids are listed in appendix \ref{sec:Motions}.\\
 
-It is also possible to add custom motions to this file by using the tools \textit{Action Editor} \,\footnote{ More informations about this tool at : \url{www.support.robotis.com/ko/product/darwin-op/development/tools/action_editor.htm}} provided by ROBOTIS.\\
+It is also possible to add custom motions to this file by using the \textit{Action Editor} tool \,\footnote{ More informations about this tool provided by ROBOTIS is available at: \url{www.support.robotis.com/ko/product/darwin-op/development/tools/action_editor.htm}}.\\
 
-The constructor of \textit{DARwInOPMotionManager} is the following :\\
+The constructor of \textit{DARwInOPMotionManager} object is the following :\\
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
 \begin{lstlisting} 
 DARwInOPMotionManager(webots::Robot *robot);
 \end{lstlisting}
 
-He only need a pointer to the robot to which it is applied. Then the following method can be used to play a motion :\\
+It only needs a pointer to the robot to which it applies. Then, the following method can be used to play a motion:\\
 
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
@@ -316,11 +316,11 @@ He only need a pointer to the robot to which it is applied. Then the following m
 void playPage(int id);
 \end{lstlisting}
 
-This method only need the id of the motion that must be played.\\
+This method only needs the id of the motion to be played.\\
 
 \newpage
 \subsection{Vision Manager}
-This manager implement the class \textit{DARwInOPVisionManager}. The constructor of this class is the following :\\
+This manager implement the \textit{DARwInOPVisionManager} class. The constructor of this class is the following :\\
 
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
@@ -331,15 +331,15 @@ The parameters are the following : \\
 \begin{itemize}
 \item The widht of the image
 \item The height of the image
-\item The hue of the target to find
-\item The tolerance on the hue of the target
-\item The minimum saturation of the target to find
-\item The minimum value of the target to find
-\item The minimum percentage of target in the image to validate the result
-\item The maximum percentage of target in the image to validate the result
+\item The color hue of the target object to find
+\item The tolerance on the color hue of the target object to find
+\item The minimum color saturation of the target object to find
+\item The minimum color value of the target object to find
+\item The minimum percentage of color value in the image to validate the result
+\item The maximum percentage of color value in the image to validate the result
 \end{itemize}
 
-To find the hue of your target and to understand the impact of the saturation and value you can refer to figure \ref{HSV}, for more information you can also find a lot of great documentation on internet about HSV colorspace.\\ 
+To find the color hue of the target object and to understand the impact of the saturation and value you can refer to figure \ref{HSV}, for more information you can also find a lot of great documentation on the Internet about HSV colorspace.\\ 
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=6cm]{HSV.png}
@@ -350,7 +350,7 @@ To find the hue of your target and to understand the impact of the saturation an
 \end{figure}
 
 \newpage
-When an instance of this class is created, the method \textit{getBallCenter} can be used to find the position of the target :\\
+When an instance of this class is created, the \textit{getBallCenter} method can be used to find the position of the target object:\\
 
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
@@ -358,15 +358,15 @@ When an instance of this class is created, the method \textit{getBallCenter} can
 bool getBallCenter(double &x, double &y, const unsigned char * image);
 \end{lstlisting}
  
-This method return true if the target has been found, and false otherwise. X and Y are references with which the result is transmitted. And image is a pointer to the image buffer. In order to find the position of the target, this method proceed to the following main steps:\\
+This method returns true if the target was found, and false otherwise. If found, the x and y variables are set. The image pointer indicates the original image buffer. In order to find the position of the target object, this method proceeds to the following steps:\\
 \begin{itemize}
-\item Store the BGRA version  of the image in a buffer
+\item Store the BGRA version of the image in a buffer
 \item Use this buffer to convert the image to HSV format
-\item Use the class \textit{Finder} of the Framework to find the target
-\item Extract and save the position of the target
+\item Use the \textit{Finder} class of the Framework to find the target object
+\item Extract and save the position of the target object
 \end{itemize}
 
-When this method has been called it is possible to know which pixels of the image is part of the target by using this function :\\
+Once this method was called it is possible to know which pixels of the image are part of the target object by using this function:\\
 
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
@@ -374,7 +374,7 @@ When this method has been called it is possible to know which pixels of the imag
 bool isDetected(int x, int y);
 \end{lstlisting}
 
-This method return true if the pixel (x,y) is part of the target and false otherwise.\\
+This method returns true if the pixel (x,y) is part of the target object and false otherwise.\\
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -382,7 +382,7 @@ This method return true if the pixel (x,y) is part of the target and false other
 \newpage
 \section{Examples}
 
-In this part we will see all the examples provided with Webots for the DARwIn-OP. We will describe how they work, how to use them and what can be done with them. All the examples can be found in WEBOTS\_HOME/projects/robots/darwin-op/worlds.\\
+In this part we will see all the examples provided with Webots for the DARwIn-OP model. We will describe how they work, how to use them and what can be done with them. All the examples can be found in WEBOTS\_HOME/projects/robots/darwin-op/worlds.\\
 
 The following buttons are the main ones used to control the simulation (they all are situated on top of the 3D view):
 \begin{table}[H]
@@ -408,12 +408,12 @@ You will also need to use the following buttons to edit the examples (they are s
 \end{center}
 \end{table}
 
-You can find more informations about the user interface in the corresponding chapter of the \textit{User Guide}\,\footnote{User Guide available at : \url{www.cyberbotics.com/guide}}.
+You can find more information about the user interface in the corresponding chapter of the \textit{User Guide}\,\footnote{User Guide available at: \url{www.cyberbotics.com/guide}}.
 
 \newpage
 \subsection{Symmetry}
 
-This example is very basic in order to explain the use of the servos.\\
+This example is very basic and explains the use of the servos.\\
 
 \begin{figure}[H]
 \begin{center}
@@ -423,13 +423,13 @@ This example is very basic in order to explain the use of the servos.\\
 \end{center}
 \end{figure}
 
-It start by setting the motor force of the three servos of the right arm to zero in order to completely release this arm.
-Then in an infinite loop the position of the previous three servos is read and displayed.
-Finally still in the loop the inverse of the position of each servos is applied on the servos of the left arm in order to mimic the motion of the right one.\\
- In order to move the right arm which is free in simulation, select the robot, then press Ctrl+Alt and left click on the arm, then without releasing the left button move the mouse. This will apply a force (symbolized by an arrow) which will make the arm to move.\\
-It must be noticed that it is very important to activate the position feedback of the servos in order to read their position. In this example, this is done in the constructor.\\
+It starts by setting the motor force of the three servos of the right arm to zero in order to completely release this arm.
+Then, in an infinite loop, the position of the previous three servos is read and displayed.
+Finally, still in the loop, the opposite position of each servo of the right arm is applied to the corresponding servo of the left arm in order to mimic the motion of the right arm.\\
+In order to move the right arm which is free in simulation, select the robot, then press Ctrl+Alt and left click on the arm, then without releasing the left button move the mouse. This will apply a force (symbolized by an arrow) which will make the arm move.\\
+Note that it is very important to activate the position feedback of the servos in order to read their position. In this example, this is done in the constructor.\\
 
-You can also try to add an oscillation to the head, by adding this in your main loop:
+You can also try to add an oscillation of the head, by adding this in your main loop:
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
 \begin{lstlisting} 
@@ -443,7 +443,7 @@ This example is well suited for the cross-compilation and we recommended that yo
 \newpage
 \subsection{VisualTracking}
 
-This example illustrate the use of the camera (including the vision manager) and of the RGB LEDs.\\
+This example illustrates the use of the camera (including the vision manager) and of the RGB LEDs.\\
 
 \begin{figure}[H]
 \begin{center}
@@ -454,8 +454,8 @@ This example illustrate the use of the camera (including the vision manager) and
 \end{figure}
 
 In the infinite loop the vision manager is used to find the red ball. 
-Then if the ball has been found the head led is set to green and otherwise to red.
-Then again if the ball has been found the position of the two servos of the head is corrected to watch in the direction of the ball. To move the ball in simulation, press Ctrl+Shift and move the ball with the left button of the mouse pressed on it.\\
+Then, if the ball has been found the head led is set to green and otherwise to red.
+Then, again, if the ball has been found the position of the two servos of the head is corrected to watch in the direction of the ball. To move the ball in simulation, press Ctrl+Shift and move the ball with the left button of the mouse pressed on it.\\
 
 Try to change the color of the LED by changing this line :
 \lstset{language=c++} 
@@ -467,7 +467,7 @@ Here the color is set in hexadecimal. The format is R8G8B8: The most significant
 
 Try also to use the other RGB LED, this is done simply be exchanging \textit{mHeadLED} by \textit{mEyeLED}.\\
 
-Here again this example is well suited for cross-compilation. You can adjust the color of the ball by changing the value in the constructor of DARwInOPVisionManager if your ball is of another color.\\
+Here again this example is well suited for cross-compilation. You can adjust the color of the ball by changing the value in the constructor of DARwInOPVisionManager if your ball has a different color.\\
 
 This example can also be used as a tool to tune the parameters of the vision manager in order to fit your application.\\
 
@@ -475,7 +475,7 @@ This example can also be used as a tool to tune the parameters of the vision man
 \newpage
 \subsection{Walk}
 
-This example illustrate the use of the gait and motion manager, the use of the keyboard, and also the use of the accelerometer.\\
+This example illustrates the use of the gait and motion manager, the use of the keyboard, and also the use of the accelerometer.\\
 
 \begin{figure}[H]
 \begin{center}
@@ -485,16 +485,16 @@ This example illustrate the use of the gait and motion manager, the use of the k
 \end{center}
 \end{figure}
 
-At the beginning of the controller, the motion manager is used to make the robot stand up, then the controller enter an infinite loop.
-The first things done in the loop is to check if the robot has not fallen, this is done by using the accelerometer. Then if the robot has fallen, the motion manager is used in order to make the robot to stand up. 
-Then the keyboard is read, if the space bar is pressed the robot start/stop to walk.
-Then the keys up/down/right/left are used to make the robot turn and move forward/backward, severals key can be used in the same time.\\
+At the beginning of the controller, the motion manager is used to make the robot stand up, then the controller enters an infinite loop.
+The first thing done in the loop is to check if the robot has not fallen down, this is achieved by using the accelerometer. Then if the robot has fallen down, the motion manager is used to make the robot to stand up. 
+Then, the keyboard is read, if the space bar is pressed the robot start/stop to walk.
+Then, the keys up/down/right/left are pressed to make the robot turn and move forward/backward, several keys can be pressed at the same time.\\
 
-Try to add some more action by using more key. You can for example use the keys \textit{KEYBOARD\_NUMPAD\_LEFT} and \textit{KEYBOARD\_NUMPAD\_RIGHT} to make a left/right shoot (page 13 and 12 in motion manager). You can also use normal keys like 'A' instead if you prefer.\\
+Try to add some more action by using more keys. You can for example use the \textit{KEYBOARD\_NUMPAD\_LEFT} and \textit{KEYBOARD\_NUMPAD\_RIGHT} keys to make a left/right shoot (page 13 and 12 in motion manager). You can also use normal keys like 'A' instead if you prefer.\\
 
-You can also use another key to make the robot walk quicker or slower (change the XAmplitude sent to the gait manager, value accepted must be between -1 and 1).\\
+You can also use another key to make the robot walk quicker or slower (change the XAmplitude sent to the gait manager, values must be between -1 and 1).\\
 
-This example work in cross-compilation but you will need to connect an usb keyboard to the robot. It is recommended to test this example with remote control in order to use the computer's keyboard instead.\\
+This example works in cross-compilation but you will need to connect a USB keyboard to the robot. Otherwise, it is recommended to test this example with the remote control in order to use the computer's keyboard instead.\\
 
 This example can also be used to explore and test all the parameters of the gait.\\
 
@@ -511,11 +511,11 @@ This is a very complete example which used the three managers and almost all of 
 \end{center}
 \end{figure}
 
-The controller is a very simple soccer player. It used most of the tools used in the previous example. We recommend you to study it by yourself and of course to improve it.\\
+The controller is a very simple soccer player. It relies on most of the tools used in the previous example. We recommend you to study it by yourself and of course to improve it.\\
 
-To extend your controller you can add new files to the project, but do not forget to also add them to the makefile (add the cpp files to the \textit{CXX\_SOURCES} section). This example is also a good starting point for a more complexed controller.\\
+To extend this controller you can add new files to the project, but do not forget to also add them to the makefile (add the cpp files to the \textit{CXX\_SOURCES} section). This example is also a good starting point for developing a more complicated controller.\\
 
-This example work in cross-compilation. But we recommend you to test it on a soft ground and away from any source of danger (stairs, hot surface ...), because the robot will move a lot and it is not excluded that it fall sometimes.\\
+This example works in cross-compilation. But we recommend you to test it on a soft ground and away from any source of danger (stairs, hot surface, etc.), because the robot will move a lot and it is not excluded that it falls down from time to time.\\
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -523,12 +523,12 @@ This example work in cross-compilation. But we recommend you to test it on a sof
 \newpage
 \section{Robot Window}
 
-When double clicking on the robot, a new window appears. This window is called \textit{Robot Window}, it has severals tabs who permits to do a lot of different things. The first four tabs concerns only the simulation and they will be describe here, the last tab is used to interact with the real robot and will therefore be describe in the next sections.\\
+When you double click on the robot, a new window appears. This window is called \textit{Robot Window}, it has severals tabs allowing you to perform different things. The first four tabs concerns the simulation and remote control. They will be describe here, the last tab is used to interact with the real robot and will therefore be describe in the next sections.\\
 
-In the unlikely case of something going wrong with the \textit{Robot Window} (freeze, bad behavior, ...) you can at any time restart it by pressing the revert button of the simulation.\\
+In the unlikely case of something going wrong with the \textit{Robot Window} (freeze, bad behavior, etc.) you can at any time restart it by pressing the revert button of the simulation.\\
 
 \paragraph*{Accelerometers} 
-This tab can be used to investigate the values of the accelerometer while the controller is running. If the checkbox is checked, the values of the accelerometer are shown and plotted on the graph in real time. Four different types of graph can be plot. The first three are one axis in function of an other, and the last one, plot the value of the three axes in function of the time. The corresponding colors are the following :\\
+This tab can be used to investigate the values of the accelerometer while the controller is running. If the checkbox is checked, the values of the accelerometer are shown and plotted on the graph in real time. Four different types of graph can be plot. The first three are one axis in function of an other, and the last one, plots the value of the three axes in function of the time. The corresponding colors are the following:\\
 \begin{itemize}
 \item Red for axis X
 \item Green for axis Y
@@ -542,7 +542,7 @@ This tab can be used to investigate the values of the accelerometer while the co
 \end{center}
 \end{figure}
 
-You can at any time click on the graph to adjust the scale to the data currently plotted.\\
+You can click any time on the graph to adjust the scale of the data currently plotted.\\
 
 \newpage
 \paragraph*{Cameras}
@@ -556,7 +556,7 @@ This tab is very simple, if the checkbox is checked, the picture of the camera i
 \end{figure}
 
 \paragraph*{Gyro}
-This tab is very similar to the accelerometer tab but for the gyro. If the checkbox is checked, the values of the gyro are shown and plotted on the graph in real time. Here again the four different types of graph can be plot. \\
+This tab is very similar to the accelerometer tab but addresses the gyro. If the checkbox is checked, the values of the gyro are shown and plotted on the graph in real time. Here again four different types of graph can be plot. \\
 
 \begin{figure}[H]
 \begin{center}
@@ -567,7 +567,7 @@ This tab is very similar to the accelerometer tab but for the gyro. If the check
 
 \newpage
 \paragraph*{Servos}
-Finally this last tab can be used to see and influence the state of each servos. The use of each servos in the robot window can separately be set by checking/unchecking the corresponding checkbox of the servos. If the checkbox is checked, the value of the servo is shown and plotted in function of the time. On the graph, two different colors are used to distinguish the target value (in red) and the real value (in black). It is also possible to manually change the value of the servo by using the slider beside the graph.\\
+Finally, this last tab can be used to see and influence the state of each servo. The use of each servo in the robot window can separately be set by checking/unchecking the corresponding checkbox of the servo. If the checkbox is checked, the value of the servo is shown and plotted in function of the time. On the graph, two different colors are used to distinguish the target value (in red) and the real value (in black). It is also possible to manually change the value of the servo by using the slider beside the graph.\\
 
 \begin{figure}[H]
 \begin{center}
@@ -582,7 +582,7 @@ Finally this last tab can be used to see and influence the state of each servos.
 \newpage
 \section{Cross-compilation}
 
-To send your controller to the real robot and make it run on it, go the tab \textit{Transfer} of the robot window (figure \ref{window_cross}).
+To send your controller to the real robot and make it run on it, go to the \textit{Transfer} tab of the robot window (figure \ref{window_cross}).
 
 \begin{figure}[H]
 \begin{center}
@@ -592,14 +592,14 @@ To send your controller to the real robot and make it run on it, go the tab \tex
 \end{center}
 \end{figure}
 
-The first thing to do is to set the connections settings. The first setting is the IP address of the robot. If you use an ethernet cable to connect to the robot, the IP address is 192.168.123.1. But if you use a wifi connection with the robot the address is not fixed, to know it execute the command \textit{ifconfig} on the robot, the IP address is the \textit{inet addr} of wlan0 (warning, the adress can sometimes change without any specific reasons). The second parameters is the username with which you log-on on the robot, if you do not have explicitly changed it, the username is \textit{darwin}. Finally the last parameters is the password corresponding to the username, here again, if you do not have explicitly changed it, the password is \textit{111111}. Each time you connect successfully to the robot, all the settings are saved in order that it is not necessary to set them each time you start the program. If you want to restore the default parameters of the connection, just click on the button \textit{Restore default settings} (Alt+r).\\
+The first thing to do is to set the connections settings. The first setting is the IP address of the robot. If you use an Ethernet cable to connect to the robot, the IP address is 192.168.123.1. But if you use a wifi connection with the robot the address is not fixed, to know it, execute the command \textit{ifconfig} on the robot, the IP address is the \textit{inet addr} of wlan0 (warning, the adress can sometimes change without any specific reason). The second parameters is the username with which you log-on on the robot, if you do not have explicitly changed it, the username is \textit{darwin}. Finally the last parameters is the password corresponding to the username, here again, if you do not have explicitly changed it, the password is \textit{111111}. Each time you connect successfully to the robot, all the settings are saved so that it is not necessary to set them each time you start the program. If you want to restore the default parameters of the connection, just click on the \textit{Restore default settings} button (Alt+r).\\
 
-Before you can send your controller to the real robot you have to change the file Makefile.darwin-op to suit to your project. If you have added new file to the project, do not forget to add them to the \textit{CXX\_SOURCES} and if you have changed the project name change also the \textit{TARGET}.\\
+Before you can send your controller to the real robot you have to change the Makefile.darwin-op file to suit to your project. If you have added new files to the project, do not forget to add them to the \textit{CXX\_SOURCES} and if you have changed the project name, change also the \textit{TARGET} value.\\
 
 \newpage
-Before to send the controller you will also need to complete the \textit{Robot Config} section of the file \textit{config.ini}. You have two parameters to complete :
+Before to send the controller you will also need to complete the \textit{Robot Config} section of the \textit{config.ini} file. You have two parameters to fill in:
 \begin{description}
-\item[Time step] The time step in milliseconds must be specified in the field \textit{time\_step}, a minimal time step of 16ms is requested, if no time step (or a time step smaller than 16ms) is set, the default time step of 16ms is set. Warning : Depending on the complexity of you controller, a time step of 16ms can not always be respected. For example using the camera or the manager can slow done the speed, so enable them only if you really need them.\\
+\item[Time step] The time step in milliseconds must be specified in the field \textit{time\_step}, a minimal time step of 16ms is requested, if no time step (or a time step smaller than 16ms) is set, the default time step of 16ms is used. Warning: Depending on the complexity of you controller, a time step of 16ms can not always be respected. For example using the camera or the manager can slow done the speed, so enable them only if you really need them.\\
 \item[Camera resolution] The horizontal and vertical resolution of the camera must be set in the fields \textit{camera\_width} and \textit{camera\_height}. Only the resolutions specified in table \ref{tab:cameraResolution} are supported, if another resolution is set, the default resolution of 320x240 will be used.\\
 \end{description}
 
@@ -638,7 +638,7 @@ To test your controller on the real robot press the following button :
 \end{center}
 \end{figure}
 
-Webots will then connect to the robot, if any error appear during the connection, the reason will be shown. If it is the first time you connect the robot with Webots, Webots will install all the files needed on the robot. This can take some times and some step are longer than other, so be patient please, this is only on the first connection, the next ones will be shorter. You can also see in real time what is appening in the \textit{DARwIn-OP console}. Webots will also stop the auto start of the demo program at the startup of the robot, but don't worry the program is not suppressed and the auto start can easily be reinstalled (explanation follows).\\
+Webots will then connect to the robot, if any error appears during the connection, the reason will be shown. If it is the first time you connect the robot with Webots, Webots will install all the files needed on the robot. This can take some time and some step are longer than other, so be patient please, this happens only on the first connection, the next ones will be shorter. You can also see in real time what is appening in the \textit{DARwIn-OP console}. Webots will also stop the auto start of the demo program at the startup of the robot, but don't worry the program is not suppressed and the auto start can easily be reinstalled (explanation follows).\\
 
 
 Then the controller code itself is send to the robot. All the directory of the controller is send to the robot, so please put all the files needed by your controller in the same directory. The controller itself is then compiled for the robot and you can see the compilation in the \textit{DARwIn-OP console}. If the compilation success and the robot is close to the start position (figure \ref{start_position}) the controller will be initialized (head and eyes LED in red) and then started (head and eyes LED in green).\\
@@ -666,10 +666,10 @@ This will stop the controller and clean all files previously sent to the robot.\
 You can also stop the controller by pressing the right button at the back of the robot. This will not entirely stop the controller but will at least avoid the robot from moving. It will also release the torque of all the servos.\\
 
 \subsection{Permanently install a controller to the robot}
-If you want to install the controller on the real robot, check the checkbox \textit{Make default controller}. Then when you press the button to send the controller to the real robot, instead of running after the compilation, the controller is set to start automatically at the startup of the robot without any need of Webots or any computer. But warning the robot still need to be in the start position when starting but their wont be any verification on the position, it is your responsibility to make sure that you always start the robot in this position (starting from an unknown position is not safe).\\
+If you want to install the controller on the real robot, check the checkbox \textit{Make default controller}. Then when you press the button to send the controller to the real robot, instead of running after the compilation, the controller is set to start automatically at the startup of the robot without any need of Webots or any computer. Warning: the robot still need to be in the start position when starting but their wont be any verification on the position, it is your responsibility to make sure that you always start the robot in this position (starting from an unknown position is not safe).\\
 
-\subsection{Uninstall Webots from the robot}
-If you plain to not use anymore Webots with your DARwIn-OP, you can uninstall all the files installed on the DARwIn-OP by Webots by pressing this button :
+\subsection{Uninstall Webots files from the robot}
+If you don't need to use anymore Webots with your DARwIn-OP, you can uninstall all the files installed on the DARwIn-OP by Webots by pressing this button :
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=2.5cm]{uninstall.png}
@@ -677,36 +677,36 @@ If you plain to not use anymore Webots with your DARwIn-OP, you can uninstall al
 \end{center}
 \end{figure}
 
-This will restore your robot like it was before installing Webots files to it. Even the demo program will again automatically start at the startup of the robot. But if you send again a controller to the robot with Webots, all the files will again be installed. You can also use this button to reinstall all Webots files to the robot if you think something went wrong during the installation.\\ 
+This will restore your robot like it was before installing the Webots files on it. Even the demo program will again automatically start at the startup of the robot. But if you send again a controller to the robot with Webots, all the files will again be installed. You can also use this button to reinstall all Webots files to the robot if you think something went wrong during the installation.\\ 
 
-If you install a new version of Webots on your computer the Webots files on the robot will automatically been update at the sending of the first controller (don't worry if you use severals version of Webots, an older version can not erase files from a newer version).\\
+If you install a new version of Webots on your computer the Webots files on the robot will automatically be updated at the sending of the first controller (don't worry if you use severals version of Webots, an older version can not erase files from a newer version).\\
 
 \subsection{Dynamixel MX28 firmware}
-The cross-compilation has been optimized for the lasts firmware versions of the servos. You need to have at least version 27 of the firmware installed on all the servos, if this is not the case (on old DARwIn-OP robot for example) you will be informed when you will try to send a controller to the real robot. In order to update the firmware version please use the tool \textit{Firmware Installer}\,\footnote{ More informations about this tool at : \url{www.support.robotis.com/ko/product/darwin-op/development/tools/firmware_installer.htm}} from ROBOTIS.\\
+The cross-compilation has been optimized for the last firmware versions of the servos. You need to have at least version 27 of the firmware installed on all the servos, if this is not the case (on old DARwIn-OP robot for example) you will be informed when you will try to send a controller to the real robot. In order to update the firmware version please use the \textit{Firmware Installer} tool\,\footnote{ More informations about this tool from ROBOTIS at: \url{www.support.robotis.com/ko/product/darwin-op/development/tools/firmware_installer.htm}}.\\
 
 \newpage
 \subsection{Using speaker}
-As speaker are not present in Webots, it is not possible to use the speakers in simulation. In cross-compilation it is still possible to play sound by using this two function :\\
+As speaker are not present in Webots, it is not possible to use the speakers in simulation. In cross-compilation it is still possible to play sound by using these two functions:\\
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
 \begin{lstlisting} 
 virtual void playFile(const char* filename);
 virtual void playFileWait(const char* filename);
 \end{lstlisting}
-Filename is the path to an audio file (MP3 for example). The function \textit{playFile} play the file without stopping the controller while the function \textit{playFileWait} stop the controller as long as the audio file is not finished.\\
+Filename is the path to an audio file (MP3 for example). The \textit{playFile} function plays the file without stopping the controller (parallel execution) while the \textit{playFileWait} function stops the controller until the audio file playback is complete (serial execution).\\
 
-In order to use them you have to use something similar to this :\\
+In order to use them you have to write something similar to this :\\
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
 \begin{lstlisting} 
 mSpeaker = getSpeaker("Speaker");
 mSpeaker->enable(mTimeStep);
-mSpeaker->playFile("hello.mp3"); // the file is in the same directory that the controller
+mSpeaker->playFile("hello.mp3"); // the file is in the same directory as the controller
 \end{lstlisting}
 
 And do not forget to include \textit{webots/Speaker.hpp}.\\
 
-Because Speaker are not yet present in simulation we recommend you to put all your code concerning the speaker in a \textit{\#ifdef CROSSCOMPILATION} in order to keep the same code running in simulation and on the real robot. Here is an example :\\
+Because Speaker are not yet present in simulation we recommend you to put all your code concerning the speaker within \textit{\#ifdef CROSSCOMPILATION} statements in order to keep the same code running in simulation and on the real robot. Here is an example :\\
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
 \begin{lstlisting} 
@@ -716,21 +716,21 @@ Because Speaker are not yet present in simulation we recommend you to put all yo
 #endif
 \end{lstlisting}
 
-Severals audio files are already present on the robot in the folder \textit{/darwin/Data/mp3/}, you can freely use them like this :\\
+Severals audio files are already present on the robot in the \textit{/darwin/Data/mp3/} folder, you can freely use them this way:\\
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
 \begin{lstlisting} 
 mSpeaker->playFile("/darwin/Data/mp3/FileName.mp3"); // this file is already on the robot, no need to send it.
 \end{lstlisting}
 
-The annex \ref{sec:audioFile} reference all the audio files available.\\
+The \ref{sec:audioFile} appendix references all the audio files available.\\
 
 \newpage
 \subsection{Using keyboard}
 
-The use of the keyboard is also available in cross-compilation. To use a keyboard you just have to connect an usb keyboard to the robot thanks to one of the two usb ports at the back of the robot (any wireless keyboard will also works).\\
+The use of the keyboard is also available in cross-compilation. To use a keyboard you just have to connect an usb keyboard to the robot to one of the two USB ports available on the back of the robot (any wireless keyboard will also works).\\
 
-Then when enabling the keyboard in your controller, a small window like the one in figure \ref{keyboardWindow} will appear on the real robot screen (if any connected).\\
+Then when enabling the keyboard in your controller, a small window like the one depicted on figure \ref{keyboardWindow} will show up on the real robot screen (if any connected).\\
 
 \begin{figure}[H]
 \begin{center}
@@ -740,7 +740,7 @@ Then when enabling the keyboard in your controller, a small window like the one 
 \end{center}
 \end{figure}
 
-This little window is used to capture the inputs of the keyboard. Please do not close this window or set the focus to another window (by clicking on another window) or you wont be able to read the keyboard inputs anymore.\\
+This little window is used to capture the input of the keyboard. Please do not close this window or unset the focus on it (by clicking outside this window) or you wont be able to read the keyboard input anymore.\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -753,7 +753,7 @@ This little window is used to capture the inputs of the keyboard. Please do not 
 \section{Known Bugs}
 
 \subsection{Lateral balance}
-In simulation, in the DARwInOPGaitManager, the lateral balance do not work as expected. It is recommended to set \textit{balance\_hip\_roll\_gain} and \textit{balance\_ankle\_roll\_gain} to 0.0, this must be done in the file 'config.ini' attached to the controller.\\
+In simulation, in the DARwInOPGaitManager, the lateral balance do not work as expected. It is recommended to set \textit{balance\_hip\_roll\_gain} and \textit{balance\_ankle\_roll\_gain} to 0.0, this must be done in the 'config.ini' file associated with the controller.\\
 
 \subsection{Controller P}
 In simulation the P gain of the servo affects the speed but on the real robot it affects the torque. This can cause differences between simulation and reality in some specific cases. Especially when P is small.\\
@@ -763,13 +763,13 @@ In simulation the P gain of the servo affects the speed but on the real robot it
 \newpage
 \section{Bibliography}
 
-For any informations (documentation, support, store ...) about Webots, please visit Cyberbotics website : \url{http://www.cyberbotics.com}\\
+For any information about Webots, please visit Cyberbotics website: \url{http://www.cyberbotics.com}\\
 
-Each time a new version of Webots is released the latest files of DARwIn-OP with Webots project are included, but you can at any times find the latest files of the project in the corresponding Github : \url{https://github.com/darwinop/webots-cross-compilation}\\
+Each time a new version of Webots is released the latest files of DARwIn-OP with Webots project are included, but you can always find the latest files of the project in the corresponding Github: \url{https://github.com/darwinop/webots-cross-compilation}\\
 
-For any informations about the DARwIn-OP robot please visit ROBOTIS website : \url{http://support.robotis.com/ko/product/darwin-op.htm}\\
+For any information about the DARwIn-OP robot please visit ROBOTIS website: \url{http://support.robotis.com/ko/product/darwin-op.htm}\\
 
-DARwIn-OP being open source you can also find all the source files of the project here : \url{http://sourceforge.net/projects/darwinop}\\
+DARwIn-OP being open source you can also find all the source files of the project here: \url{http://sourceforge.net/projects/darwinop}\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -781,10 +781,10 @@ DARwIn-OP being open source you can also find all the source files of the projec
 
 \section{Walking parameters} \label{sec:walkParameter}
 
-This annex explain all the parameters that can be set in the configuration file (.ini) to tune the gait.\\ 
+This appendix explains all the parameters that can be set in the configuration file (.ini) to tune the gait.\\ 
 
 \paragraph*{X offset}
-is the offset of the feet in the direction X. Unit is in millimeter.
+is the offset of the feet in the X direction. Unit is in millimeter.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=3cm]{x_offset.jpg}
@@ -794,7 +794,7 @@ is the offset of the feet in the direction X. Unit is in millimeter.
 \end{figure}
 
 \paragraph*{Y offset}
-is the offset of the feet in the direction Y. Unit is in millimeter.
+is the offset of the feet in the Y direction. Unit is in millimeter.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[height=6cm]{y_offset.jpg}
@@ -805,7 +805,7 @@ is the offset of the feet in the direction Y. Unit is in millimeter.
 
 \newpage
 \paragraph*{Z offset}
-is the offset of the feet in the direction Z. Unit is in millimeter.
+is the offset of the feet in the Z direction. Unit is in millimeter.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[height=6cm]{z_offset.jpg}
@@ -928,7 +928,7 @@ is angle offset at the pelvis along X axis. It uses a special unit of the motor 
 \end{figure}
 
 \paragraph*{Arm swing gain}
-is the gain that influence the movements of the arm during walking.
+is the gain that influences the movement of the arm during walking.
 
 \paragraph*{Balance knee gain}
 is the gain at the knee level for the front/back balance
@@ -937,10 +937,10 @@ is the gain at the knee level for the front/back balance
 is the gain at the ankle level for the front/back balance.
 
 \paragraph*{Balance hip roll gain}
-is the gain at the hip level for the lateral balance. Since lateral balance do not work very well in simulation, we recommend you tu put this parameters to 0.
+is the gain at the hip level for the lateral balance. Since the lateral balance does not work very well in simulation, we recommend you to set this parameter to 0.
 
 \paragraph*{Balance ankle roll gain}
-is the gain at the ankle level for the lateral balance. Since lateral balance do not work very well in simulation, we recommend you tu put this parameters to 0.
+is the gain at the ankle level for the lateral balance. Since the lateral balance does not work very well in simulation, we recommend you to set this parameter to 0.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
