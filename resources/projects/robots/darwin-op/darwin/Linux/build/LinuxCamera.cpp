@@ -482,7 +482,7 @@ int LinuxCamera::ReadFrameWb()
             int r, g, b;
             int y, u, v;
 
-            if(!z)
+            if(z)
                 y = yuyv[-3] << 8;
             else
                 y = yuyv[-1] << 8;
