@@ -1,6 +1,13 @@
+Webots 7.1.X
+
+  Simulation :
+
+    Corrected wrong link between the LEDS: BackLedRed, BackLedGreen and BackLedBlue.
+
+
 Webots 7.1.0
 
-Released on January XXth, 2012 (revision XXXXX) 
+Released on January 18th, 2012 (revision 13099) 
 
   Simulation :
 

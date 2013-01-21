@@ -8,7 +8,7 @@
 #- camera
 #- realistic physics
 #
-# More info here: http://darwin-op.springnote.com
+# More info here: http://support.robotis.com/ko/product/darwin-op.htm
 #
 # Modeled by fabien.rohrer@cyberbotics.com
 
@@ -468,7 +468,7 @@ Robot {
       color [0 1 0]
       name "BackLedGreen"
       children [
-        DEF BackLedShape Shape {
+        Shape {
               appearance Appearance {
                 material Material {
                   ambientIntensity 0.01
@@ -486,7 +486,17 @@ Robot {
       color [0 0 1]
       name "BackLedBlue"
       children [
-        USE BackLedShape
+        Shape {
+              appearance Appearance {
+                material Material {
+                  ambientIntensity 0.01
+                  transparency 0.1
+                }
+              }
+            geometry Box {
+            size 0.002 0.005 0.002
+          }
+        }
       ]
     }
     LED {
@@ -494,7 +504,17 @@ Robot {
       color [1 0 0]
       name "BackLedRed"
       children [
-        USE BackLedShape
+        Shape {
+              appearance Appearance {
+                material Material {
+                  ambientIntensity 0.01
+                  transparency 0.1
+                }
+              }
+            geometry Box {
+            size 0.002 0.005 0.002
+          }
+        }
       ]
     }
     Accelerometer {
