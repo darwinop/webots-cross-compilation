@@ -1,4 +1,4 @@
-.PHONY: build
+.PHONY: release debug profile
 
-build clean:
+release debug profile clean:
 	+make -s -C ../lib $@

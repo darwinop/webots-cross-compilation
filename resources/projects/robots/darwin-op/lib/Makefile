@@ -48,7 +48,7 @@ DEPENDENCIES = $(OBJECTS:.o=.d)
 
 .PHONY: clean build
 
-build: $(TARGET)
+release debug profile: $(TARGET)
 
 vpath %.c   $(dir $(SOURCES))
 vpath %.cpp $(dir $(SOURCES))
