@@ -474,7 +474,7 @@ int LinuxCamera::ReadFrameWb()
     assert (buf.index < n_buffers);
 
     // Extract the image from the buffer, flip it (H and V) and convert it in BGRA format (everything in only one loop)
-    unsigned char *yuyv = (unsigned char*)buffers[buf.index].start + fbuffer->m_YUVFrame->m_ImageSize/2 - 1; 
+    unsigned char *yuyv = (unsigned char*)buffers[buf.index].start + fbuffer->m_YUVFrame->m_ImageSize/2 - 1;
     unsigned char *bgra  = fbuffer->m_BGRAFrame->m_ImageData;
     int z = 0;
 
@@ -562,3 +562,4 @@ void LinuxCamera::CaptureFrameWb()
         /* EAGAIN - continue select loop. */
     }
 }
+
