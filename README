@@ -81,6 +81,11 @@ E. Run the same controller on the DARwIn-OP
      $ cd /darwin/Linux/project/webots/controllers/symmetry
      $ make -f Makefile.darwin-op
 
+- 7. Start the controller
+     $ ./symmetry
+     To stop the controller press Ctrl+c
+     You can now try the other examples presents in the directory "controllers"
+
 ----- Known issues ----- 
 
 - 1. In simulation, in the DARwInOPGaitManager, the lateral balance do not work as expected.
