@@ -52,16 +52,21 @@ D. Run the simulation
 
 E. Run the same controller on the DARwIn-OP
 
-- 0. On the DARwIn-OP, merge $GIT_REPOSITORY/resources/projects/robots/darwin-op/darwin/ with existing DARwIn-OP source code in /darwin/ directory
+- 1. On the DARwIn-OP, merge $GIT_REPOSITORY/resources/projects/robots/darwin-op/darwin/ with existing DARwIn-OP source code in /darwin/ directory
 
      $ cp -R $GIT_REPOSITORY/resources/projects/robots/darwin-op/darwin/* /darwin/ 
 
-- 1. On the DARwIn-OP, create a /darwin/Linux/project/webots directory
+- 2. On the DARwIn-OP, recompile the Framework
 
-- 2. Copy-paste the "include", "lib", "transfer", and "src" directories of the $GIT_REPOSITORY/resources/projects/robots/darwin-op
+     $ cd /darwin/Linux/build
+     $ make
+
+- 3. On the DARwIn-OP, create a /darwin/Linux/project/webots directory
+
+- 4. Copy-paste the "include", "lib", "transfer", and "src" directories of the $GIT_REPOSITORY/resources/projects/robots/darwin-op
      directory directly in the /darwin/Linux/project/webots directory
 
-- 3. Do the same with the $GIT_REPOSITORY/projects/robots/darwin-op/controllers directory.
+- 5. Do the same with the $GIT_REPOSITORY/projects/robots/darwin-op/controllers directory.
      Note: From now, on the real DARwIn-OP, you should have these directories:
        /darwin/Linux/project/webots/include
        /darwin/Linux/project/webots/lib
@@ -69,19 +74,19 @@ E. Run the same controller on the DARwIn-OP
        /darwin/Linux/project/webots/src
        /darwin/Linux/project/webots/controllers
 
-- 4. Compile the wrapper library
+- 6. Compile the wrapper library
      $ cd /darwin/Linux/project/webots/transfer/lib
      $ make
 
-- 5. Compile the managers library
+- 7. Compile the managers library
      $ cd /darwin/Linux/project/webots/lib
      $ make -f Makefile.darwin-op
 
-- 6. Compile the controller
+- 8. Compile the controller
      $ cd /darwin/Linux/project/webots/controllers/symmetry
      $ make -f Makefile.darwin-op
 
-- 7. Start the controller
+- 9. Start the controller
      $ ./symmetry
      To stop the controller press Ctrl+c
      You can now try the other examples presents in the directory "controllers"
