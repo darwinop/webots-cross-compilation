@@ -42,10 +42,10 @@ D. Run the simulation
      
      => $WEBOTS_HOME/resources/projects/robots/darwin-op/lib/managers.a is generated
 
-- 3. Compile a Sample controller
+- 3. Compile a Soccer controller
      Open Webots and compile the controller:
-     $ webots $GIT_REPOSITORY/projects/robots/darwin-op/worlds/darwin-op.wbt
-     From the Webots GUI, open $GIT_REPOSITORY/projects/robots/darwin-op/controllers/sample/Sample.cpp and
+     $ webots $GIT_REPOSITORY/projects/robots/darwin-op/worlds/soccer.wbt
+     From the Webots GUI, open $GIT_REPOSITORY/projects/robots/darwin-op/controllers/soccer/Soccer.cpp and
      hit the "Build / Build" menu item.
      Revert and play the simulation.
 
