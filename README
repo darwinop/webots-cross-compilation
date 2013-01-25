@@ -78,7 +78,7 @@ E. Run the same controller on the DARwIn-OP
      $ make -f Makefile.darwin-op
 
 - 6. Compile the controller
-     $ cd /darwin/Linux/project/webots/controllers/sample
+     $ cd /darwin/Linux/project/webots/controllers/symmetry
      $ make -f Makefile.darwin-op
 
 ----- Known issues ----- 
