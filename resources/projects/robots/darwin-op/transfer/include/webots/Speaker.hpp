@@ -11,6 +11,9 @@
 
 #include <webots/Device.hpp>
 
+#include <unistd.h>
+#include <sys/wait.h>
+
 namespace webots {
   class Speaker: public Device  {
     public:
@@ -20,6 +23,11 @@ namespace webots {
       virtual void  disable();
       virtual void  playFile(const char* filename);
       virtual void  playFileWait(const char* filename);
+      virtual void  speak(const char * text);
+      virtual void  speakFile(const char * filename);
+
+    private:
+      pid_t speak_pid;
   };
 }
 
