@@ -140,8 +140,8 @@ int webots::Robot::step(int ms) {
     mKeyboard->resetKeyPressed();
 
 // -------- Timing management -------- //
-  if(stepDuration < getBasicTimeStep()) { // Step to short -> wait remaining time
-    usleep((getBasicTimeStep() - stepDuration) * 1000);
+  if(stepDuration < ms) { // Step to short -> wait remaining time
+    usleep((ms - stepDuration) * 1000);
     mPreviousStepTime = actualTime;
     return 0;
   }
