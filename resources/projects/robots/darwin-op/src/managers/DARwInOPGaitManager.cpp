@@ -104,7 +104,7 @@ void DARwInOPGaitManager::step(int step) {
     mWalking->Process();
   }
 
-  for (int i=0; i<DGM_NSERVOS; i++)
+  for (int i=0; i<(DGM_NSERVOS-2); i++)
     mServos[i]->setPosition(valueToPosition(mWalking->m_Joint.GetValue(i+1)));
 #endif
 }
