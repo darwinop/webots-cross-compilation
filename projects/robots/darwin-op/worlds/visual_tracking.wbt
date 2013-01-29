@@ -7,15 +7,8 @@ WorldInfo {
     "Date: May 2011"
   ]
   title "Robotis DARwIn-OP"
-  basicTimeStep 8
+  basicTimeStep 16
   displayRefresh 4
-  contactProperties [
-    ContactProperties {
-      material2 "DMetalMaterial"
-      coulombFriction 20
-      bounce 0.3
-    }
-  ]
 }
 Viewpoint {
   orientation -0.162905 0.937794 0.306602 2.21925
