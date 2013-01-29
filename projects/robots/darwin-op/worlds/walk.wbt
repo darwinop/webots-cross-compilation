@@ -7,7 +7,7 @@ WorldInfo {
     "Date: May 2011"
   ]
   title "Robotis DARwIn-OP"
-  basicTimeStep 8
+  basicTimeStep 16
   displayRefresh 4
 }
 Viewpoint {
