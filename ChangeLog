@@ -2,7 +2,8 @@ Webots 7.1.X
 
   Simulation :
 
-    Corrected wrong link between the LEDS: BackLedRed, BackLedGreen and BackLedBlue.
+    Corrected wrong link between the LEDS: BackLedRed, BackLedGreen and BackLedBlue
+    Set default basicTimeStep to 16ms for each example
 
 
 Webots 7.1.0
