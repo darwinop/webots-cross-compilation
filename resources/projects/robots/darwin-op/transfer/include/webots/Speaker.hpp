@@ -23,8 +23,8 @@ namespace webots {
       virtual void  disable();
       virtual void  playFile(const char* filename);
       virtual void  playFileWait(const char* filename);
-      virtual void  speak(const char * text);
-      virtual void  speakFile(const char * filename);
+      virtual void  speak(const char * text, const char * voice = "en", int speed = 175);
+      virtual void  speakFile(const char * filename, const char * voice = "en", int speed = 175);
 
     private:
       pid_t speak_pid;
