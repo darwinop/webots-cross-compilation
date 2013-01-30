@@ -28,9 +28,9 @@ int x_return, y_return;
 unsigned int border_width_return;
 unsigned int depth_return;
 
-const char text1[128] = "This window is used to catch keyboard inputs by the controller.";
-const char text2[128] = "Please do not close it and do notunfocus it.";
-const char text3[128] = "It will be closed automatically when the controller terminate.";
+const char text1[128] = "This window is used to catch keyboard input by the controller.";
+const char text2[128] = "Please do not close it and do not unfocus it.";
+const char text3[128] = "It will be closed automatically when the controller terminates.";
 
 int SpecialKey[10] = { 0, WB_ROBOT_KEYBOARD_HOME, WB_ROBOT_KEYBOARD_LEFT, WB_ROBOT_KEYBOARD_UP, WB_ROBOT_KEYBOARD_RIGHT, WB_ROBOT_KEYBOARD_DOWN, WB_ROBOT_KEYBOARD_PAGEUP, WB_ROBOT_KEYBOARD_PAGEDOWN, WB_ROBOT_KEYBOARD_END };
 
@@ -83,9 +83,9 @@ void Keyboard::createWindow() {
     XCopyPlane(display, bitmap, window, gc, 0, 0, bitmap_width, bitmap_height, 0, 0, 1);
   
   // Set text in the window
-  XDrawString(display, window, gc, 10 + (width - 400) / 2, height/2 - 30, text1, 63);
-  XDrawString(display, window, gc, 70 + (width - 400) / 2, height/2, text2, 44);
-  XDrawString(display, window, gc, 10 + (width - 400) / 2, height/2 + 30, text3, 62);
+  XDrawString(display, window, gc, 10 + (width - 400) / 2, height/2 - 30, text1, 62);
+  XDrawString(display, window, gc, 70 + (width - 400) / 2, height/2, text2, 45);
+  XDrawString(display, window, gc, 10 + (width - 400) / 2, height/2 + 30, text3, 63);
   
   /* flush all pending requests to the X server. */
   XFlush(display);
