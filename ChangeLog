@@ -4,7 +4,11 @@ Webots 7.1.X
 
     Corrected wrong link between the LEDS: BackLedRed, BackLedGreen and BackLedBlue
     Set default basicTimeStep to 16ms for each example
+    Increase camera refresh time to 32ms in example 'Soccer' and 'Visual_tracking'
 
+  Cross-Compilation:
+    
+    Added text-to-speech functions in Speaker module
 
 Webots 7.1.0
 
