@@ -37,7 +37,7 @@ Soccer::Soccer():
   mBackLedGreen = getLED("BackLedGreen");
   mBackLedBlue = getLED("BackLedBlue");
   mCamera = getCamera("Camera");
-  mCamera->enable(mTimeStep);
+  mCamera->enable(2*mTimeStep);
   mAccelerometer = getAccelerometer("Accelerometer");
   mAccelerometer->enable(mTimeStep);
   mGyro = getGyro("Gyro");

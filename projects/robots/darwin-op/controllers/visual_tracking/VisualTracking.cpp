@@ -29,7 +29,7 @@ VisualTracking::VisualTracking():
   mEyeLED = getLED("EyeLed");
   mHeadLED = getLED("HeadLed");
   mCamera = getCamera("Camera");
-  mCamera->enable(mTimeStep);
+  mCamera->enable(2*mTimeStep);
   
   for (int i=0; i<NSERVOS; i++)
     mServos[i] = getServo(servoNames[i]);
