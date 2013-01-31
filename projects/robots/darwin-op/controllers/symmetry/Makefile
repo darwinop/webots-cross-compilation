@@ -6,10 +6,10 @@
 
 RESOURCES_PATH = $(WEBOTS_HOME)/resources/projects/robots/darwin-op
 PROTECTED_RESOURCES_PATH = $(subst $(space),\ ,$(strip $(subst \,/,$(RESOURCES_PATH))))
-CFLAGS = -I"$(RESOURCES_PATH)/include"
+INCLUDE = -I"$(RESOURCES_PATH)/include"
 LIBRARIES = "$(RESOURCES_PATH)/lib/managers.a"
 LINK_DEPENDENCIES = $(PROTECTED_RESOURCES_PATH)/lib/managers.a
-CPP_SOURCES = main.cpp Symmetry.cpp
+CXX_SOURCES = main.cpp Symmetry.cpp
 
 ### Do not modify: this includes Webots global Makefile.include
 space :=
