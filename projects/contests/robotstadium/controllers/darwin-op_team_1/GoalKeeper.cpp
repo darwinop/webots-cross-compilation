@@ -1,5 +1,5 @@
 #include "GoalKeeper.hpp"
-#include <managers/DARwInOPMotionManager.hpp>
+#include <DARwInOPMotionManager.hpp>
 
 using namespace webots;
 

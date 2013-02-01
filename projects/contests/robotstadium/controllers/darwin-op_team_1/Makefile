@@ -4,9 +4,8 @@
 # See documentation in $(WEBOTS_HOME_PATH)/resources/Makefile.include
 
 RESOURCES_PATH = $(WEBOTS_HOME)/resources/projects/robots/darwin-op
-INCLUDE = -I"$(RESOURCES_PATH)/include"
-LIBRARIES = "$(RESOURCES_PATH)/lib/managers.a"
-LINK_DEPENDENCIES = $(RESOURCES_PATH)/lib/managers.a
+INCLUDE = -I"$(RESOURCES_PATH)/libraries/managers/include" -I"$(RESOURCES_PATH)/libraries/darwin/darwin/Framework/include"
+LIBRARIES = -L"$(RESOURCES_PATH)/libraries/darwin" -ldarwin -L"$(RESOURCES_PATH)/libraries/managers" -lmanagers
 CXX_SOURCES = $(wildcard *.cpp)
 JAR_FILE = darwin-op_team.jar
 
