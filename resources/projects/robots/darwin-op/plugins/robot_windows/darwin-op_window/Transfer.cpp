@@ -140,6 +140,9 @@ Transfer::Transfer()
 Transfer::~Transfer() {
   free(mControllerThread);
 }
+// -------------------------------------------------------------------- //
+// *** Cross-Compilation function and corresponding thread function *** //
+// -------------------------------------------------------------------- //
 
 void Transfer::sendController() {
 
@@ -410,16 +413,20 @@ void * Transfer::thread_controller(void *param) {
   pthread_exit(NULL);
 }
 
+// -------------------------------------------------------------------------- //
+// *** Webots API installation function and corresponding thread function *** //
+// -------------------------------------------------------------------------- //
+
 int Transfer::installAPI() {
 
   mStatusLabel->setText(QString("Status : Installation/Update of Webots API"));
 
   QString installInclude, installLib, insatllTransfer, installSRC, installConfig, installCheck_start_position, installArchive, webotsHome;
   webotsHome = QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME"));
-  installInclude = webotsHome + QString("/resources/projects/robots/darwin-op/include");
-  installLib = webotsHome + QString("/resources/projects/robots/darwin-op/lib/Makefile.darwin-op");
+  installInclude = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/managers/include");
+  installLib = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/managers/Makefile.darwin-op");
   insatllTransfer = webotsHome + QString("/resources/projects/robots/darwin-op/transfer");
-  installSRC = webotsHome + QString("/resources/projects/robots/darwin-op/src");
+  installSRC = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/managers/src");
   installConfig = webotsHome + QString("/resources/projects/robots/darwin-op/config");
   installCheck_start_position = webotsHome + QString("/resources/projects/robots/darwin-op/check_start_position");
   installArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_install.tar");
@@ -521,7 +528,7 @@ int Transfer::installAPI() {
   ExecuteSSHCommand("make -C /darwin/Linux/project/webots/check_start_position -f Makefile.darwin-op");
   ShowOutputSSHCommand();
   ExecuteSSHCommand("make -C /darwin/Linux/project/webots/transfer/lib -f Makefile");
-    emit updateProgressSignal(75);
+  emit updateProgressSignal(75);
   ShowOutputSSHCommand();
 
   ExecuteSSHCommand("make -C /darwin/Linux/project/webots/lib -f Makefile.darwin-op");
@@ -544,8 +551,13 @@ int Transfer::installAPI() {
   return 1;
 }
 
+// ---------------------------------------------------------------------------- //
+// *** Webots API uninstallation function and corresponding thread function *** //
+// ---------------------------------------------------------------------------- //
+
 void Transfer::uninstall() {
   QMessageBox msgBox;
+  msgBox.setWindowTitle("Webots API uninstallation");
   msgBox.setText("You are going to completely uninstall Webots API from DARwIn-OP");
   msgBox.setInformativeText("Are you sure is it what do you want to do?");
   msgBox.setStandardButtons(QMessageBox ::Yes | QMessageBox::No);
@@ -758,6 +770,7 @@ void Transfer::robotInstableSlot() {
 	QString imagePath;
 	imagePath = StandardPaths::getWebotsHomePath() + QString("resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/start_position.png.png");
     QMessageBox msgBox;
+    msgBox.setWindowTitle("Stability check");
     msgBox.setText("The robot doesn't seems to be in a stable position.");
     msgBox.setInformativeText("What do you want to do?");
     msgBox.setDetailedText("Warning, the robot doesn't seems to be in it's stable start-up position.\nWe recommand you to put the robot in the stable position and to retry.\nThe stable position is when the robot is sit down (illustration above).\nNevertheless if you want to start the controller in this position you can press Ignore, but be aware that the robot can make sudden movements to reach its start position and this can damage it!");
@@ -818,10 +831,10 @@ int Transfer::updateFramework() {
 
   QString installVersion, installArchive, installData, installFramework, installLinux, webotsHome;
   webotsHome = QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME"));
-  installVersion = webotsHome + QString("/resources/projects/robots/darwin-op/darwin/version.txt");
-  installData = webotsHome + QString("/resources/projects/robots/darwin-op/darwin/Data");
-  installLinux = webotsHome + QString("/resources/projects/robots/darwin-op/darwin/Linux");
-  installFramework = webotsHome + QString("/resources/projects/robots/darwin-op/darwin/Framework");
+  installVersion = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/darwin/darwin/version.txt");
+  installData = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/darwin/darwin/Data");
+  installLinux = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/darwin/darwin/Linux");
+  installFramework = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/darwin/darwin/Framework");
   installArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_update.tar");
 
   emit updateProgressSignal(10);
@@ -885,7 +898,8 @@ int Transfer::updateFramework() {
 void Transfer::installControllerWarningSlot() {
   if(!mMakeDefaultControllerCheckBox->isChecked()) {
     QMessageBox msgBox;
-    msgBox.setText("Installation of controller on the DARwIn-OP");
+    msgBox.setWindowTitle("Controller installation");
+    msgBox.setText("Installation of controller on the DARwIn-OP                     ");
     msgBox.setInformativeText("The controller will start automaticaly when the robot starts.\nWarning the position of the robot will not be checked, so make sure that the robot is allways in its stable position before to start it.");
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.setDefaultButton(QMessageBox::Ok);
