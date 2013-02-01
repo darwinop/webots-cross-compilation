@@ -1,0 +1,53 @@
+/*
+ * File:         Wrapper.hpp
+ * Date:         January 2013
+ * Description:  Defines an interface wrapping the libController with this library for the DARwIn-OP
+ * Author:       david.mansolino@epfl.ch
+ * Modifications:
+ */
+
+#ifndef WRAPPER_HPP
+#define WRAPPER_HPP
+
+#include <webots/types.h>
+
+class Communication;
+class Time;
+
+class Wrapper {
+public:
+  // init
+  static void init();
+  static void cleanup();
+
+  // mandatory functions
+  static bool start(void *);
+  static void stop();
+  static bool hasFailed() { return !cSuccess; }
+  static int  robotStep(int);
+  static void stopActuators();
+
+  // redefined functions
+  static void setRefreshRate(WbDeviceTag tag, int rate);
+  static void setMotorForceRefreshRate(WbDeviceTag tag, int rate);
+  static void ledSet(WbDeviceTag tag, int state);
+  static void servoSetPosition(WbDeviceTag tag, double position);
+  static void servoSetVelocity(WbDeviceTag tag, double velocity);
+  static void servoSetAcceleration(WbDeviceTag tag, double acceleration);
+  static void servoSetMotorForce(WbDeviceTag tag, double force);
+  static void servoSetForce(WbDeviceTag tag, double force);
+  static void servoSetControlP(WbDeviceTag tag, double p); 
+
+  // unimplemented required functions
+  static void cameraSetFOV(WbDeviceTag tag, double fov) {}
+
+private:
+  Wrapper() {}
+  virtual ~Wrapper() {}
+
+  static Communication *cCommunication;
+  static Time *cTime;
+  static bool cSuccess;
+};
+
+#endif
