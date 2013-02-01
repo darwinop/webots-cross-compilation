@@ -36,11 +36,13 @@ D. Run the simulation
 - 1. Merge the "resources" directory git repository with the "resources" directory of Webots
      $ cp -R $GIT_REPOSITORY/resources $WEBOTS_HOME
 
-- 2. Compile the manager library by typing:
-     $ cd $WEBOTS_HOME/resources/projects/robots/darwin-op/lib
+- 2. Compile the darwin and manager libraries by typing:
+     $ cd $WEBOTS_HOME/resources/projects/robots/darwin-op/libraries/darwin
      $ make
-     
-     => $WEBOTS_HOME/resources/projects/robots/darwin-op/lib/managers.a is generated
+     => $WEBOTS_HOME/resources/projects/robots/darwin-op/libraries/darwin/libdarwin is generated
+     $ cd $WEBOTS_HOME/resources/projects/robots/darwin-op/libraries/managers
+     $ make
+     => $WEBOTS_HOME/resources/projects/robots/darwin-op/libraries/managers/libmanagers is generated
 
 - 3. Compile a Soccer controller
      Open Webots and compile the controller:
