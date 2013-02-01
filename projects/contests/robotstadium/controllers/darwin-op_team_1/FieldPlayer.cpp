@@ -1,7 +1,7 @@
 #include "FieldPlayer.hpp"
 #include "../nao_soccer_supervisor/RoboCupGameControlData.h"
-#include <managers/DARwInOPMotionManager.hpp>
-#include <managers/DARwInOPGaitManager.hpp>
+#include <DARwInOPMotionManager.hpp>
+#include <DARwInOPGaitManager.hpp>
 #include <iostream>
 #include <cmath>
 

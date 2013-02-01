@@ -4,9 +4,9 @@
 #include <webots/Camera.hpp>
 #include <webots/Accelerometer.hpp>
 #include <webots/Gyro.hpp>
-#include <managers/DARwInOPMotionManager.hpp>
-#include <managers/DARwInOPGaitManager.hpp>
-#include <managers/DARwInOPVisionManager.hpp>
+#include <DARwInOPMotionManager.hpp>
+#include <DARwInOPGaitManager.hpp>
+#include <DARwInOPVisionManager.hpp>
 
 #include <cstdlib>
 #include <cmath>

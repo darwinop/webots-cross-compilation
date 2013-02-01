@@ -3,8 +3,8 @@
 #include <webots/Accelerometer.hpp>
 #include <webots/Gyro.hpp>
 #include <webots/Servo.hpp>
-#include <managers/DARwInOPMotionManager.hpp>
-#include <managers/DARwInOPGaitManager.hpp>
+#include <DARwInOPMotionManager.hpp>
+#include <DARwInOPGaitManager.hpp>
 
 #include <cstdlib>
 #include <cmath>
