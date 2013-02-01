@@ -85,7 +85,7 @@ Transfer::Transfer()
   
   // Wrapper
   mWrapperVersionFile = new QFile(QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME")) + QString("/resources/projects/robots/darwin-op/config/version.txt"));
-  mFrameworkVersionFile = new QFile(QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME")) + QString("/resources/projects/robots/darwin-op/darwin/version.txt"));
+  mFrameworkVersionFile = new QFile(QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME")) + QString("/resources/projects/robots/darwin-op/libraries/darwin/darwin/version.txt"));
   mUninstallButton = new QPushButton;
   iconPath = StandardPaths::getWebotsHomePath() + QString("resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/uninstall.png");
   mUninstallButton->setIcon(QIcon(QPixmap((char*)iconPath.toStdString().c_str())));
