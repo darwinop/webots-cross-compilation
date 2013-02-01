@@ -8,7 +8,7 @@
 #include <minIni.h>
 
 #ifdef CROSSCOMPILATION
-#include <managers/DARwInOPMotionTimerManager.hpp>
+#include <DARwInOPMotionTimerManager.hpp>
 #include <MotionManager.h>
 #else
 #include <MotionStatus.h>
