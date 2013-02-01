@@ -1,24 +1,24 @@
 #include "entry_points.hpp"
 
 #include <core/MainApplication.hpp>
-#include "CategoryViewer.hpp"
+#include "Viewer.hpp"
 
 using namespace webotsQtUtils;
 
 static MainApplication *gApplication = NULL;
-static CategoryViewer *gCategoryViewer = NULL;
+static Viewer *gViewer = NULL;
 
 bool wbw_init() {
   gApplication = new MainApplication;
   if (gApplication->isInitialized())
-    gCategoryViewer = new CategoryViewer;
+    gViewer = new Viewer;
   return gApplication->isInitialized();
 }
 
 void wbw_cleanup() {
-  if (gCategoryViewer) {
-    delete gCategoryViewer;
-    gCategoryViewer = NULL;
+  if (gViewer) {
+    delete gViewer;
+    gViewer = NULL;
   }
   if (gApplication) {
     delete gApplication;
@@ -37,17 +37,17 @@ void wbw_update_gui() {
 }
 
 void wbw_read_sensors() {
-  if (gCategoryViewer)
-    gCategoryViewer->readSensors();
+  if (gViewer)
+    gViewer->readSensors();
 }
 
 void wbw_write_actuators() {
-  if (gCategoryViewer)
-    gCategoryViewer->writeActuators();
+  if (gViewer)
+    gViewer->writeActuators();
 }
 
 void wbw_show() {
-  if (gCategoryViewer)
-    gCategoryViewer->showWindow();
+  if (gViewer)
+    gViewer->showWindow();
 }
 
