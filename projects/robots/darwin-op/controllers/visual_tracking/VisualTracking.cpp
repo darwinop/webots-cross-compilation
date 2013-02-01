@@ -2,7 +2,7 @@
 #include <webots/Servo.hpp>
 #include <webots/LED.hpp>
 #include <webots/Camera.hpp>
-#include <managers/DARwInOPVisionManager.hpp>
+#include <DARwInOPVisionManager.hpp>
 
 #include <cstdlib>
 #include <cmath>

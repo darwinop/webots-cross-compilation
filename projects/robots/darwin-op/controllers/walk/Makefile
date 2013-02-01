@@ -6,9 +6,8 @@
 
 RESOURCES_PATH = $(WEBOTS_HOME)/resources/projects/robots/darwin-op
 PROTECTED_RESOURCES_PATH = $(subst $(space),\ ,$(strip $(subst \,/,$(RESOURCES_PATH))))
-INCLUDE = -I"$(RESOURCES_PATH)/include"
-LIBRARIES = "$(RESOURCES_PATH)/lib/managers.a"
-LINK_DEPENDENCIES = $(PROTECTED_RESOURCES_PATH)/lib/managers.a
+INCLUDE = -I"$(RESOURCES_PATH)/libraries/managers/include" -I"$(RESOURCES_PATH)/libraries/darwin/darwin/Framework/include"
+LIBRARIES = -L"$(RESOURCES_PATH)/libraries/darwin" -ldarwin -L"$(RESOURCES_PATH)/libraries/managers" -lmanagers
 CXX_SOURCES = main.cpp walk.cpp
 
 ### Do not modify: this includes Webots global Makefile.include
