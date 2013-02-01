@@ -5,6 +5,7 @@ Webots 7.1.X
     Corrected wrong link between the LEDS: BackLedRed, BackLedGreen and BackLedBlue
     Set default basicTimeStep to 16ms for each example
     Increase camera refresh time to 32ms in example 'Soccer' and 'Visual_tracking'
+    Manager static library split into two dynamics libraries, now located in /libraries/darwin and /libraries/managers instead of /lib
 
   Cross-Compilation:
     
