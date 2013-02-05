@@ -28,9 +28,11 @@ int readINTFromBuffer(char * buffer);
 
 int main(int argc, char *argv[]) {
   int erreur = 0;
-  int cameraWidthZoomFactor = (argv[1][0] - 48) & 0xFF;
-  int cameraHeightZoomFactor = (argv[2][0] - 48) & 0xFF;
-
+  int cameraWidthZoomFactor = 1;
+  int cameraHeightZoomFactor = 1;
+  sscanf(argv[1], "%d", &cameraWidthZoomFactor);
+  sscanf(argv[2], "%d", &cameraHeightZoomFactor);
+  
   // Server socket
   SOCKADDR_IN sin;
   SOCKET sock;
