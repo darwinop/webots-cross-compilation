@@ -286,7 +286,7 @@ void * Transfer::thread_remote(void *param) {
   int cameraWidth = wb_camera_get_width(wb_robot_get_device("Camera"));
   int cameraHeight = wb_camera_get_height(wb_robot_get_device("Camera"));
   
-  if((cameraWidth != 320) && (cameraWidth != 160) && (cameraWidth != 80) && (cameraWidth != 40)) {
+  if((cameraWidth != 320) && (cameraWidth != 160) && (cameraWidth != 80) && (cameraWidth != 40) && (cameraWidth != 20)) {
     printf("camera width not supported!\n");
     emit instance->ActiveButtonsSignal();
     emit instance->remoteCameraWarningSignal();
@@ -296,7 +296,7 @@ void * Transfer::thread_remote(void *param) {
     return NULL;
   }
     
-  if((cameraHeight != 240) && (cameraHeight != 120) && (cameraHeight != 60) && (cameraHeight != 30)) {
+  if((cameraHeight != 240) && (cameraHeight != 120) && (cameraHeight != 80) && (cameraHeight != 60) && (cameraHeight != 40) && (cameraHeight != 30)) {
     printf("camera height not supported!\n");
     emit instance->ActiveButtonsSignal();
     emit instance->remoteCameraWarningSignal();
