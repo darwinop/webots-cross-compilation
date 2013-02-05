@@ -36,6 +36,14 @@ public slots:
   void installControllerWarningSlot();
   void ActiveButtonsSlot();
   void UnactiveButtonsSlot();
+  void startRemoteControl();
+  void activateRemoteControlSlot();
+  void remoteCameraWarningSlot();
+  void waitRemoteSlot();
+  void endWaitRemotSlot();
+  void RemoteCanceledSlot();
+  void resetRemoteButtonSlot();
+  void resetControllerButtonSlot();
   
 signals:
   void updateProgressSignal(int);
@@ -44,6 +52,11 @@ signals:
   void robotInstableSignal();
   void ActiveButtonsSignal();
   void UnactiveButtonsSignal();
+  void activateRemoteControlSignal();
+  void remoteCameraWarningSignal();
+  void endWaitRemotSignal();
+  void resetRemoteButtonSignal();
+  void resetControllerButtonSignal();
 
 private:
   //***  SSH  ***//
@@ -81,8 +94,20 @@ private:
   QIcon       *mStopControllerIcon;
   QPushButton *mSendControllerButton;
   QCheckBox   *mMakeDefaultControllerCheckBox;
-  pthread_t   *mControllerThread;
+  pthread_t   *mThread;
   int          mStabilityResponse;
+  
+  // remote control
+  QIcon       *mRemoteControlIcon;
+  QPushButton *mRemoteControlButton;
+  bool         mRemoteEnable;
+  
+  // Remote control wait during starting
+  QProgressDialog *mRemoteProgressDialog;
+  QProgressBar    *mRemoteProgressBar;
+  QTimer          *mRemoteTime;
+  int              mRemoteStartingTime;
+  int              mRemoteStartingTimeCounter;
 
   // Wrapper
   QPushButton *mUninstallButton;
@@ -103,13 +128,16 @@ private:
   int          installAPI();
   int          updateFramework();
   int          StartSSH();
+  int          killProcessIfRunning(Transfer * instance, QString process);
   void         loadSettings();
   void         ShowOutputSSHCommand();
   bool         isRobotStable();
   bool         isWrapperUpToDate();
   bool         isFrameworkUpToDate();
+  static void  wait(int duration);
   static void *thread_uninstall(void *param);
   static void *thread_controller(void *param);
+  static void *thread_remote(void *param);
     
 };
 

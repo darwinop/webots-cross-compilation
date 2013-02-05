@@ -12,6 +12,14 @@
 #include <string.h>
 
 #include <webots/robot.h>
+#include <webots/camera.h>
+
+#ifdef WIN32
+#include <windows.h>
+#else
+#include <sys/time.h>
+#include <unistd.h>
+#endif
 
 using namespace webotsQtUtils;
 
@@ -19,7 +27,7 @@ Transfer::Transfer()
 {
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setMinimumHeight(520);
-  mControllerThread = new pthread_t;
+  mThread = new pthread_t;
   mContainerGridLayout = new QGridLayout;
   mContainerGridLayout->setHorizontalSpacing(150);
   mContainerGridLayout->setVerticalSpacing(30);
@@ -82,6 +90,16 @@ Transfer::Transfer()
   mMakeDefaultControllerCheckBox = new QCheckBox("Make default controller        ");
   mMakeDefaultControllerCheckBox->setToolTip("Set this controller to be the default controller of the robot.");
   mActionGridLayout->addWidget(mMakeDefaultControllerCheckBox, 1, 0, 1, 2);
+
+  // remote control
+  mRemoteEnable = false;
+  iconPath = StandardPaths::getWebotsHomePath() + QString("resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/remote.png");
+  mRemoteControlIcon = new QIcon(QPixmap((char*)iconPath.toStdString().c_str()));
+  mRemoteControlButton = new QPushButton;
+  mRemoteControlButton->setIcon(*mRemoteControlIcon);
+  mRemoteControlButton->setIconSize(QSize(64,64));
+  mRemoteControlButton->setToolTip("Start remote control.");
+  mActionGridLayout->addWidget(mRemoteControlButton, 0, 1, 1, 1);
   
   // Wrapper
   mWrapperVersionFile = new QFile(QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME")) + QString("/resources/projects/robots/darwin-op/config/version.txt"));
@@ -91,7 +109,7 @@ Transfer::Transfer()
   mUninstallButton->setIcon(QIcon(QPixmap((char*)iconPath.toStdString().c_str())));
   mUninstallButton->setIconSize(QSize(64,64));
   mUninstallButton->setToolTip("If you do not want to use it, you can uninstall Webots API from the real robot.");
-  mActionGridLayout->addWidget(mUninstallButton, 0, 1, 1, 1);
+  mActionGridLayout->addWidget(mUninstallButton, 0, 2, 1, 1);
 
   mActionGroupBox->setLayout(mActionGridLayout);
   mContainerGridLayout->addWidget(mActionGroupBox, 0, 1, 1, 1);
@@ -114,18 +132,32 @@ Transfer::Transfer()
   mConsoleShowTextEdit = new QTextEdit;
   mConsoleShowTextEdit->setReadOnly(true);
   mConsoleShowTextEdit->setOverwriteMode(false);
-  mOutputGridLayout->addWidget(mConsoleShowTextEdit, 0, 0, 1, 2);;
+  mOutputGridLayout->addWidget(mConsoleShowTextEdit, 0, 0, 1, 2);
   
   mOutputGroupBox->setLayout(mOutputGridLayout);
-  mContainerGridLayout->addWidget(mOutputGroupBox, 1, 0, 1, 3);
+  mContainerGridLayout->addWidget(mOutputGroupBox, 1, 0, 1, 2);
 
   mConnectionState = false;
 
   mContainerWidget = new QWidget;
   mContainerWidget->setLayout(mContainerGridLayout);
   setWidget(mContainerWidget);
+  
+  mRemoteTime = new QTimer(this);
+  mRemoteProgressDialog = new QProgressDialog("Copying files...", "Cancel", 0, 100, this);
+  mRemoteProgressDialog->setWindowModality(Qt::WindowModal);
+  mRemoteProgressDialog->setWindowTitle("Remote control");
+  mRemoteProgressDialog->setLabelText("Starting remot-control.\nPlease wait, it can take a few seconds.");
+  mRemoteProgressBar = new QProgressBar(mRemoteProgressDialog);
+  mRemoteProgressBar->setTextVisible(false);
+  mRemoteProgressBar->setMinimum(0);
+  mRemoteProgressBar->setMaximum(100);
+  mRemoteProgressDialog->setBar(mRemoteProgressBar);
+  mRemoteStartingTime = mSettings->value("darwin-op_window/remote_starting_time", QString::number(-1)).toInt();
 
+  QObject::connect(mRemoteTime, SIGNAL(timeout()), this, SLOT(waitRemoteSlot()));
   QObject::connect(mSendControllerButton, SIGNAL(clicked()), this, SLOT(sendController()));
+  QObject::connect(mRemoteControlButton, SIGNAL(clicked()), this, SLOT(startRemoteControl()));
   QObject::connect(mUninstallButton, SIGNAL(clicked()), this, SLOT(uninstall()));
   QObject::connect(mDefaultSettingsButton, SIGNAL(clicked()), this, SLOT(restoreSettings()));
   QObject::connect(this, SIGNAL(updateProgressSignal(int)), this, SLOT(updateProgressSlot(int)));
@@ -135,11 +167,169 @@ Transfer::Transfer()
   QObject::connect(this, SIGNAL(UnactiveButtonsSignal()), this, SLOT(UnactiveButtonsSlot()));
   QObject::connect(this, SIGNAL(ActiveButtonsSignal()), this, SLOT(ActiveButtonsSlot()));
   QObject::connect(mMakeDefaultControllerCheckBox, SIGNAL(pressed()), this, SLOT(installControllerWarningSlot()));
+  QObject::connect(this, SIGNAL(activateRemoteControlSignal()), this, SLOT(activateRemoteControlSlot()));
+  QObject::connect(this, SIGNAL(remoteCameraWarningSignal()), this, SLOT(remoteCameraWarningSlot()));
+  QObject::connect(this, SIGNAL(endWaitRemotSignal()), this, SLOT(endWaitRemotSlot()));
+  QObject::connect(mRemoteProgressDialog, SIGNAL(canceled()), this, SLOT(RemoteCanceledSlot()));
+  QObject::connect(this, SIGNAL(resetRemoteButtonSignal()), this, SLOT(resetRemoteButtonSlot()));
+  QObject::connect(this, SIGNAL(resetControllerButtonSignal()), this, SLOT(resetControllerButtonSlot()));
 }
 
 Transfer::~Transfer() {
-  free(mControllerThread);
+  free(mThread);
 }
+
+// ----------------------------------------------------------------- //
+// *** Remote-Control function and corresponding thread function *** //
+// ----------------------------------------------------------------- //
+
+void Transfer::startRemoteControl() {
+  if(mRemoteEnable == false) {
+	emit UnactiveButtonsSignal();
+	mRemoteEnable = true;
+    mRemoteControlButton->setIcon(*mStopControllerIcon);
+    mRemoteControlButton->setToolTip("Stop remote control.");
+
+    mRemoteProgressDialog->show();
+    mRemoteTime->start(10);
+    
+    pthread_create(mThread, NULL, this->thread_remote, this);
+  }
+  else {
+    UnactiveButtonsSlot();
+    pthread_cancel(*mThread);
+    wb_robot_set_mode(WB_MODE_SIMULATION, NULL);
+    mStatusLabel->setText(QString("Status : Disconnected"));
+    ExecuteSSHCommand("killall remote_control");
+    emit resetRemoteButtonSignal();
+    emit ActiveButtonsSignal();
+    // Clear SSH
+    CloseAllSSH();
+  }
+}
+
+void * Transfer::thread_remote(void *param) {
+  Transfer * instance = ((Transfer*)param);
+  emit instance->UnactiveButtonsSignal();
+  
+  // Create SSH session and channel
+  instance->mStatusLabel->setText(QString("Status : Connection to the robot"));
+  if(instance->StartSSH() < 0) {
+    emit instance->ActiveButtonsSignal();
+    emit instance->endWaitRemotSignal();
+    emit instance->resetRemoteButtonSignal();
+    instance->CloseAllSSH();
+    return NULL;
+  }
+  
+  // Create SFTP Channel
+  if(instance->OpenSFTPChannel() < 0) {
+	instance->mStatusLabel->setText(QString("Status : ") + QString(instance->mSSHError));
+    emit instance->ActiveButtonsSignal();
+    emit instance->endWaitRemotSignal();
+    emit instance->resetRemoteButtonSignal();
+    instance->CloseAllSSH();
+    return NULL;
+  }
+  
+  instance->mStatusLabel->setText(QString("Status : Stopping current controller"));
+  // kill demo process (if any)
+  if(instance->killProcessIfRunning(instance, QString("demo")) < 0) {
+    emit instance->ActiveButtonsSignal();
+    emit instance->endWaitRemotSignal();
+    emit instance->resetRemoteButtonSignal();
+    instance->CloseAllSSH();
+    return NULL;
+  }
+  // kill default process (if any)
+  if(instance->killProcessIfRunning(instance, QString("default")) < 0) {
+    emit instance->ActiveButtonsSignal();
+    emit instance->endWaitRemotSignal();
+    emit instance->resetRemoteButtonSignal();
+    instance->CloseAllSSH();
+    return NULL;
+  }
+  // kill controller process (if any)
+  if(instance->killProcessIfRunning(instance, QString("controller")) < 0) {
+    emit instance->ActiveButtonsSignal();
+    emit instance->endWaitRemotSignal();
+    emit instance->resetRemoteButtonSignal();
+    instance->CloseAllSSH();
+    return NULL;
+  }
+  // kill any older remote_control process
+  instance->ExecuteSSHCommand("killall remote_control");
+  
+  // Verfify Framework version and update it if needed
+  if(instance->isFrameworkUpToDate())
+    instance->mStatusLabel->setText(QString("Status : Framework up-to-date"));
+  else if(instance->updateFramework() < 0) {
+    emit instance->ActiveButtonsSignal();
+    emit instance->endWaitRemotSignal();
+    emit instance->resetRemoteButtonSignal();
+    instance->CloseAllSSH();
+    return NULL;
+  }
+  	
+  // Verfify wrapper version and update it if needed
+  if(instance->isWrapperUpToDate())
+    instance->mStatusLabel->setText(QString("Status : Webots API up-to-date"));
+  else if(instance->installAPI() < 0) {
+    emit instance->ActiveButtonsSignal();
+    emit instance->endWaitRemotSignal();
+    emit instance->resetRemoteButtonSignal();
+    instance->CloseAllSSH();
+    return NULL;
+  }
+  
+  
+  int cameraWidth = wb_camera_get_width(wb_robot_get_device("Camera"));
+  int cameraHeight = wb_camera_get_height(wb_robot_get_device("Camera"));
+  
+  if((cameraWidth != 320) && (cameraWidth != 160) && (cameraWidth != 80) && (cameraWidth != 40)) {
+    printf("camera width not supported!\n");
+    emit instance->ActiveButtonsSignal();
+    emit instance->remoteCameraWarningSignal();
+    emit instance->endWaitRemotSignal();
+    emit instance->resetRemoteButtonSignal();
+    instance->CloseAllSSH();
+    return NULL;
+  }
+    
+  if((cameraHeight != 240) && (cameraHeight != 120) && (cameraHeight != 60) && (cameraHeight != 30)) {
+    printf("camera height not supported!\n");
+    emit instance->ActiveButtonsSignal();
+    emit instance->remoteCameraWarningSignal();
+    emit instance->endWaitRemotSignal();
+    emit instance->resetRemoteButtonSignal();
+    instance->CloseAllSSH();
+    return NULL;
+  }
+  
+  QString command;
+  command = QString("/darwin/Linux/project/webots/remote_control/remote_control ") + QString::number(320/cameraWidth) + QString(" ") + QString::number(240/cameraHeight);
+  instance->mStatusLabel->setText(QString("Status : Starting remote control"));
+  
+  if(instance->ExecuteSSHCommand((char*)(command.toStdString().c_str())) < 0) {
+    emit instance->ActiveButtonsSignal();
+    emit instance->endWaitRemotSignal();
+    emit instance->resetRemoteButtonSignal();
+    instance->CloseAllSSH();
+    return NULL; 
+  }
+  wait(2000); // wait robot initialisation (same delay as in constructor of Robot)
+  
+  
+  emit instance->endWaitRemotSignal();
+  emit instance->activateRemoteControlSignal();
+  instance->mRemoteControlButton->setEnabled(true);
+  
+  // Show output
+  instance->ShowOutputSSHCommand();
+
+  return NULL;
+}
+
 // -------------------------------------------------------------------- //
 // *** Cross-Compilation function and corresponding thread function *** //
 // -------------------------------------------------------------------- //
@@ -150,11 +340,11 @@ void Transfer::sendController() {
   controller = QString(wb_robot_get_controller_name());
 
   if(mConnectionState == false) {
-    pthread_create(mControllerThread, NULL, this->thread_controller, this);
+    pthread_create(mThread, NULL, this->thread_controller, this);
   } 
   else {
     // Stop Thread
-    pthread_cancel(*mControllerThread);
+    pthread_cancel(*mThread);
 	  
 	// Stop controller and clear 'controllers' directory
 	QString killallController = QString("killall controller");
@@ -170,9 +360,7 @@ void Transfer::sendController() {
     
     // Update Status
     mStatusLabel->setText(QString("Status : Disconnected"));
-    mConnectionState = false;
-    mSendControllerButton->setIcon(*mSendControllerIcon);
-    mSendControllerButton->setToolTip("Send the controller curently used in simulation on the real robot and play it.");
+    emit resetControllerButtonSignal();
     emit ActiveButtonsSignal();
   }
 }
@@ -186,6 +374,7 @@ void * Transfer::thread_controller(void *param) {
   instance->mStatusLabel->setText(QString("Status : Connection in progress (1/7)"));
   if(instance->StartSSH() < 0) {
     emit instance->ActiveButtonsSignal();
+    emit instance->resetControllerButtonSignal();
     instance->CloseAllSSH();
     emit instance->updateProgressSignal(100);
     return NULL;
@@ -196,6 +385,7 @@ void * Transfer::thread_controller(void *param) {
   if(instance->OpenSFTPChannel() < 0) {
 	instance->mStatusLabel->setText(QString("Status : ") + QString(instance->mSSHError));
     emit instance->ActiveButtonsSignal();
+    emit instance->resetControllerButtonSignal();
     instance->CloseAllSSH();
     emit instance->updateProgressSignal(100);
     return NULL;
@@ -206,6 +396,7 @@ void * Transfer::thread_controller(void *param) {
     instance->mStatusLabel->setText(QString("Status : Framework up-to-date"));
   else if(instance->updateFramework() < 0) {
     emit instance->ActiveButtonsSignal();
+    emit instance->resetControllerButtonSignal();
     instance->CloseAllSSH();
     emit instance->updateProgressSignal(100);
     return NULL;
@@ -216,6 +407,7 @@ void * Transfer::thread_controller(void *param) {
     instance->mStatusLabel->setText(QString("Status : Webots API up-to-date"));
   else if(instance->installAPI() < 0) {
     emit instance->ActiveButtonsSignal();
+    emit instance->resetControllerButtonSignal();
     instance->CloseAllSSH();
     emit instance->updateProgressSignal(100);
     return NULL;
@@ -234,52 +426,42 @@ void * Transfer::thread_controller(void *param) {
   tar_close(pTar);
   emit instance->updateProgressSignal(5);
   
-   // Stop demo controller on the robot if it is running
-  instance->ExecuteSSHCommand("pstree | grep -c demo");
-  char processOutput[256];
-  instance->ChannelRead(processOutput, false);
-  QString process(processOutput);
-  if(process.toInt() > 0) {
-    instance->mStatusLabel->setText(QString("Status : Stopping current controller (3/7)"));
-    // kill demo process
-    if(instance->ExecuteSSHSudoCommand("killall demo\n", sizeof("killall demo\n"), ((char*)(instance->mPasswordLineEdit->text() + "\n").toStdString().c_str()), sizeof((char*)(instance->mPasswordLineEdit->text() + "\n").toStdString().c_str())) < 0) {
-      emit instance->ActiveButtonsSignal();
-      instance->CloseAllSSH();
-      emit instance->updateProgressSignal(100);
-      return NULL;
-    }
-    instance->WaitEndSSHCommand();
-    emit instance->updateProgressSignal(30);
+  instance->mStatusLabel->setText(QString("Status : Stopping current controller (3/7)"));
+  // kill demo process (if any)
+  if(instance->killProcessIfRunning(instance, QString("demo")) < 0) {
+    emit instance->ActiveButtonsSignal();
+    emit instance->resetControllerButtonSignal();
+    instance->CloseAllSSH();
+    emit instance->updateProgressSignal(100);
+    return NULL;
   }
-  
-  // Stop default controller on the robot if it is running
-  instance->ExecuteSSHCommand("pstree | grep -c default");
-  instance->ChannelRead(processOutput, false);
-  process = QString(processOutput);
-  if(process.toInt() > 0) {
-    instance->mStatusLabel->setText(QString("Status : Stopping current controller (3/7)"));
-    // kill default process
-    if(instance->ExecuteSSHSudoCommand("killall default\n", sizeof("killall default\n"), ((char*)(instance->mPasswordLineEdit->text() + "\n").toStdString().c_str()), sizeof((char*)(instance->mPasswordLineEdit->text() + "\n").toStdString().c_str())) < 0) {
-      emit instance->ActiveButtonsSignal();
-      instance->CloseAllSSH();
-      emit instance->updateProgressSignal(100);
-      return NULL;
-    }
-    instance->WaitEndSSHCommand();
-    emit instance->updateProgressSignal(45);
+  emit instance->updateProgressSignal(15);
+  // kill default process (if any)
+  if(instance->killProcessIfRunning(instance, QString("default")) < 0) {
+    emit instance->ActiveButtonsSignal();
+    emit instance->resetControllerButtonSignal();
+    instance->CloseAllSSH();
+    emit instance->updateProgressSignal(100);
+    return NULL;
   }
-  
-  // Stop any controller 'controller' that is still running
-  instance->ExecuteSSHCommand("pstree | grep -c controller");
-  instance->ChannelRead(processOutput, false);
-  process = QString(processOutput);
-  if(process.toInt() > 0) {
-    instance->mStatusLabel->setText(QString("Status : Stopping current controller (3/7)"));
-    // kill controller process
-    instance->ExecuteSSHCommand("killall controller\n");
-    instance->WaitEndSSHCommand();
-    emit instance->updateProgressSignal(45);
+  emit instance->updateProgressSignal(25);
+  // kill controller process (if any)
+  if(instance->killProcessIfRunning(instance, QString("controller")) < 0) {
+    emit instance->ActiveButtonsSignal();
+    emit instance->resetControllerButtonSignal();
+    instance->CloseAllSSH();
+    emit instance->updateProgressSignal(100);
+    return NULL;
   }
+  emit instance->updateProgressSignal(30);
+  // kill remote_control process (if any)
+  if(instance->killProcessIfRunning(instance, QString("remote_control")) < 0) {
+    emit instance->ActiveButtonsSignal();
+    emit instance->resetControllerButtonSignal();
+    instance->CloseAllSSH();
+    return NULL;
+  }
+  emit instance->updateProgressSignal(35);
     
   // Clean directory controllers
   instance->ExecuteSSHCommand("rm -r /darwin/Linux/project/webots/controllers");
@@ -292,6 +474,7 @@ void * Transfer::thread_controller(void *param) {
   if(instance->SendFile((char*)controllerArchive.toStdString().c_str(), "/darwin/Linux/project/webots/controllers/controller.tar") < 0) {
     instance->mStatusLabel->setText(QString("Status : ") + QString(instance->mSSHError));
     emit instance->ActiveButtonsSignal();
+    emit instance->resetControllerButtonSignal();
     instance->CloseAllSSH();
     instance->mStatusLabel->setText(instance->mStatusLabel->text() + QString(".\nMaybe Webots API is not installed."));
     // Delete local archive
@@ -324,12 +507,12 @@ void * Transfer::thread_controller(void *param) {
   emit instance->updateProgressSignal(70);
     
   // Compile controller
-  emit instance->addToConsoleSignal(QString("\n--------------------------------------------------------------- Compiling controller ---------------------------------------------------------------\n"));
+  emit instance->addToConsoleSignal(QString("\n--------------------------------------------------------- Compiling controller ---------------------------------------------------------\n"));
   instance->mStatusLabel->setText(QString("Status : Compiling controller (6/7)")); 
   QString makeClean = QString("make -C /darwin/Linux/project/webots/controllers/") + controller + QString(" -f Makefile.darwin-op clean");
   instance->ExecuteSSHCommand((char*)makeClean.toStdString().c_str());
-  QString maketest = QString("make -C /darwin/Linux/project/webots/controllers/") + controller + QString(" -f Makefile.darwin-op");
-  instance->ExecuteSSHCommand((char*)maketest.toStdString().c_str());
+  QString makeController = QString("make -C /darwin/Linux/project/webots/controllers/") + controller + QString(" -f Makefile.darwin-op");
+  instance->ExecuteSSHCommand((char*)makeController.toStdString().c_str());
   emit instance->updateProgressSignal(80);
 
   // Show compilation
@@ -370,13 +553,14 @@ void * Transfer::thread_controller(void *param) {
     else {
       // Verify that controller exist -> no compilation error
       QString controllerExist;
+      char processOutput[256];
       controllerExist = QString("ls /darwin/Linux/project/webots/controllers/") + controller + QString("/") + controller + QString(" | grep -c ") + controller;
       instance->ExecuteSSHCommand((char*)controllerExist.toStdString().c_str());
       instance->ChannelRead(processOutput, false);
-      process = QString (processOutput);
+      QString process(processOutput);
       if(process.toInt() > 0) { // OK controller exist
         // Start controller    
-        emit instance->addToConsoleSignal(QString("\n---------------------------------------------------------------- Starting controller ----------------------------------------------------------------\n"));
+        emit instance->addToConsoleSignal(QString("\n---------------------------------------------------------- Starting controller ----------------------------------------------------------\n"));
         instance->mStatusLabel->setText(QString("Status : Starting controller (7/7)")); 
         QString renameController = QString("mv /darwin/Linux/project/webots/controllers/") + controller + QString("/") + controller + QString(" /darwin/Linux/project/webots/controllers/") + controller + QString("/controller");
         instance->ExecuteSSHCommand((char*)renameController.toStdString().c_str());
@@ -404,6 +588,7 @@ void * Transfer::thread_controller(void *param) {
           // Clear SSH
           instance->CloseAllSSH();
           // End
+          emit instance->resetControllerButtonSignal();
           emit instance->ActiveButtonsSignal();
           instance->mStatusLabel->setText(QString("Status : disconnected")); 
           emit instance->updateProgressSignal(100);
@@ -421,7 +606,7 @@ int Transfer::installAPI() {
 
   mStatusLabel->setText(QString("Status : Installation/Update of Webots API"));
 
-  QString installInclude, installLib, insatllTransfer, installSRC, installConfig, installCheck_start_position, installArchive, webotsHome;
+  QString installInclude, installLib, insatllTransfer, installSRC, installConfig, installCheck_start_position, installArchive, installRemote_control, webotsHome;
   webotsHome = QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME"));
   installInclude = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/managers/include");
   installLib = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/managers/Makefile.darwin-op");
@@ -429,6 +614,7 @@ int Transfer::installAPI() {
   installSRC = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/managers/src");
   installConfig = webotsHome + QString("/resources/projects/robots/darwin-op/config");
   installCheck_start_position = webotsHome + QString("/resources/projects/robots/darwin-op/check_start_position");
+  installRemote_control = webotsHome + QString("/resources/projects/robots/darwin-op/remote_control");
   installArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_install.tar");
 
   emit updateProgressSignal(10);
@@ -441,6 +627,7 @@ int Transfer::installAPI() {
   tar_append_tree(pTar, (char*)installSRC.toStdString().c_str(), (char*)"src");
   tar_append_tree(pTar, (char*)installConfig.toStdString().c_str(), (char*)"config");
   tar_append_tree(pTar, (char*)installCheck_start_position.toStdString().c_str(), (char*)"check_start_position");
+  tar_append_tree(pTar, (char*)installRemote_control.toStdString().c_str(), (char*)"remote_control");
   tar_close(pTar);
   
   emit updateProgressSignal(20);
@@ -497,7 +684,7 @@ int Transfer::installAPI() {
   
   // Delete local archive
   QFile deleteArchive(installArchive);
-  //if(deleteArchive.exists())
+  if(deleteArchive.exists())
     deleteArchive.remove();
   emit updateProgressSignal(45);
 
@@ -513,11 +700,14 @@ int Transfer::installAPI() {
   ExecuteSSHCommand("mv /home/darwin/transfer /darwin/Linux/project/webots/transfer");
   ExecuteSSHCommand("mv /home/darwin/check_start_position /darwin/Linux/project/webots/check_start_position");
   ExecuteSSHCommand("mv /home/darwin/config /darwin/Linux/project/webots/config");
+  ExecuteSSHCommand("mv /home/darwin/remote_control /darwin/Linux/project/webots/remote_control");
   ExecuteSSHCommand("rm /darwin/Linux/project/webots/install.tar");
   emit updateProgressSignal(60);
   
   // Compile Wrapper 
   ExecuteSSHCommand("make -C /darwin/Linux/project/webots/check_start_position -f Makefile.darwin-op clean");
+  ShowOutputSSHCommand();
+  ExecuteSSHCommand("make -C /darwin/Linux/project/webots/remote_control -f Makefile.darwin-op clean");
   ShowOutputSSHCommand();
   ExecuteSSHCommand("make -C /darwin/Linux/project/webots/transfer/lib -f Makefile clean");
   ShowOutputSSHCommand();
@@ -527,12 +717,13 @@ int Transfer::installAPI() {
   emit updateProgressSignal(70);
   ExecuteSSHCommand("make -C /darwin/Linux/project/webots/check_start_position -f Makefile.darwin-op");
   ShowOutputSSHCommand();
+  ExecuteSSHCommand("make -C /darwin/Linux/project/webots/remote_control -f Makefile.darwin-op");
+  ShowOutputSSHCommand();
   ExecuteSSHCommand("make -C /darwin/Linux/project/webots/transfer/lib -f Makefile");
   emit updateProgressSignal(75);
   ShowOutputSSHCommand();
-
   ExecuteSSHCommand("make -C /darwin/Linux/project/webots/lib -f Makefile.darwin-op");
-    emit updateProgressSignal(80);
+  emit updateProgressSignal(80);
   ShowOutputSSHCommand();  
 
   
@@ -613,6 +804,70 @@ void * Transfer::thread_uninstall(void *param) {
   pthread_exit(NULL);
 }
 
+// --------------------------- //
+// *** Auxiliary functions *** //
+// --------------------------- //
+
+void Transfer::waitRemoteSlot() {
+  int static i = 5;
+  int static direction = 1;
+  
+  if(!mRemoteProgressDialog->isVisible()) {
+	direction = 5;
+    i = 1;
+    mRemoteStartingTimeCounter = 0;
+  }
+    
+  mRemoteStartingTimeCounter++; // Count the number of times that the loop of 10ms is called -> time estimation for next time
+  
+  if(mRemoteStartingTime > 0) {  // time has already been tested and saved
+  
+	int minutes = (mRemoteStartingTime - mRemoteStartingTimeCounter) / 6000;  // 6000 = 0.01 * 60, 0.01 because loop is called every 10ms
+	if(minutes < 0)
+	  minutes = 0;
+	  
+	int seconds = (int)((mRemoteStartingTime - mRemoteStartingTimeCounter) * 0.01) % 60;
+	if(seconds < 0)
+	  seconds = 0;
+	
+    mRemoteProgressDialog->setLabelText(QString("Starting remot-control.\nPlease wait.\nApproximated remaining time : ") + QString::number(minutes) + QString("m") + QString::number(seconds) + QString("s"));
+  }
+  
+  mRemoteProgressDialog->setValue(i);
+  i = i + direction;
+  
+  if(i > 95) {
+    direction = -1;
+    mRemoteProgressBar->setInvertedAppearance(true);
+  }
+  else if(i < 5) {
+    direction = 1;
+    mRemoteProgressBar->setInvertedAppearance(false);
+  }
+    
+}
+
+void Transfer::RemoteCanceledSlot() {
+  endWaitRemotSlot();
+  pthread_cancel(*mThread);
+  emit ActiveButtonsSignal();
+  CloseAllSSH();
+  mStatusLabel->setText(QString("Status : Disconnected"));
+  mRemoteEnable = false;
+  emit resetRemoteButtonSignal();
+}
+
+void Transfer::endWaitRemotSlot() {
+  mRemoteTime->stop();
+  mRemoteProgressDialog->hide();
+}
+
+void Transfer::activateRemoteControlSlot() {
+  mSettings->setValue("darwin-op_window/remote_starting_time", QString::number(mRemoteStartingTimeCounter));  // Save time needed to start remote-control for next time
+  wb_robot_set_mode(WB_MODE_REMOTE_CONTROL, (void *)(mIPLineEdit->text().toStdString().c_str()));
+  mStatusLabel->setText(QString("Status : Remote control started"));
+}
+
 void Transfer::ShowOutputSSHCommand() {
   char console1[1024];
   QChar console2[1024];
@@ -683,12 +938,14 @@ void Transfer::ActiveButtonsSlot() {
   mUninstallButton->setEnabled(true);
   mSendControllerButton->setEnabled(true);
   mMakeDefaultControllerCheckBox->setEnabled(true);
+  mRemoteControlButton->setEnabled(true);
 }
 
 void Transfer::UnactiveButtonsSlot() {
   mUninstallButton->setEnabled(false);
   mSendControllerButton->setEnabled(false);
   mMakeDefaultControllerCheckBox->setEnabled(false);
+  mRemoteControlButton->setEnabled(false);
 }
 
 void Transfer::updateProgressSlot(int percent) {
@@ -761,7 +1018,7 @@ bool Transfer::isRobotStable() {
     mStabilityResponse = -1;
 	emit robotInstableSignal();
     while(mStabilityResponse == -1)
-      {usleep(1000000);}
+      {wait(1000);}
     return mStabilityResponse;
   }
 }
@@ -908,6 +1165,19 @@ void Transfer::installControllerWarningSlot() {
   }
 }
 
+void Transfer::remoteCameraWarningSlot() {
+  if(!mMakeDefaultControllerCheckBox->isChecked()) {
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Warning camera resolution not supported");
+    msgBox.setText("Warning this camera resolution is not supported in remote control.");
+    msgBox.setInformativeText("The following resolutions are available:\n\tWidth :  320/160/80/40\n\tHeight : 240/120/60/30");
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.exec();
+  }
+}
+
 int Transfer::StartSSH() {
   if(OpenSSHSession(mIPLineEdit->text(), mUsernameLineEdit->text(), mPasswordLineEdit->text()) < 0) {
     mStatusLabel->setText(QString("Connection error : ")+ QString(mSSHError));
@@ -915,4 +1185,45 @@ int Transfer::StartSSH() {
   }
   saveSettings();
   return 1;
+}
+
+int Transfer::killProcessIfRunning(Transfer * instance, QString process) {
+  instance->ExecuteSSHCommand((char*)(QString("pstree | grep -c ") + process).toStdString().c_str());
+  char processOutput[256];
+  instance->ChannelRead(processOutput, false);
+  QString result(processOutput);
+  if(result.left(1).toInt() > 0) {  // process is running
+    // kill process
+    if(instance->ExecuteSSHSudoCommand((char*)(QString("killall ") + process + QString("\n")).toStdString().c_str(), (QString("killall ") + process + QString("\n")).size(), ((char*)(instance->mPasswordLineEdit->text() + "\n").toStdString().c_str()), sizeof((char*)(instance->mPasswordLineEdit->text() + "\n").toStdString().c_str())) < 0) {
+      return -1;
+    }
+    instance->WaitEndSSHCommand();
+  }
+  return 1;
+}
+
+void Transfer::resetRemoteButtonSlot() {
+  mRemoteControlButton->setIcon(*mRemoteControlIcon);
+  mRemoteControlButton->setToolTip("Start remote control.");
+  mRemoteEnable = false;
+}
+
+void Transfer::resetControllerButtonSlot() {
+  mSendControllerButton->setIcon(*mSendControllerIcon);
+  mSendControllerButton->setToolTip("Send the controller curently used in simulation on the real robot and play it.");
+  mConnectionState = false;
+}
+
+void Transfer::wait(int duration) {
+#ifdef WIN32
+  Sleep(duration);
+#else
+  // because usleep cannot handle values
+  // bigger than 1 second (1'000'000 nanoseconds)
+  int seconds = duration / 1000;
+  int milliSeconds = duration - 1000 * seconds;
+  for (int i=0; i<seconds; i++)
+    usleep(1000000);
+  usleep(1000 * milliSeconds);
+#endif
 }
