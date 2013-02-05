@@ -1,4 +1,4 @@
-MANAGERS_SOURCES_PATH = ../src/managers
+MANAGERS_SOURCES_PATH = ../src
 MANAGERS_INCLUDE_PATH = ../include
 DARWIN_FRAMEWORK_PATH = /darwin/Framework
 DARWIN_LINUX_PATH = /darwin/Linux

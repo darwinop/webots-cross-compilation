@@ -8,7 +8,7 @@
 #include <MX28.h>
 
 #ifdef CROSSCOMPILATION
-#include <managers/DARwInOPMotionTimerManager.hpp>
+#include <DARwInOPMotionTimerManager.hpp>
 #include <MotionManager.h>
 #include <unistd.h>
 #endif
