@@ -101,13 +101,13 @@ xleftmargin=0.8cm
 \renewcommand{\abstractname}{\huge{Foreword}}
 \begin{abstract}
 \vspace{3cm}
-This document will explain you how it is possible to use Webots to simulate, remote-control and program the DARwIn-OP robot.\\
+This document will explain you how is it possible to program the DARwIn-OP robot using Webots. Webots allows to program both the virtual robot model and the real robot by crosscompiling programs, or by remote-controlling the robot.\\
 
 In the first chapters, all the features of the simulation model of the DARwIn-op will be presented and the examples included in Webots will be explained.\\
 
 Then, in the following chapters, the possibilities of interaction with the real robot (real-time sensors viewing, cross-compilation and controller installation) will be explained.\\
 
-We hope that you will enjoy working with Webots 7, and that it will greatly simplify your work with the DARwIn-OP.\\
+We hope that you will enjoy working with Webots, and that it will greatly simplify your work with the DARwIn-OP.\\
 
 
 \end{abstract}
@@ -587,12 +587,12 @@ To send your controller to the real robot and make it run on it, go to the \text
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=13cm]{window_cross.png}
-\caption{Tab Transfer of the robot window.}
+\caption{Transfer tab of the robot window.}
 \label{window_cross}
 \end{center}
 \end{figure}
 
-The first thing to do is to set the connections settings. The first setting is the IP address of the robot. If you use an Ethernet cable to connect to the robot, the IP address is 192.168.123.1. But if you use a wifi connection with the robot the address is not fixed, to know it, execute the command \textit{ifconfig} on the robot, the IP address is the \textit{inet addr} of wlan0 (warning, the adress can sometimes change without any specific reason). The second parameters is the username with which you log-on on the robot, if you do not have explicitly changed it, the username is \textit{darwin}. Finally the last parameters is the password corresponding to the username, here again, if you do not have explicitly changed it, the password is \textit{111111}. Each time you connect successfully to the robot, all the settings are saved so that it is not necessary to set them each time you start the program. If you want to restore the default parameters of the connection, just click on the \textit{Restore default settings} button (Alt+r).\\
+The first thing to do is to set the connections settings. The first setting is the IP address of the robot. If you use an Ethernet cable to connect to the robot, the IP address is 192.168.123.1. But if you use a wifi connection with the robot the address is not fixed, to know it, execute the \textit{ifconfig} command on the robot, the IP address is the \textit{inet addr} of wlan0 (warning, the address can sometimes change without any specific reason). The second parameter is the username with which you log-on on the robot, if you do not have explicitly changed it, the username is \textit{darwin}. Finally the last parameter is the password corresponding to the username, here again, if you do not have explicitly changed it, the password is \textit{111111}. Each time you connect successfully to the robot, all the settings are saved so that it is not necessary to set them each time you start the program. If you want to restore the default parameters of the connection, just click on the \textit{Restore default settings} button (Alt+r).\\
 
 Before you can send your controller to the real robot you have to change the Makefile.darwin-op file to suit to your project. If you have added new files to the project, do not forget to add them to the \textit{CXX\_SOURCES} and if you have changed the project name, change also the \textit{TARGET} value.\\
 
@@ -657,6 +657,7 @@ To stop the controller press the following button :
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=2.5cm]{stop.png}
+\caption{Stop button.}
 \label{stop}
 \end{center}
 \end{figure}
@@ -693,18 +694,18 @@ As speaker are not present in Webots, it is not possible to use the speakers in 
 virtual void playFile(const char* filename);
 virtual void playFileWait(const char* filename);
 \end{lstlisting}
-Filename is the path to an audio file (MP3 for example). The \textit{playFile} function plays the file without stopping the controller (parallel execution) while the \textit{playFileWait} function stops the controller until the audio file playback is complete (serial execution).\\
+\textit{filename} is the path to an audio file (MP3 for example). The \textit{playFile} function plays the file without stopping the controller (parallel execution) while the \textit{playFileWait} function stops the controller until the audio file playback is complete (serial execution).\\
 
-In order to use them you have to write something similar to this :\\
+In order to use them you have to write something similar to this:\\
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
 \begin{lstlisting} 
+#include <webots/Speaker.hpp>
+
 mSpeaker = getSpeaker("Speaker");
 mSpeaker->enable(mTimeStep);
 mSpeaker->playFile("hello.mp3"); // the file is in the same directory as the controller
 \end{lstlisting}
-
-And do not forget to include \textit{webots/Speaker.hpp}.\\
 
 Because Speaker are not yet present in simulation we recommend you to put all your code concerning the speaker within \textit{\#ifdef CROSSCOMPILATION} statements in order to keep the same code running in simulation and on the real robot. Here is an example :\\
 \lstset{language=c++} 
@@ -716,14 +717,24 @@ Because Speaker are not yet present in simulation we recommend you to put all yo
 #endif
 \end{lstlisting}
 
-Severals audio files are already present on the robot in the \textit{/darwin/Data/mp3/} folder, you can freely use them this way:\\
+Several audio files are already present on the robot in the \textit{/darwin/Data/mp3/} folder, you can freely use them this way:\\
 \lstset{language=c++} 
 \lstset{commentstyle=\textit} 
 \begin{lstlisting} 
-mSpeaker->playFile("/darwin/Data/mp3/FileName.mp3"); // this file is already on the robot, no need to send it.
+mSpeaker->playFile("/darwin/Data/mp3/Introduction.mp3"); // this file is already on the robot, no need to send it.
 \end{lstlisting}
 
 The \ref{sec:audioFile} appendix references all the audio files available.\\
+
+You can also use this two text to speech functions of \textit{Speaker} class:\\
+\lstset{language=c++} 
+\lstset{commentstyle=\textit} 
+\begin{lstlisting} 
+virtual void  speak(const char * text, const char * voice = "en", int speed = 175);
+virtual void  speakFile(const char * filename, const char * voice = "en", int speed = 175);
+\end{lstlisting}
+
+In the first one you need to specify the path as an argument to the file containing the text and in the second one you can directly specify the text. You can also specify the voice you want to use (appendix \ref{sec:voices} lists all the voices) and the speed in words per minute.\\
 
 \newpage
 \subsection{Using keyboard}
@@ -747,16 +758,84 @@ This little window is used to capture the input of the keyboard. Please do not c
 \newpage
 \section{Remote control}
 
+Remote-control, is much more simpler to use than cross-compilation, you do not have to set the time step in any files, or to edit any specific makefile, the exact same controller that in simulation can be used for remote control (without even having to recompile it). Moreover, the remote-control mode allows you to visualize the state of the sensors and actuators of the real robot in real time. To use remote-control, open the robot window, go to the \textit{Transfer} tab, as for cross-compilation you have to set the connection settings (the settings been the same as for cross-compilation, see previous chapter for more information). To start the remote control, stop and revert your simulation, put your robot in the stable position (see figure \ref{start_position}). Then press the following button:\\
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=2.5cm]{remote.png}
+\label{send}
+\end{center}
+\end{figure}
+
+A small window (similar of the one from picture \ref{waitWindow}) will appear and ask you to wait until the remote-control has been started. When this window disappears and the eyes of the robot switch from red to green, the remote-control has been sucessfully started. You can now easily start and stop your controller in remote-control mode by using the run and stop button of Webots (see chapter \textit{Examples} for more details). Warning: if you revert the simulation it will stop the remote-control mode. In order to stop the remote-control (without reverting) simply press the stop button of the remote control (it has the same aspect from the one of the cross-compilation in figure \ref{stop}).\\
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=6cm]{waitWindow.png}
+\caption{This small window asks you to wait until remote-control has started.}
+\label{waitWindow}
+\end{center}
+\end{figure}
+
+When the controller runs in remote-control mode, you can see in the other tabs of the robot window the values of the sensors of the real robot in real-time.\\
+
+\newpage
+\subsection{Camera resolution}
+
+In remote control, the camera's resolutions supported are not the same as in cross-compilation, indeed they are smaller in order to not slow down too much the communication speed between Webots and the robot. All the resolutions available are specified in table \ref{tab:cameraRemoteResolution}. Unlike from cross-compilation you do not have to specify the desired resolution in any file, the resolution is automatically send to the robot from Webots. So in order to adjust the resolution, just do the same way you would do it in the simulation (by editing \textit{cameraWidth} and \textit{cameraHeight} fields of the DARwIn-OP in the scene tree window).\\
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{| c | p{1cm} | c | }
+\cline{1-1} \cline{3-3}
+Width [pixel] &   & Height [pixel]\\ 
+\cline{1-1} \cline{3-3}
+\cline{1-1} \cline{3-3}
+ 320 &   & 240 \\
+\cline{1-1} \cline{3-3}
+160 &  & 120 \\
+\cline{1-1} \cline{3-3}
+80 &  & 80 \\
+\cline{1-1} \cline{3-3}
+40 &  & 60 \\
+\cline{1-1} \cline{3-3}
+20 &  & 40 \\
+\cline{1-1}  \cline{3-3}
+\multicolumn{1}{l}{}  &  & 30 \\
+\cline{3-3}
+\end{tabular}
+\caption{Camera resolutions supported in remote-control.}
+\label{tab:cameraRemoteResolution}
+\end{center}
+\end{table}
+
+Note that you do not need to choose a width and a height from the same line, any combination of height and width is valid (for example, you can use a resolution of 320x30).\\
+
+\subsection{Controller speed}
+Your controller is supposed to run at a speed of 1.0x whatever you chose to run the simulation at run in \textit{real-time} or \textit{as fast as possible} mode. It can still happen sometimes that the speed can not achieve a speed of 1.0x, especialy when using the camera at high resolution, the mode \textit{as fast as possible without graphics} should resolve this problem.\\
+
+If despite this you can not achieve a speed of 1.0x, it means that your connection with the robot is to slow. You should consider reducing camera resolution in order to increase the speed.\\
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newpage
 \section{Known Bugs}
 
 \subsection{Lateral balance}
-In simulation, in the DARwInOPGaitManager, the lateral balance do not work as expected. It is recommended to set \textit{balance\_hip\_roll\_gain} and \textit{balance\_ankle\_roll\_gain} to 0.0, this must be done in the 'config.ini' file associated with the controller.\\
+In simulation, in the DARwInOPGaitManager, the lateral balance does not work as expected. It is recommended to set \textit{balance\_hip\_roll\_gain} and \textit{balance\_ankle\_roll\_gain} to 0.0, this must be done in the 'config.ini' file associated with the controller.\\
 
 \subsection{Controller P}
 In simulation the P gain of the servo affects the speed but on the real robot it affects the torque. This can cause differences between simulation and reality in some specific cases. Especially when P is small.\\
+
+\subsection{Text-to-speech warning message}
+When using one of the two functions of text to speech from the \textit{Speaker} module in cross-compilation, you might see the following message:
+\begin{center}
+bt\_audio\_service\_open : connect() failed : Connection refused (111)
+\end{center}
+You can simply ignore this message. This message is due to the fact that the robot is trying to communicate with a non-existent bluetooth device. You can supress this message by executing the following command on the robot:
+\begin{center}
+sudo apt-get purge bluez-alsa
+\end{center}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1082,6 +1161,65 @@ Yes go.mp3 & 1 & 24.1 \\
 \end{tabular}
 \caption{Audio files already available on the robot in the directory /darwin/Data/mp3/}
 \label{tab::audioFile}
+\end{center}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Voices available} \label{sec:voices}
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | c | c | | c | c |}
+\hline
+Name & Voice & Name & Voice \\ 
+\hline
+\hline
+af & afrikaans & bs & bosnian \\
+\hline
+ca & catalan & cs & czech \\
+\hline
+cy & welsh & da & danish \\
+\hline
+de & german & el & greek \\
+\hline
+en & english & eo & esperanto \\
+\hline
+es & esperanto & fi & finnish \\
+\hline
+fr & french & grc & greek \\
+\hline
+hi & hindi & hr & croatian \\
+\hline
+hu & hungarian & hy & armenian \\
+\hline
+id & indonesian & is & icelandic \\
+\hline
+it & italian & ku & kurdish \\
+\hline
+la & latin & lv & latvian \\
+\hline
+mk & macedonian & nl & dutch \\
+\hline
+no & norwegian & pl & polish \\
+\hline
+pt & brazil & pt-pt & portugal \\
+\hline
+ro & romanian & ru & russian \\
+\hline
+sk & slovak & sq & albanian \\
+\hline
+sr & serbian & sv & swedish \\
+\hline
+sw & swahihi & ta & tamil \\
+\hline
+tr & turkish & vi & vietnam \\
+\hline
+zh & Mandarin & & \\
+\hline
+\end{tabular}
+\caption{Available audio voices}
+\label{tab::voices}
 \end{center}
 \end{table}
 
