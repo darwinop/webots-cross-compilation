@@ -19,7 +19,8 @@ CXXFLAGS += -O2 -DLINUX -Wall -shared $(INCLUDE_DIRS)
 #CXXFLAGS += -O2 -DDEBUG -DLINUX -Wall -shared $(INCLUDE_DIRS)
 LFLAGS += -lpthread -ldl
 
-OBJS =  ../../Framework/src/CM730.o     	\
+OBJS =  ../../Framework/src/MX28.o     	\
+        ../../Framework/src/CM730.o     	\
         ../../Framework/src/math/Matrix.o   \
         ../../Framework/src/math/Plane.o    \
         ../../Framework/src/math/Point.o    \
