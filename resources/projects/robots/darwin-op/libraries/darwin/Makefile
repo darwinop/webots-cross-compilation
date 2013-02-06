@@ -4,8 +4,10 @@ CXX_SOURCES = \
   $(DARWIN_FRAMEWORK_PATH)/src/math/Matrix.cpp \
   $(DARWIN_FRAMEWORK_PATH)/src/math/Vector.cpp \
   $(DARWIN_FRAMEWORK_PATH)/src/math/Point.cpp \
+  $(DARWIN_FRAMEWORK_PATH)/src/MX28.cpp \
   $(DARWIN_FRAMEWORK_PATH)/src/motion/JointData.cpp \
   $(DARWIN_FRAMEWORK_PATH)/src/motion/MotionStatus.cpp \
+  $(DARWIN_FRAMEWORK_PATH)/src/motion/Kinematics.cpp \
   $(DARWIN_FRAMEWORK_PATH)/src/motion/modules/Action.cpp \
   $(DARWIN_FRAMEWORK_PATH)/src/motion/modules/Walking.cpp \
   $(DARWIN_FRAMEWORK_PATH)/src/vision/ImgProcess.cpp \
