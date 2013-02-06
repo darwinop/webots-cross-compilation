@@ -7,8 +7,8 @@
 #include <webots/Emitter.hpp>
 #include <webots/Receiver.hpp>
 #include <webots/Servo.hpp>
-#include <managers/DARwInOPMotionManager.hpp>
-#include <managers/DARwInOPGaitManager.hpp>
+#include <DARwInOPMotionManager.hpp>
+#include <DARwInOPGaitManager.hpp>
 
 #include <string>
 #include <cstring>
