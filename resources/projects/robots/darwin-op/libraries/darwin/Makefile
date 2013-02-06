@@ -14,8 +14,8 @@ CXX_SOURCES = \
 C_SOURCES = \
   $(DARWIN_FRAMEWORK_PATH)/src/minIni/minIni.c
 
-INCLUDE += -I"$(DARWIN_FRAMEWORK_PATH)/include"
-CFLAGS  += -DWEBOTS
+INCLUDE = -I"$(DARWIN_FRAMEWORK_PATH)/include"
+CFLAGS = -DWEBOTS
 
 space :=
 space +=
