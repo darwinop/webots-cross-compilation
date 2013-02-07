@@ -1,5 +1,6 @@
 #include "Communication.hpp"
 #include "Packet.hpp"
+#include "Time.hpp"
 
 #include <QtNetwork/QtNetwork>
 #include <QtCore/QtCore>
@@ -74,7 +75,7 @@ bool Communication::receivePacket(Packet *packet) {
   socket->setReadBufferSize(0);
 
   while(socket->bytesAvailable() < 5) // Wait until at least W + packet size has been transmitted
-    {usleep(100);}
+    {Time::wait(1);}
   
   QByteArray startPacket;
   startPacket = socket->readAll();
