@@ -1,10 +1,11 @@
 ###############################################################
 #
-# Purpose: Makefile for compiling a controller using the Webots
-#          API on the darwin-op real robot
-# Author : fabien.rohrer@cyberbotics.com
-# License: GPL
-# Date   : September 2011
+# Purpose:            Makefile for compiling a controller using the Webots
+#                     API on the darwin-op real robot
+# Author :            fabien.rohrer@cyberbotics.com
+# License:            GPL
+# Date   :            September 2011
+# Last modification : February 2013 (by david.mansolino@epfl.ch)
 #
 ###############################################################
 
@@ -21,12 +22,9 @@ WEBOTS_DARWINOP_PROJECT_ROOT = /darwin/Linux/project/webots
 # source filenames
 CXX_SOURCES = \
   main.cpp \
-  VisualTracking.cpp \
-  $(WEBOTS_DARWINOP_PROJECT_ROOT)/src/managers/DARwInOPVisionManager.cpp 
+  VisualTracking.cpp 
 
 # -------------------------------------------------------------
-
-
 
 INCLUDE_DIRS = -I$(DARWINOP_ROOT)/Linux/include -I$(DARWINOP_ROOT)/Framework/include -I$(WEBOTS_DARWINOP_PROJECT_ROOT)/transfer/include -I$(WEBOTS_DARWINOP_PROJECT_ROOT)/include
 CXX = g++
@@ -34,6 +32,7 @@ CXXFLAGS += -O2 -DLINUX -DCROSSCOMPILATION -Wall $(INCLUDE_DIRS)
 LFLAGS += -lpthread -ljpeg -lrt
 WRAPPER = $(WEBOTS_DARWINOP_PROJECT_ROOT)/transfer/lib/wrapper.a $(WEBOTS_DARWINOP_PROJECT_ROOT)/transfer/keyboard/keyboard.a /usr/lib/libX11.so.6
 DARWINOP_STATIC_LIBRARY = $(DARWINOP_ROOT)/Linux/lib/darwin.a
+MANAGERS_STATIC_LIBRARY = $(WEBOTS_DARWINOP_PROJECT_ROOT)/lib/managers.a
 OBJECTS = $(CXX_SOURCES:.cpp=.o)
 
 all: $(TARGET)
@@ -48,5 +47,5 @@ $(DARWINOP_STATIC_LIBRARY):
 	make -C $(DARWINOP_ROOT)/Linux/build
 
 $(TARGET): $(WRAPPER) $(OBJECTS) $(DARWINOP_STATIC_LIBRARY)
-	$(CXX) $(CFLAGS) $(LFLAGS) $(OBJECTS) $(WRAPPER) $(DARWINOP_STATIC_LIBRARY) -o $(TARGET)
+	$(CXX) $(CFLAGS) $(LFLAGS) $(OBJECTS) $(WRAPPER) $(DARWINOP_STATIC_LIBRARY) $(MANAGERS_STATIC_LIBRARY) -o $(TARGET)
 	chmod 755 $(TARGET)
