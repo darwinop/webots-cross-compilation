@@ -70,7 +70,7 @@ E. Run the same controller on the DARwIn-OP
 
 - 4. On the DARwIn-OP, create a /darwin/Linux/project/webots directory
 
-- 5. Copy-paste the "libraries/managers/include", "lib", "transfer", and "libraries/managers/src" directories of the $GIT_REPOSITORY/resources/projects/robots/darwin-op
+- 5. Copy-paste the "libraries/managers/include", "transfer", and "libraries/managers/src" directories of the $GIT_REPOSITORY/resources/projects/robots/darwin-op
      directory directly in the /darwin/Linux/project/webots directory
 
 - 6. Create a new directory /darwin/Linux/project/webots/lib and copy paste $GIT_REPOSITORY/resources/projects/robots/darwin-op/libraries/managers/Makefile.darwin-op in it
