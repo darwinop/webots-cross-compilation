@@ -2,6 +2,7 @@
 #include <webots/Robot.hpp>
 
 #include <LinuxDARwIn.h>
+#include <string.h>
 
 using namespace webots;
 using namespace Robot;
@@ -44,7 +45,7 @@ void Speaker::speak(const char * text, const char * voice, int speed) {
     break;
   case 0:
     fprintf(stderr, "Saying \"%s\" ...\n", text);
-    char buffer[sizeof(text) + 10];
+    char buffer[strlen(text) + 10];
     sprintf(buffer, "\"%s\"", text);
     execl("/usr/bin/espeak", "espeak", buffer, "-v", voice, "-s", speedBuffer, (char *)NULL);
     fprintf(stderr, "exec failed!! \n");
