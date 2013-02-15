@@ -596,6 +596,7 @@ void * Transfer::thread_controller(void *param) {
     }
   }
   pthread_exit(NULL);
+  return NULL;
 }
 
 // -------------------------------------------------------------------------- //
@@ -732,7 +733,7 @@ int Transfer::installAPI() {
     emit ActiveButtonsSignal();
     CloseAllSSH();
     emit updateProgressSignal(100);
-    return NULL;
+    return 0;
   }
   WaitEndSSHCommand();
   emit updateProgressSignal(99);
@@ -802,6 +803,7 @@ void * Transfer::thread_uninstall(void *param) {
   
   emit instance->updateProgressSignal(100);
   pthread_exit(NULL);
+  return NULL;
 }
 
 // --------------------------- //
