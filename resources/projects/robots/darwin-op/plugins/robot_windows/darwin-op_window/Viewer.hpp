@@ -9,9 +9,9 @@
 #ifndef VIEWER_HPP
 #define VIEWER_HPP
 
-#include <gui/CategoryViewer.hpp>
+#include <gui/GenericWindow.hpp>
 
-class Viewer : public webotsQtUtils::CategoryViewer
+class Viewer : public webotsQtUtils::GenericWindow
 {
   public:
     Viewer();

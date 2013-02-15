@@ -4,7 +4,7 @@
 using namespace webotsQtUtils;
 
 Viewer::Viewer() :
-  CategoryViewer()
+  GenericWindow()
 {
   mTabWidget->addTab(new Transfer, QString("Transfer"));
 }
