@@ -16,7 +16,9 @@
 #include <cstdlib>
 
 #include <QtCore/QtCore>
+#include <QtGui/QtGui>
 
+#include <core/StandardPaths.hpp>
 
 using namespace std;
 
@@ -26,6 +28,7 @@ DarwinInputPacket::DarwinInputPacket(int maxSize) :
   CameraR *camera = DeviceManager::instance()->camera();
   mCameraWidth = camera->width();
   mCameraHeight = camera->height();
+  QCoreApplication::addLibraryPath(webotsQtUtils::StandardPaths::getWebotsHomePath() + "/lib/qt");
 }
 
 DarwinInputPacket::~DarwinInputPacket() {
@@ -72,38 +75,17 @@ void DarwinInputPacket::decode(int simulationTime, const DarwinOutputPacket &out
 	
     CameraR *camera = DeviceManager::instance()->camera();
 
-    static JSAMPARRAY buffer;
-    
-    static struct jpeg_decompress_struct cinfo;
-    static struct jpeg_error_mgr jerr;
-    cinfo.err = jpeg_std_error(&jerr);
-    jpeg_create_decompress(&cinfo);
-    jpeg_memory_src(&cinfo, (const JOCTET *)getBufferFromPos(currentPos), image_length); // set buffer source
-    jpeg_read_header(&cinfo, true);
-    jpeg_start_decompress(&cinfo);
-    int row_stride = cinfo.output_width * cinfo.output_components;
-    
-    buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
-    buffer[0] = (JSAMPROW)malloc(sizeof(JSAMPLE) * row_stride);
-    
-    int counter = 0;
-    unsigned char imageRGB[mCameraWidth * mCameraHeight * 3];
-    
-    // Start decompression
-    while (cinfo.output_scanline < cinfo.output_height) {
-      jpeg_read_scanlines(&cinfo, buffer, 1);
-      memcpy(imageRGB+counter, buffer[0], row_stride);
-      counter += row_stride;
-    }
-    jpeg_finish_decompress(&cinfo);
-    
+    QImage image(mCameraWidth, mCameraHeight, QImage::Format_RGB32);
+    if(!(image.loadFromData(getBufferFromPos(currentPos), image_length, "JPEG")))
+      printf("Problem while loading jpeg image\n");
+      
     // Convert RGB buffer to BGRA buffer
-    unsigned char imageBGRA[mCameraWidth * mCameraHeight * 4];
+    static unsigned char imageBGRA[320 * 240 * 4];
     for(int i = 0; i < mCameraHeight; i++) {
       for(int j = 0; j < mCameraWidth; j++) {
-        imageBGRA[i * 4 * mCameraWidth + j * 4 + 0] = imageRGB[i * 3 * mCameraWidth + j * 3 + 2];
-        imageBGRA[i * 4 * mCameraWidth + j * 4 + 1] = imageRGB[i * 3 * mCameraWidth + j * 3 + 1];
-        imageBGRA[i * 4 * mCameraWidth + j * 4 + 2] = imageRGB[i * 3 * mCameraWidth + j * 3 + 0];
+        imageBGRA[i * 4 * mCameraWidth + j * 4 + 0] = qBlue(image.pixel(j,i));
+        imageBGRA[i * 4 * mCameraWidth + j * 4 + 1] = qGreen(image.pixel(j,i));
+        imageBGRA[i * 4 * mCameraWidth + j * 4 + 2] = qRed(image.pixel(j,i));
         imageBGRA[i * 4 * mCameraWidth + j * 4 + 3] = 255;
       }
     }
@@ -134,61 +116,4 @@ void DarwinInputPacket::decode(int simulationTime, const DarwinOutputPacket &out
     }
   }
   
-}
-
-// *** Jpeg part *** //
-
-void DarwinInputPacket::init_source(j_decompress_ptr cinfo) {
-  (void)cinfo;
-}
-
-boolean DarwinInputPacket::fill_input_buffer(j_decompress_ptr cinfo) {
-  my_src_ptr src = (my_src_ptr) cinfo->src;
-
-  WARNMS(cinfo, JWRN_JPEG_EOF);
-
-  // Create a fake EOI marker 
-  src->eoi_buffer[0] = (JOCTET) 0xFF;
-  src->eoi_buffer[1] = (JOCTET) JPEG_EOI;
-  src->pub.next_input_byte = src->eoi_buffer;
-  src->pub.bytes_in_buffer = 2;
-
-  return TRUE;
-}
-
-void DarwinInputPacket::skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
-  my_src_ptr src = (my_src_ptr) cinfo->src;
-
-  if (num_bytes > 0) {
-    while (num_bytes > (long) src->pub.bytes_in_buffer) {
-      num_bytes -= (long) src->pub.bytes_in_buffer;
-      (void) fill_input_buffer(cinfo);
-
-    }
-    src->pub.next_input_byte += (size_t) num_bytes;
-    src->pub.bytes_in_buffer -= (size_t) num_bytes;
-  }
-}
-
-void DarwinInputPacket::term_source(j_decompress_ptr cinfo) {
-  // no work necessary here 
-  (void)cinfo;
-}
-
-void DarwinInputPacket::jpeg_memory_src(j_decompress_ptr cinfo, const JOCTET * buffer, size_t bufsize) {
-  my_src_ptr src;
-
-  if (cinfo->src == NULL) { // first time for this JPEG object? 
-    cinfo->src = (struct jpeg_source_mgr *) (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT, sizeof(my_source_mgr));
-  }
-
-  src = (my_src_ptr) cinfo->src;
-  src->pub.init_source = init_source;
-  src->pub.fill_input_buffer = fill_input_buffer;
-  src->pub.skip_input_data = skip_input_data;
-  src->pub.resync_to_restart = jpeg_resync_to_restart; // use default method
-  src->pub.term_source = term_source;
-
-  src->pub.next_input_byte = buffer;
-  src->pub.bytes_in_buffer = bufsize;
 }
