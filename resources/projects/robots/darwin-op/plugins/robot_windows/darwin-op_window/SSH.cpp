@@ -213,7 +213,11 @@ int SSH::SendFile(const char * source, const char * target) {
   int size = fread(buffer,1,length,file);
 
   // Open remote file
+#ifdef WIN32
+  mSFTPFile = sftp_open(mSFTPChannel, target, access_type, 0);
+#else
   mSFTPFile = sftp_open(mSFTPChannel, target, access_type, S_IRWXU);
+#endif
   if (mSFTPFile == NULL) {
     strcpy(mSSHError, ssh_get_error(mSSHSession));
     fclose(file);
@@ -336,7 +340,11 @@ int SSH::ChannelRead(char * buffer, bool channel = false) {
 }
 
 int SSH::MakeRemoteDirectory(const char * directory) {
+#ifdef WIN32
+  if(sftp_mkdir(mSFTPChannel, directory , 0) != 0)
+#else
   if(sftp_mkdir(mSFTPChannel, directory , S_IRWXU) != 0)
+#endif
     return -1;
   return 1;
 }
