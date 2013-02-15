@@ -18,6 +18,7 @@ C_SOURCES = \
 
 INCLUDE = -I"$(DARWIN_FRAMEWORK_PATH)/include"
 CFLAGS = -DWEBOTS
+USE_C_API = True
 
 space :=
 space +=
