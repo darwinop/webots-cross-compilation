@@ -414,16 +414,18 @@ void * Transfer::thread_controller(void *param) {
   }
 
   // Creat archive
-  QString controller, controllerDirPath, controllerArchive;
+  QString controller, controllerArchive;
   controller = QString(wb_robot_get_controller_name());
-  controllerDirPath = QString(wb_robot_get_project_path()) + QString("/controllers/") + controller;
   controllerArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_controller.tar");
+
+  QStringList * argumentsList = new QStringList();
+  argumentsList->append(QString("-cf"));
+  argumentsList->append(controllerArchive);
+  argumentsList->append(QString("-C"));
+  argumentsList->append(QString(wb_robot_get_project_path()) + QString("/controllers/"));
+  argumentsList->append(controller);
+  QProcess::execute( "tar", *argumentsList);
   
-  instance->mStatusLabel->setText(QString("Status : Creating archive of the controller (2/7)"));
-  TAR *pTar;
-  tar_open(&pTar, (char*)controllerArchive.toStdString().c_str(), NULL, O_WRONLY | O_CREAT, 0644, TAR_GNU);
-  tar_append_tree(pTar, (char*)controllerDirPath.toStdString().c_str(), (char*)controller.toStdString().c_str());
-  tar_close(pTar);
   emit instance->updateProgressSignal(5);
   
   instance->mStatusLabel->setText(QString("Status : Stopping current controller (3/7)"));
