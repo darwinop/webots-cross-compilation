@@ -1094,22 +1094,23 @@ int Transfer::updateFramework() {
 
   mStatusLabel->setText(QString("Status : Updating the Framework"));
 
-  QString installVersion, installArchive, installData, installFramework, installLinux, webotsHome;
+  QString darwinDir, installArchive, webotsHome;
   webotsHome = QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME"));
-  installVersion = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/darwin/darwin/version.txt");
-  installData = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/darwin/darwin/Data");
-  installLinux = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/darwin/darwin/Linux");
-  installFramework = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/darwin/darwin/Framework");
+  darwinDir = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/darwin/darwin");
   installArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_update.tar");
 
   emit updateProgressSignal(10);
-  // Creat archive
-  TAR *pTar;
-  tar_open(&pTar, (char*)installArchive.toStdString().c_str(), NULL, O_WRONLY | O_CREAT, 0644, TAR_GNU);
-  tar_append_tree(pTar, (char*)installVersion.toStdString().c_str(), (char*)"version.txt");
-  tar_append_tree(pTar, (char*)installLinux.toStdString().c_str(), (char*)"Linux");
-  tar_append_tree(pTar, (char*)installFramework.toStdString().c_str(), (char*)"Framework");
-  tar_close(pTar);
+  
+  QStringList * argumentsList = new QStringList();
+  argumentsList->append(QString("-cf"));
+  argumentsList->append(installArchive);
+  argumentsList->append(QString("-C"));
+  argumentsList->append(darwinDir);
+  argumentsList->append("version.txt");
+  argumentsList->append("Data");
+  argumentsList->append("Linux");
+  argumentsList->append("Framework");
+  QProcess::execute( "tar", *argumentsList);
   
   emit updateProgressSignal(20);
     
