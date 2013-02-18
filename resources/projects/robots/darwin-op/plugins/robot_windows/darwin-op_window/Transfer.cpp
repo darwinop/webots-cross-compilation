@@ -609,29 +609,48 @@ int Transfer::installAPI() {
 
   mStatusLabel->setText(QString("Status : Installation/Update of Webots API"));
 
-  QString installInclude, installLib, insatllTransfer, installSRC, installConfig, installCheck_start_position, installArchive, installRemote_control, webotsHome;
+  QString managerDir, darwinDir, installArchive, webotsHome;
   webotsHome = QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME"));
-  installInclude = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/managers/include");
-  installLib = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/managers/Makefile.darwin-op");
-  insatllTransfer = webotsHome + QString("/resources/projects/robots/darwin-op/transfer");
-  installSRC = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/managers/src");
-  installConfig = webotsHome + QString("/resources/projects/robots/darwin-op/config");
-  installCheck_start_position = webotsHome + QString("/resources/projects/robots/darwin-op/check_start_position");
-  installRemote_control = webotsHome + QString("/resources/projects/robots/darwin-op/remote_control");
+  managerDir = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/managers");
+  darwinDir = webotsHome + QString("/resources/projects/robots/darwin-op");
   installArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_install.tar");
 
   emit updateProgressSignal(10);
   // Creat archive
-  TAR *pTar;
-  tar_open(&pTar, (char*)installArchive.toStdString().c_str(), NULL, O_WRONLY | O_CREAT, 0644, TAR_GNU);
-  tar_append_tree(pTar, (char*)installInclude.toStdString().c_str(), (char*)"include");
-  tar_append_tree(pTar, (char*)installLib.toStdString().c_str(), (char*)"lib/Makefile.darwin-op");
-  tar_append_tree(pTar, (char*)insatllTransfer.toStdString().c_str(), (char*)"transfer");
-  tar_append_tree(pTar, (char*)installSRC.toStdString().c_str(), (char*)"src");
-  tar_append_tree(pTar, (char*)installConfig.toStdString().c_str(), (char*)"config");
-  tar_append_tree(pTar, (char*)installCheck_start_position.toStdString().c_str(), (char*)"check_start_position");
-  tar_append_tree(pTar, (char*)installRemote_control.toStdString().c_str(), (char*)"remote_control");
-  tar_close(pTar);
+  
+  QStringList * argumentsList = new QStringList();
+  argumentsList->append(QString("-cf"));
+  argumentsList->append(installArchive);
+  // Managers include
+  argumentsList->append(QString("-C"));
+  argumentsList->append(managerDir);
+  argumentsList->append(QString("include"));
+  // Makefile.darwin-op
+  argumentsList->append(QString("-C"));
+  argumentsList->append(managerDir);
+  argumentsList->append(QString("lib/Makefile.darwin-op"));
+  // Transfer
+  argumentsList->append(QString("-C"));
+  argumentsList->append(darwinDir);
+  argumentsList->append(QString("transfer"));
+  // Managers src
+  argumentsList->append(QString("-C"));
+  argumentsList->append(managerDir);
+  argumentsList->append(QString("src"));
+  // config
+  argumentsList->append(QString("-C"));
+  argumentsList->append(darwinDir);
+  argumentsList->append(QString("config"));
+  // check_start_position
+  argumentsList->append(QString("-C"));
+  argumentsList->append(darwinDir);
+  argumentsList->append(QString("check_start_position"));
+  // remote_control
+  argumentsList->append(QString("-C"));
+  argumentsList->append(darwinDir);
+  argumentsList->append(QString("remote_control"));
+  
+  QProcess::execute( "tar", *argumentsList);
   
   emit updateProgressSignal(20);
 
