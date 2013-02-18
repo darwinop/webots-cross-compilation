@@ -933,7 +933,7 @@ void Transfer::saveSettings() {
 void Transfer::loadSettings() {
   mIPLineEdit->setText(mSettings->value("darwin-op_window/IP", QString("192.168.123.1")).toString());
   mUsernameLineEdit->setText(mSettings->value("darwin-op_window/username", QString("darwin")).toString());
-  mPasswordLineEdit->setText(mSettings->value("darwin-op_window/password", QString("1114111")).toString());
+  mPasswordLineEdit->setText(mSettings->value("darwin-op_window/password", QString("111111")).toString());
 }
 
 void Transfer::ActiveButtonsSlot() {
