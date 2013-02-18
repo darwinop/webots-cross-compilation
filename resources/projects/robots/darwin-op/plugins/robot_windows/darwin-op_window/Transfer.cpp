@@ -621,33 +621,18 @@ int Transfer::installAPI() {
   QStringList * argumentsList = new QStringList();
   argumentsList->append(QString("-cf"));
   argumentsList->append(installArchive);
-  // Managers include
+  // Managers
   argumentsList->append(QString("-C"));
   argumentsList->append(managerDir);
   argumentsList->append(QString("include"));
-  // Makefile.darwin-op
-  argumentsList->append(QString("-C"));
-  argumentsList->append(managerDir);
   argumentsList->append(QString("lib/Makefile.darwin-op"));
-  // Transfer
+  argumentsList->append(QString("src"));
+  // Wrapper
   argumentsList->append(QString("-C"));
   argumentsList->append(darwinDir);
   argumentsList->append(QString("transfer"));
-  // Managers src
-  argumentsList->append(QString("-C"));
-  argumentsList->append(managerDir);
-  argumentsList->append(QString("src"));
-  // config
-  argumentsList->append(QString("-C"));
-  argumentsList->append(darwinDir);
   argumentsList->append(QString("config"));
-  // check_start_position
-  argumentsList->append(QString("-C"));
-  argumentsList->append(darwinDir);
   argumentsList->append(QString("check_start_position"));
-  // remote_control
-  argumentsList->append(QString("-C"));
-  argumentsList->append(darwinDir);
   argumentsList->append(QString("remote_control"));
   
   QProcess::execute( "tar", *argumentsList);
