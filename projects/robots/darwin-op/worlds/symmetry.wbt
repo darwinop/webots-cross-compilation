@@ -38,7 +38,7 @@ DARwInOP {
   rotation 0.0593 0.9964 -0.0599 1.58336
   controller "symmetry"
   cameraPixelSize 0
-  cameraWidth 360
+  cameraWidth 320
   cameraHeight 240
   selfCollision TRUE
 }

@@ -39,7 +39,7 @@ DARwInOP {
   controller "visual_tracking"
   selfCollision TRUE
   cameraPixelSize 0.5
-  cameraWidth 360
+  cameraWidth 320
   cameraHeight 240
 }
 Floor {
