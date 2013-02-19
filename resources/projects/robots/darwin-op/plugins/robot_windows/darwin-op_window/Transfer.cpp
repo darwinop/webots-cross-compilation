@@ -68,7 +68,7 @@ Transfer::Transfer()
   
   mSettingsGroupBox->setLayout(mSettingsGridLayout);
   mSettingsGroupBox->setToolTip("Specify the parameters of the connection with the robot");
-  mSettingsGroupBox->setStyleSheet("QGroupBox { border: 2px groove darkGray; border-radius: 8px; padding-top: 20px; padding-left: 5px;} QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top center; padding: 0 3px;}");
+  mSettingsGroupBox->setObjectName("borderedGroupBox");
   mContainerGridLayout->addWidget(mSettingsGroupBox, 0, 0, 1, 1);
   
   //***  Upload controller  ***//
@@ -112,7 +112,7 @@ Transfer::Transfer()
   mActionGridLayout->addWidget(mUninstallButton, 0, 2, 1, 1);
 
   mActionGroupBox->setLayout(mActionGridLayout);
-  mActionGroupBox->setStyleSheet("QGroupBox { border: 2px groove darkGray; border-radius: 8px; padding-top: 20px; padding-left: 5px;} QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top center; padding: 0 3px;}");
+  mActionGroupBox->setObjectName("borderedGroupBox");
   mContainerGridLayout->addWidget(mActionGroupBox, 0, 1, 1, 1);
   
   //***  OUTPUT  ***//
@@ -136,7 +136,7 @@ Transfer::Transfer()
   mOutputGridLayout->addWidget(mConsoleShowTextEdit, 0, 0, 1, 2);
   
   mOutputGroupBox->setLayout(mOutputGridLayout);
-  mOutputGroupBox->setStyleSheet("QGroupBox { border: 2px groove darkGray; border-radius: 8px; padding-top: 20px; padding-left: 5px;} QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top center; padding: 0 3px;}");
+  mOutputGroupBox->setObjectName("borderedGroupBox");
   mContainerGridLayout->addWidget(mOutputGroupBox, 1, 0, 1, 2);
 
   mConnectionState = false;
