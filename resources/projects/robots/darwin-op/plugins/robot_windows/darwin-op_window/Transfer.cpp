@@ -172,6 +172,7 @@ Transfer::Transfer()
   QObject::connect(mRemoteProgressDialog, SIGNAL(canceled()), this, SLOT(RemoteCanceledSlot()));
   QObject::connect(this, SIGNAL(resetRemoteButtonSignal()), this, SLOT(resetRemoteButtonSlot()));
   QObject::connect(this, SIGNAL(resetControllerButtonSignal()), this, SLOT(resetControllerButtonSlot()));
+  QObject::connect(this, SIGNAL(updateStatusSignal(QString)), this, SLOT(updateStatusSlot(QString)));
 }
 
 Transfer::~Transfer() {
@@ -261,7 +262,7 @@ void * Transfer::thread_remote(void *param) {
   
   // Verfify Framework version and update it if needed
   if(instance->isFrameworkUpToDate())
-    instance->mStatusLabel->setText(QString("Status : Framework up-to-date"));
+    emit instance->updateStatusSignal("Status : Framework up-to-date");
   else if(instance->updateFramework() < 0) {
     emit instance->ActiveButtonsSignal();
     emit instance->endWaitRemotSignal();
@@ -272,7 +273,7 @@ void * Transfer::thread_remote(void *param) {
   	
   // Verfify wrapper version and update it if needed
   if(instance->isWrapperUpToDate())
-    instance->mStatusLabel->setText(QString("Status : Webots API up-to-date"));
+    emit instance->updateStatusSignal("Status : Webots API up-to-date");
   else if(instance->installAPI() < 0) {
     emit instance->ActiveButtonsSignal();
     emit instance->endWaitRemotSignal();
@@ -307,7 +308,7 @@ void * Transfer::thread_remote(void *param) {
   
   QString command;
   command = QString("/darwin/Linux/project/webots/remote_control/remote_control ") + QString::number(320/cameraWidth) + QString(" ") + QString::number(240/cameraHeight);
-  instance->mStatusLabel->setText(QString("Status : Starting remote control"));
+  emit instance->updateStatusSignal("Status : Starting remote control");
   
   if(instance->ExecuteSSHCommand((char*)(command.toStdString().c_str())) < 0) {
     emit instance->ActiveButtonsSignal();
@@ -370,7 +371,7 @@ void * Transfer::thread_controller(void *param) {
   emit instance->updateProgressSignal(0);
   
   // Create SSH session and channel
-  instance->mStatusLabel->setText(QString("Status : Connection in progress (1/7)"));
+  emit instance->updateStatusSignal("Status : Connection in progress (1/7)");
   if(instance->StartSSH() < 0) {
     emit instance->ActiveButtonsSignal();
     emit instance->resetControllerButtonSignal();
@@ -382,7 +383,7 @@ void * Transfer::thread_controller(void *param) {
   
   // Create SFTP Channel
   if(instance->OpenSFTPChannel() < 0) {
-	instance->mStatusLabel->setText(QString("Status : ") + QString(instance->mSSHError));
+	emit instance->updateStatusSignal(QString("Status : ") + QString(instance->mSSHError));
     emit instance->ActiveButtonsSignal();
     emit instance->resetControllerButtonSignal();
     instance->CloseAllSSH();
@@ -392,7 +393,7 @@ void * Transfer::thread_controller(void *param) {
   	
   // Verfify Framework version and update it if needed
   if(instance->isFrameworkUpToDate())
-    instance->mStatusLabel->setText(QString("Status : Framework up-to-date"));
+    emit instance->updateStatusSignal("Status : Framework up-to-date");
   else if(instance->updateFramework() < 0) {
     emit instance->ActiveButtonsSignal();
     emit instance->resetControllerButtonSignal();
@@ -403,7 +404,7 @@ void * Transfer::thread_controller(void *param) {
   	
   // Verfify wrapper version and update it if needed
   if(instance->isWrapperUpToDate())
-    instance->mStatusLabel->setText(QString("Status : Webots API up-to-date"));
+    emit instance->updateStatusSignal("Status : Webots API up-to-date");
   else if(instance->installAPI() < 0) {
     emit instance->ActiveButtonsSignal();
     emit instance->resetControllerButtonSignal();
@@ -427,7 +428,7 @@ void * Transfer::thread_controller(void *param) {
   
   emit instance->updateProgressSignal(5);
   
-  instance->mStatusLabel->setText(QString("Status : Stopping current controller (3/7)"));
+  emit instance->updateStatusSignal("Status : Stopping current controller (3/7)");
   // kill demo process (if any)
   if(instance->killProcessIfRunning(instance, QString("demo")) < 0) {
     emit instance->ActiveButtonsSignal();
@@ -471,13 +472,13 @@ void * Transfer::thread_controller(void *param) {
   instance->WaitEndSSHCommand();
 	  
   // Send archive file
-  instance->mStatusLabel->setText(QString("Status : Sending files to the robot (4/7)")); 
+  emit instance->updateStatusSignal("Status : Sending files to the robot (4/7)"); 
   if(instance->SendFile((char*)controllerArchive.toStdString().c_str(), "/darwin/Linux/project/webots/controllers/controller.tar") < 0) {
-    instance->mStatusLabel->setText(QString("Status : ") + QString(instance->mSSHError));
+    emit instance->updateStatusSignal(QString("Status : ") + QString(instance->mSSHError));
     emit instance->ActiveButtonsSignal();
     emit instance->resetControllerButtonSignal();
     instance->CloseAllSSH();
-    instance->mStatusLabel->setText(instance->mStatusLabel->text() + QString(".\nMaybe Webots API is not installed."));
+    emit instance->updateStatusSignal(".\nMaybe Webots API is not installed.");
     // Delete local archive
     QFile deleteArchive(controllerArchive);
     if(deleteArchive.exists())
@@ -497,7 +498,7 @@ void * Transfer::thread_controller(void *param) {
   emit instance->updateProgressSignal(55);
 
   // Decompress remote controller files
-  instance->mStatusLabel->setText(QString("Status : Decompressing files (5/7)")); 
+  emit instance->updateStatusSignal("Status : Decompressing files (5/7)"); 
   instance->ExecuteSSHCommand("tar xf /darwin/Linux/project/webots/controllers/controller.tar");
   emit instance->updateProgressSignal(60);
     
@@ -509,7 +510,7 @@ void * Transfer::thread_controller(void *param) {
     
   // Compile controller
   emit instance->addToConsoleSignal(QString("\n--------------------------------------------------------- Compiling controller ---------------------------------------------------------\n"));
-  instance->mStatusLabel->setText(QString("Status : Compiling controller (6/7)")); 
+  emit instance->updateStatusSignal("Status : Compiling controller (6/7)"); 
   QString makeClean = QString("make -C /darwin/Linux/project/webots/controllers/") + controller + QString(" -f Makefile.darwin-op clean");
   instance->ExecuteSSHCommand((char*)makeClean.toStdString().c_str());
   QString makeController = QString("make -C /darwin/Linux/project/webots/controllers/") + controller + QString(" -f Makefile.darwin-op");
@@ -521,7 +522,7 @@ void * Transfer::thread_controller(void *param) {
   emit instance->updateProgressSignal(90);
     
   if(instance->mMakeDefaultControllerCheckBox->isChecked()) {
-	instance->mStatusLabel->setText(QString("Status : Installing controller (7/7)")); 
+	emit instance->updateStatusSignal("Status : Installing controller (7/7)"); 
 	// Install controller
     QString CPCommande = QString("cp /darwin/Linux/project/webots/controllers/") + controller + QString("/") + controller + QString(" /darwin/Linux/project/webots/default\n");
     instance->ExecuteSSHCommand((char*)CPCommande.toStdString().c_str());
@@ -535,12 +536,12 @@ void * Transfer::thread_controller(void *param) {
     instance->CloseAllSSH();
     // End
     emit instance->ActiveButtonsSignal();
-    instance->mStatusLabel->setText(QString("Status : Controller installed")); 
+    emit instance->updateStatusSignal("Status : Controller installed"); 
     emit instance->updateProgressSignal(100);
   }
   else {
 	if(!instance->isRobotStable()) {
-      instance->mStatusLabel->setText(QString("Status : Robot not in a stable position"));
+      emit instance->updateStatusSignal("Status : Robot not in a stable position");
       // Remove compilation files
       QString removeController = QString("rm -r /darwin/Linux/project/webots/controllers/") + controller;
       instance->ExecuteSSHCommand((char*)removeController.toStdString().c_str());
@@ -562,7 +563,7 @@ void * Transfer::thread_controller(void *param) {
       if(process.toInt() > 0) { // OK controller exist
         // Start controller    
         emit instance->addToConsoleSignal(QString("\n---------------------------------------------------------- Starting controller ----------------------------------------------------------\n"));
-        instance->mStatusLabel->setText(QString("Status : Starting controller (7/7)")); 
+        emit instance->updateStatusSignal("Status : Starting controller (7/7)"); 
         QString renameController = QString("mv /darwin/Linux/project/webots/controllers/") + controller + QString("/") + controller + QString(" /darwin/Linux/project/webots/controllers/") + controller + QString("/controller");
         instance->ExecuteSSHCommand((char*)renameController.toStdString().c_str());
         instance->ShowOutputSSHCommand();
@@ -574,7 +575,7 @@ void * Transfer::thread_controller(void *param) {
         instance->mSendControllerButton->setEnabled(true);
         instance->mSendControllerButton->setIcon(*instance->mStopControllerIcon);
         instance->mSendControllerButton->setToolTip("Stop the controller on the real robot.");
-        instance->mStatusLabel->setText(QString("Status : Controller running")); 
+        emit instance->updateStatusSignal("Status : Controller running"); 
       
         // Show controller output
         while(1)
@@ -591,7 +592,7 @@ void * Transfer::thread_controller(void *param) {
           // End
           emit instance->resetControllerButtonSignal();
           emit instance->ActiveButtonsSignal();
-          instance->mStatusLabel->setText(QString("Status : disconnected")); 
+          emit instance->updateStatusSignal("Status : disconnected"); 
           emit instance->updateProgressSignal(100);
         }
     }
@@ -606,7 +607,7 @@ void * Transfer::thread_controller(void *param) {
 
 int Transfer::installAPI() {
 
-  mStatusLabel->setText(QString("Status : Installation/Update of Webots API"));
+  emit updateStatusSignal("Status : Installation/Update of Webots API");
 
   QString managerDir, darwinDir, installArchive, webotsHome;
   webotsHome = QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME"));
@@ -647,7 +648,7 @@ int Transfer::installAPI() {
     
   // Create new directory webots
   if(MakeRemoteDirectory("/darwin/Linux/project/webots") < 0) {
-    mStatusLabel->setText(QString("Status : Problem while creating directory webots")); 
+    emit updateStatusSignal("Status : Problem while creating directory webots"); 
     // Delete local archive
     QFile deleteArchive(installArchive);
     if(deleteArchive.exists())
@@ -656,7 +657,7 @@ int Transfer::installAPI() {
   }
   // Create new directory controller
   if(MakeRemoteDirectory("/darwin/Linux/project/webots/controllers") < 0) {
-    mStatusLabel->setText(QString("Status : Problem while creating directory controller")); 
+    emit updateStatusSignal("Status : Problem while creating directory controller"); 
     // Delete local archive
     QFile deleteArchive(installArchive);
     if(deleteArchive.exists())
@@ -665,7 +666,7 @@ int Transfer::installAPI() {
   }
   // Create new directory backup
   if(MakeRemoteDirectory("/darwin/Linux/project/webots/backup") < 0) {
-    mStatusLabel->setText(QString("Status : Problem while creating directory backup")); 
+    emit updateStatusSignal("Status : Problem while creating directory backup"); 
     // Delete local archive
     QFile deleteArchive(installArchive);
     if(deleteArchive.exists())
@@ -743,7 +744,7 @@ int Transfer::installAPI() {
   WaitEndSSHCommand();
   emit updateProgressSignal(99);
   
-  mStatusLabel->setText(QString("Status : Webots API installed")); 
+  emit updateStatusSignal("Status : Webots API installed"); 
   
   return 1;
 }
@@ -776,7 +777,7 @@ void * Transfer::thread_uninstall(void *param) {
   
   // The Wrapper is uninstalled in a Thread in order to not freeze the window
   // Create SSH session and channel
-  instance->mStatusLabel->setText(QString("Status : Connection in progress (1/3)"));
+  emit instance->updateStatusSignal("Status : Connection in progress (1/3)");
   if(instance->StartSSH() < 0) {
     instance->CloseAllSSH();
     emit instance->ActiveButtonsSignal();
@@ -785,7 +786,7 @@ void * Transfer::thread_uninstall(void *param) {
   }
   
   emit instance->updateProgressSignal(10);
-  instance->mStatusLabel->setText(QString("Status : Restoring demo controller (2/3)"));
+  emit instance->updateStatusSignal("Status : Restoring demo controller (2/3)");
   // Restore rc.local
   if(instance->ExecuteSSHSudoCommand("cp /darwin/Linux/project/webots/backup/rc.local_original /etc/rc.local\n", sizeof("cp /darwin/Linux/project/webots/backup/rc.local_original /etc/rc.local\n"), (char*)(instance->mPasswordLineEdit->text() + "\n").toStdString().c_str(), sizeof((char*)(instance->mPasswordLineEdit->text() + "\n").toStdString().c_str())) < 0) {
     instance->CloseAllSSH();
@@ -795,7 +796,7 @@ void * Transfer::thread_uninstall(void *param) {
   }
   emit instance->updateProgressSignal(75);
   
-  instance->mStatusLabel->setText(QString("Status : Removing files (3/3)"));
+  emit instance->updateStatusSignal("Status : Removing files (3/3)");
   // Remove directory webots
   emit instance->updateProgressSignal(85);
   instance->ExecuteSSHCommand("rm -r /darwin/Linux/project/webots");
@@ -803,7 +804,7 @@ void * Transfer::thread_uninstall(void *param) {
   // Clear SSH
   emit instance->updateProgressSignal(90);
   instance->CloseAllSSH();
-  instance->mStatusLabel->setText(QString("Status : Webots API uninstalled"));
+  emit instance->updateStatusSignal("Status : Webots API uninstalled");
   emit instance->ActiveButtonsSignal();
   
   emit instance->updateProgressSignal(100);
@@ -1091,7 +1092,7 @@ bool Transfer::isFrameworkUpToDate() {
 
 int Transfer::updateFramework() {
 
-  mStatusLabel->setText(QString("Status : Updating the Framework"));
+  emit updateStatusSignal("Status : Updating the Framework");
 
   QString darwinDir, installArchive, webotsHome;
   webotsHome = QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME"));
@@ -1155,7 +1156,7 @@ int Transfer::updateFramework() {
   ExecuteSSHCommand("rm /darwin/Linux/project/webots/config/version.txt");
   WaitEndSSHCommand();
   
-  mStatusLabel->setText(QString("Status : Framework Updated")); 
+  emit updateStatusSignal("Status : Framework Updated"); 
   
   return 1;
 }
@@ -1184,6 +1185,10 @@ void Transfer::remoteCameraWarningSlot() {
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.exec();
   }
+}
+
+void Transfer::updateStatusSlot(QString status) {
+  mStatusLabel->setText(status);
 }
 
 int Transfer::StartSSH() {
