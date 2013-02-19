@@ -32,6 +32,7 @@ public slots:
   void updateProgressSlot(int);
   void addToConsoleSlot(QString);
   void addToConsoleRedSlot(QString);
+  void updateStatusSlot(QString);
   void robotInstableSlot();
   void installControllerWarningSlot();
   void ActiveButtonsSlot();
@@ -49,6 +50,7 @@ signals:
   void updateProgressSignal(int);
   void addToConsoleSignal(QString);
   void addToConsoleRedSignal(QString);
+  void updateStatusSignal(QString);
   void robotInstableSignal();
   void ActiveButtonsSignal();
   void UnactiveButtonsSignal();
