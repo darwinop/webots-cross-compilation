@@ -126,8 +126,8 @@ int main(int argc, char *argv[]) {
           image = remote->getRemoteImage();
           int image_buffer_position = 0;
 
-          for(int height = 0; height < 240; height +=cameraHeightZoomFactor){
-            for(int width = 0; width < 320; width +=cameraWidthZoomFactor) {
+          for(int height = 120 - (120 / cameraHeightZoomFactor) ; w < 120 + (120 / cameraHeightZoomFactor); height++) {
+            for(int width = 160 - (160 / cameraWidthZoomFactor) ; width < 160 + (160 / cameraWidthZoomFactor); width++) {
               rgbImage.m_ImageData[image_buffer_position  + 2] = image[height * 320 * 4 + width * 4 + 0];
               rgbImage.m_ImageData[image_buffer_position  + 1] = image[height * 320 * 4 + width * 4 + 1];
               rgbImage.m_ImageData[image_buffer_position  + 0] = image[height * 320 * 4 + width * 4 + 2];
