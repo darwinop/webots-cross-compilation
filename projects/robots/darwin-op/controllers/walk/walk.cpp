@@ -67,15 +67,15 @@ void walk::wait(int ms) {
 
 // function containing the main feedback loop
 void walk::run() {
-	
+
   cout << "-------Walk example of DARwIn-OP-------" << endl;
   cout << "This example illustrate the gait manager" << endl;
   cout << "Press the space bar of the keyboard to make the robot start/stop walking" << endl;
   cout << "Use the arrow keyboard to move the robot when walking" << endl;
-	
+
   // First step to update sensors values
   myStep();
-	
+
   // play the hello motion
   mMotionManager->playPage(9); // init position
   wait(200);
@@ -105,13 +105,17 @@ void walk::run() {
             wait(200);
           }
           break;
-        case KEYBOARD_UP : mGaitManager->setXAmplitude(1.0);
+        case KEYBOARD_UP : 
+          mGaitManager->setXAmplitude(1.0);
           break;
-        case KEYBOARD_DOWN : mGaitManager->setXAmplitude(-1.0);
+        case KEYBOARD_DOWN : 
+          mGaitManager->setXAmplitude(-1.0);
           break;
-        case KEYBOARD_RIGHT : mGaitManager->setAAmplitude(-0.5);
+        case KEYBOARD_RIGHT : 
+          mGaitManager->setAAmplitude(-0.5);
           break;
-        case KEYBOARD_LEFT : mGaitManager->setAAmplitude(0.5);
+        case KEYBOARD_LEFT : 
+          mGaitManager->setAAmplitude(0.5);
           break;
       }
     }
