@@ -98,8 +98,12 @@ int Wrapper::robotStep(int step) {
 
   // Time management -> in order to be always as close as possible to 1.0x
   int newTime = cTime->currentSimulationTime();
-  int static oldTime;
-  double static timeStep=0;
+
+  int static oldTime = 0;
+  double static timeStep = step;
+  
+  if(newTime < oldTime)
+    oldTime = newTime;
 
   // calculate difference between this time step and the previous one
   int difference = (newTime-oldTime);
