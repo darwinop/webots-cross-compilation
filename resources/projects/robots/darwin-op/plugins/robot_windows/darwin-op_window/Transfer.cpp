@@ -68,6 +68,7 @@ Transfer::Transfer()
   
   mSettingsGroupBox->setLayout(mSettingsGridLayout);
   mSettingsGroupBox->setToolTip("Specify the parameters of the connection with the robot");
+  mSettingsGroupBox->setObjectName("borderedGroupBox");
   mContainerGridLayout->addWidget(mSettingsGroupBox, 0, 0, 1, 1);
   
   //***  Upload controller  ***//
@@ -111,12 +112,13 @@ Transfer::Transfer()
   mActionGridLayout->addWidget(mUninstallButton, 0, 2, 1, 1);
 
   mActionGroupBox->setLayout(mActionGridLayout);
+  mActionGroupBox->setObjectName("borderedGroupBox");
   mContainerGridLayout->addWidget(mActionGroupBox, 0, 1, 1, 1);
   
   //***  OUTPUT  ***//
   
   mOutputGridLayout = new QGridLayout;
-  mOutputGroupBox = new QGroupBox("DARwIn-OP console :");
+  mOutputGroupBox = new QGroupBox("DARwIn-OP console");
 
   // Status label and progress bar
   mStatusLabel = new QLabel("Status : Disconnected");
@@ -134,6 +136,7 @@ Transfer::Transfer()
   mOutputGridLayout->addWidget(mConsoleShowTextEdit, 0, 0, 1, 2);
   
   mOutputGroupBox->setLayout(mOutputGridLayout);
+  mOutputGroupBox->setObjectName("borderedGroupBox");
   mContainerGridLayout->addWidget(mOutputGroupBox, 1, 0, 1, 2);
 
   mConnectionState = false;
