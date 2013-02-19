@@ -72,7 +72,6 @@ private:
   QGroupBox   *mSettingsGroupBox;
 
   // IP adresse
-  QLineEdit   *mIPLineEdit;
   QLineEdit   *mIPLineEdit1;
   QLineEdit   *mIPLineEdit2;
   QLineEdit   *mIPLineEdit3;
