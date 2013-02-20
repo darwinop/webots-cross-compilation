@@ -8,6 +8,10 @@ QT_UTILS = $(WEBOTS_HOME_PATH)/resources/projects/default/libraries/qt_utils
 INCLUDE = -I"$(QT_UTILS)" -I"$(WEBOTS_HOME_PATH)/include/libssh" -I"$(WEBOTS_HOME_PATH)/include/libtar"
 LIBRARIES = -L"$(QT_UTILS)" -lqt_utils -L"$(WEBOTS_HOME_PATH)/" -lssh
 
+ifeq ($(OS),Windows_NT)
+LIBRARIES += -lpthreadGC2
+endif
+
 space :=
 space +=
 WEBOTS_HOME_PATH=$(subst $(space),\ ,$(strip $(subst \,/,$(WEBOTS_HOME))))
