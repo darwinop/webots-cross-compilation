@@ -6,7 +6,7 @@ using namespace webotsQtUtils;
 Viewer::Viewer() :
   GenericWindow()
 {
-  mTabWidget->addTab(new Transfer, QString("Transfer"));
+  mTabWidget->addTab(new Transfer(this), "Transfer");
 }
 
 Viewer::~Viewer() {

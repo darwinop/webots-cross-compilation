@@ -17,8 +17,6 @@ class Viewer : public webotsQtUtils::GenericWindow
     Viewer();
     virtual ~Viewer();
 
-  protected:
-
 };
 
 #endif
