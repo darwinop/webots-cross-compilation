@@ -22,7 +22,8 @@
 
 using namespace webotsQtUtils;
 
-Transfer::Transfer()
+Transfer::Transfer(QWidget *parent):
+  QScrollArea(parent)
 {
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setMinimumHeight(520);
