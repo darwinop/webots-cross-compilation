@@ -29,7 +29,7 @@ Transfer::Transfer(QWidget *parent):
   setMinimumHeight(520);
   mThread = new pthread_t;
   mContainerGridLayout = new QGridLayout;
-  mContainerGridLayout->setHorizontalSpacing(100);
+  mContainerGridLayout->setHorizontalSpacing(150);
   mContainerGridLayout->setVerticalSpacing(30);
   
   //***  SETTINGS  ***//
@@ -37,36 +37,11 @@ Transfer::Transfer(QWidget *parent):
   mSettingsGroupBox = new QGroupBox("Connection settings");
 
   // IP
-  mIPVAlidator = new QIntValidator(0, 255);
-  mIPLineEdit1 = new QLineEdit;
-  mIPLineEdit1->setValidator(mIPVAlidator);
-  mIPLineEdit1->setMaximumWidth(50);
-  mIPLineEdit1->setAlignment(Qt::AlignHCenter);
-  mIPLineEdit1->setToolTip("IP adress of the robot, the robot must be on the same network that the computer.\nIf the robot is connected with an ethernet cable, the default adress is 192.168.123.1\nIf the robot is connected by wifi, run (on the robot) the command 'ifconfig' to find the IP adress.");
-  mIPLineEdit2 = new QLineEdit;
-  mIPLineEdit2->setValidator(mIPVAlidator);
-  mIPLineEdit2->setMaximumWidth(50);
-  mIPLineEdit2->setAlignment(Qt::AlignHCenter);
-  mIPLineEdit2->setToolTip("IP adress of the robot, the robot must be on the same network that the computer.\nIf the robot is connected with an ethernet cable, the default adress is 192.168.123.1\nIf the robot is connected by wifi, run (on the robot) the command 'ifconfig' to find the IP adress.");
-  mIPLineEdit3 = new QLineEdit;
-  mIPLineEdit3->setValidator(mIPVAlidator);
-  mIPLineEdit3->setMaximumWidth(50);
-  mIPLineEdit3->setAlignment(Qt::AlignHCenter);
-  mIPLineEdit3->setToolTip("IP adress of the robot, the robot must be on the same network that the computer.\nIf the robot is connected with an ethernet cable, the default adress is 192.168.123.1\nIf the robot is connected by wifi, run (on the robot) the command 'ifconfig' to find the IP adress.");
-  mIPLineEdit4 = new QLineEdit;
-  mIPLineEdit4->setValidator(mIPVAlidator);
-  mIPLineEdit4->setMaximumWidth(50);
-  mIPLineEdit4->setAlignment(Qt::AlignHCenter);
-  mIPLineEdit4->setToolTip("IP adress of the robot, the robot must be on the same network that the computer.\nIf the robot is connected with an ethernet cable, the default adress is 192.168.123.1\nIf the robot is connected by wifi, run (on the robot) the command 'ifconfig' to find the IP adress.");
-  mIPHBoxLayout = new QHBoxLayout;
-  mIPHBoxLayout->addWidget(mIPLineEdit1);
-  mIPHBoxLayout->addWidget(mIPLineEdit2);
-  mIPHBoxLayout->addWidget(mIPLineEdit3);
-  mIPHBoxLayout->addWidget(mIPLineEdit4);
-  
+  mIPLineEdit = new QLineEdit;
+  mIPLineEdit->setToolTip("IP adress of the robot, the robot must be on the same network that the computer.\nIf the robot is connected with an ethernet cable, the default adress is 192.168.123.1\nIf the robot is connected by wifi, run (on the robot) the command 'ifconfig' to find the IP adress.");
   mIPLabel = new QLabel("IP adresse : ");
   mSettingsGridLayout->addWidget(mIPLabel, 0, 0, 1, 1);
-  mSettingsGridLayout->addLayout(mIPHBoxLayout, 0, 1, 1, 1);
+  mSettingsGridLayout->addWidget(mIPLineEdit, 0, 1, 1, 1);
   
   // Username
   mUsernameLineEdit = new QLineEdit;
@@ -900,7 +875,7 @@ void Transfer::endWaitRemotSlot() {
 
 void Transfer::activateRemoteControlSlot() {
   mSettings->setValue("darwin-op_window/remote_starting_time", QString::number(mRemoteStartingTimeCounter));  // Save time needed to start remote-control for next time
-  wb_robot_set_mode(WB_MODE_REMOTE_CONTROL, (void *)((mIPLineEdit1->text() + QString(".") + mIPLineEdit2->text() + QString(".") + mIPLineEdit3->text() + QString(".") + mIPLineEdit4->text()).toStdString().c_str()));
+  wb_robot_set_mode(WB_MODE_REMOTE_CONTROL, (void *)(mIPLineEdit->text().toStdString().c_str()));
   mStatusLabel->setText(QString("Status : Remote control started"));
 }
 
@@ -953,29 +928,19 @@ void Transfer::ShowOutputSSHCommand() {
 }
 
 void Transfer::restoreSettings() {
-  mIPLineEdit1->setText(QString("192"));
-  mIPLineEdit2->setText(QString("168"));
-  mIPLineEdit3->setText(QString("123"));
-  mIPLineEdit4->setText(QString("1"));
+  mIPLineEdit->setText(QString("192.168.123.1"));
   mUsernameLineEdit->setText(QString("darwin"));
   mPasswordLineEdit->setText(QString("111111"));
 }
 
 void Transfer::saveSettings() {
-  mSettings->setValue("darwin-op_window/IP", (mIPLineEdit1->text() + QString(".") +  mIPLineEdit2->text() + QString(".") + mIPLineEdit3->text() + QString(".") + mIPLineEdit4->text()));
+  mSettings->setValue("darwin-op_window/IP", mIPLineEdit->text());
   mSettings->setValue("darwin-op_window/username", mUsernameLineEdit->text());
   mSettings->setValue("darwin-op_window/password", mPasswordLineEdit->text());
 }
 
 void Transfer::loadSettings() {
-  QString IP;
-  QStringList IPList;
-  IP = QString(mSettings->value("darwin-op_window/IP", QString("192.168.123.1")).toString());
-  IPList = IP.split(".");
-  mIPLineEdit1->setText(IPList.at(0));
-  mIPLineEdit2->setText(IPList.at(1));
-  mIPLineEdit3->setText(IPList.at(2));
-  mIPLineEdit4->setText(IPList.at(3));
+  mIPLineEdit->setText(mSettings->value("darwin-op_window/IP", QString("192.168.123.1")).toString());
   mUsernameLineEdit->setText(mSettings->value("darwin-op_window/username", QString("darwin")).toString());
   mPasswordLineEdit->setText(mSettings->value("darwin-op_window/password", QString("111111")).toString());
 }
@@ -1230,7 +1195,7 @@ void Transfer::updateStatusSlot(QString status) {
 }
 
 int Transfer::StartSSH() {
-  if(OpenSSHSession((mIPLineEdit1->text() + QString(".") + mIPLineEdit2->text() + QString(".") + mIPLineEdit3->text() + QString(".") + mIPLineEdit4->text()), mUsernameLineEdit->text(), mPasswordLineEdit->text()) < 0) {
+  if(OpenSSHSession(mIPLineEdit->text(), mUsernameLineEdit->text(), mPasswordLineEdit->text()) < 0) {
     mStatusLabel->setText(QString("Connection error : ")+ QString(mSSHError));
     return -1;
   }
