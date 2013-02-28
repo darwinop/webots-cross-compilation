@@ -13,6 +13,8 @@
 #include <webots/robot.h>
 #include <webots/camera.h>
 
+#include "ZIP.hpp"
+
 #ifdef WIN32
 #include <windows.h>
 #else
@@ -419,15 +421,8 @@ void * Transfer::thread_controller(void *param) {
   // Creat archive
   QString controller, controllerArchive;
   controller = QString(wb_robot_get_controller_name());
-  controllerArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_controller.tar");
-
-  QStringList * argumentsList = new QStringList();
-  argumentsList->append(QString("-cf"));
-  argumentsList->append(controllerArchive);
-  argumentsList->append(QString("-C"));
-  argumentsList->append(QString(wb_robot_get_project_path()) + QString("/controllers/"));
-  argumentsList->append(controller);
-  QProcess::execute( "tar", *argumentsList);
+  controllerArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_controller.zip");
+  ZIP::CompressFolder(controllerArchive, QString(wb_robot_get_project_path()) + QString("/controllers/") + controller, true, (const char *)controller.toStdString().c_str());
   
   emit instance->updateProgressSignal(5);
   
@@ -476,7 +471,7 @@ void * Transfer::thread_controller(void *param) {
 	  
   // Send archive file
   emit instance->updateStatusSignal("Status : Sending files to the robot (4/7)"); 
-  if(instance->SendFile((char*)controllerArchive.toStdString().c_str(), "/darwin/Linux/project/webots/controllers/controller.tar") < 0) {
+  if(instance->SendFile((char*)controllerArchive.toStdString().c_str(), "/darwin/Linux/project/webots/controllers/controller.zip") < 0) {
     emit instance->updateStatusSignal(QString("Status : ") + QString(instance->mSSHError));
     emit instance->ActiveButtonsSignal();
     emit instance->resetControllerButtonSignal();
@@ -502,13 +497,12 @@ void * Transfer::thread_controller(void *param) {
 
   // Decompress remote controller files
   emit instance->updateStatusSignal("Status : Decompressing files (5/7)"); 
-  instance->ExecuteSSHCommand("tar xf /darwin/Linux/project/webots/controllers/controller.tar");
+  instance->ExecuteSSHCommand("unzip /darwin/Linux/project/webots/controllers/controller.zip -d /darwin/Linux/project/webots/controllers");
   emit instance->updateProgressSignal(60);
+  instance->WaitEndSSHCommand();
     
-  // Moving the files to where they need to be and deleting archive
-  QString move = QString("mv /home/darwin/") + controller + QString(" /darwin/Linux/project/webots/controllers/") + controller;
-  instance->ExecuteSSHCommand((char*)move.toStdString().c_str());
-  instance->ExecuteSSHCommand("rm /darwin/Linux/project/webots/controllers/controller.tar");
+  // Deleting archive
+  instance->ExecuteSSHCommand("rm /darwin/Linux/project/webots/controllers/controller.zip");
   emit instance->updateProgressSignal(70);
     
   // Compile controller
@@ -616,29 +610,17 @@ int Transfer::installAPI() {
   webotsHome = QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME"));
   managerDir = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/managers");
   darwinDir = webotsHome + QString("/resources/projects/robots/darwin-op");
-  installArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_install.tar");
+  installArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_install.zip");
 
   emit updateProgressSignal(10);
   // Creat archive
-  
-  QStringList * argumentsList = new QStringList();
-  argumentsList->append(QString("-cf"));
-  argumentsList->append(installArchive);
-  // Managers
-  argumentsList->append(QString("-C"));
-  argumentsList->append(managerDir);
-  argumentsList->append(QString("include"));
-  argumentsList->append(QString("lib/Makefile.darwin-op"));
-  argumentsList->append(QString("src"));
-  // Wrapper
-  argumentsList->append(QString("-C"));
-  argumentsList->append(darwinDir);
-  argumentsList->append(QString("transfer"));
-  argumentsList->append(QString("config"));
-  argumentsList->append(QString("check_start_position"));
-  argumentsList->append(QString("remote_control"));
-  
-  QProcess::execute( "tar", *argumentsList);
+  ZIP::CompressFolder(installArchive, managerDir + QString("/include"), true, "include");
+  ZIP::AddFolderToArchive(installArchive, managerDir + QString("/src"), true, "src");
+  ZIP::AddFolderToArchive(installArchive, managerDir + QString("/lib"), true, "lib");
+  ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/transfer"), true, "transfer");
+  ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/config"), true, "config");
+  ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/check_start_position"), true, "check_start_position");
+  ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/remote_control"), true, "remote_control");
   
   emit updateProgressSignal(20);
 
@@ -683,7 +665,7 @@ int Transfer::installAPI() {
   WaitEndSSHCommand();
 
   // Send archive file
-  if(SendFile((char*)installArchive.toStdString().c_str(), "/darwin/Linux/project/webots/install.tar") < 0) {
+  if(SendFile((char*)installArchive.toStdString().c_str(), "/darwin/Linux/project/webots/install.zip") < 0) {
     // Delete local archive
     QFile deleteArchive(installArchive);
     if(deleteArchive.exists())
@@ -699,8 +681,9 @@ int Transfer::installAPI() {
   emit updateProgressSignal(45);
 
   // Decompress remote controller files
-  ExecuteSSHCommand("tar xf /darwin/Linux/project/webots/install.tar");
+  ExecuteSSHCommand("unzip /darwin/Linux/project/webots/install.zip");
   emit updateProgressSignal(50);
+  WaitEndSSHCommand();
   
   // Move files and delete archive
   ExecuteSSHCommand("mv /home/darwin/config/rc.local_original /darwin/Linux/project/webots/backup/rc.local_original");
@@ -711,7 +694,7 @@ int Transfer::installAPI() {
   ExecuteSSHCommand("mv /home/darwin/check_start_position /darwin/Linux/project/webots/check_start_position");
   ExecuteSSHCommand("mv /home/darwin/config /darwin/Linux/project/webots/config");
   ExecuteSSHCommand("mv /home/darwin/remote_control /darwin/Linux/project/webots/remote_control");
-  ExecuteSSHCommand("rm /darwin/Linux/project/webots/install.tar");
+  ExecuteSSHCommand("rm /darwin/Linux/project/webots/install.zip");
   emit updateProgressSignal(60);
   
   // Compile Wrapper 
@@ -736,6 +719,7 @@ int Transfer::installAPI() {
   emit updateProgressSignal(80);
   ShowOutputSSHCommand();  
 
+  emit updateProgressSignal(85);
   
   // Permanently stop demo program
   if(ExecuteSSHSudoCommand("cp /darwin/Linux/project/webots/config/rc.local_custom /etc/rc.local\n", sizeof("cp /darwin/Linux/project/webots/config/rc.local_custom /etc/rc.local\n"), ((char*)(mPasswordLineEdit->text() + "\n").toStdString().c_str()), sizeof((char*)(mPasswordLineEdit->text() + "\n").toStdString().c_str())) < 0) {
@@ -1100,26 +1084,20 @@ int Transfer::updateFramework() {
   QString darwinDir, installArchive, webotsHome;
   webotsHome = QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME"));
   darwinDir = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/darwin/darwin");
-  installArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_update.tar");
+  installArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_update.zip");
 
   emit updateProgressSignal(10);
-  
-  QStringList * argumentsList = new QStringList();
-  argumentsList->append(QString("-cf"));
-  argumentsList->append(installArchive);
-  argumentsList->append(QString("-C"));
-  argumentsList->append(darwinDir);
-  argumentsList->append("version.txt");
-  argumentsList->append("Data");
-  argumentsList->append("Linux");
-  argumentsList->append("Framework");
-  QProcess::execute( "tar", *argumentsList);
+  // Creat archive
+  ZIP::CompressFolder(installArchive, darwinDir + QString("/Data"), true, "Data");
+  ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/Linux"), true, "Linux");
+  ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/Framework"), true, "Framework");
+  ZIP::AddFileToArchive(installArchive, darwinDir + QString("/version.txt"), "version.txt");
   
   emit updateProgressSignal(20);
     
 
   // Send archive file
-  if(SendFile((char*)installArchive.toStdString().c_str(), "/darwin/update.tar") < 0) {
+  if(SendFile((char*)installArchive.toStdString().c_str(), "/darwin/update.zip") < 0) {
     // Delete local archive
     QFile deleteArchive(installArchive);
     if(deleteArchive.exists())
@@ -1135,17 +1113,20 @@ int Transfer::updateFramework() {
   emit updateProgressSignal(35);
 
   // Decompress remote controller files
-  ExecuteSSHCommand("tar xf /darwin/update.tar");
+  ExecuteSSHCommand("unzip /darwin/update.zip");
   emit updateProgressSignal(40);
-  
+  WaitEndSSHCommand();
+
   // Move files and delete archive
   ExecuteSSHCommand("cp /home/darwin/version.txt /darwin/version.txt");
   ExecuteSSHCommand("cp -r /home/darwin/Framework /darwin");
   ExecuteSSHCommand("cp -r /home/darwin/Linux /darwin");
-  ExecuteSSHCommand("rm /darwin/update.tar");
+  ExecuteSSHCommand("cp -r /home/darwin/Data /darwin");
+  ExecuteSSHCommand("rm /darwin/update.zip");
   ExecuteSSHCommand("rm /home/darwin/version.txt");
   ExecuteSSHCommand("rm -r /home/darwin/Framework");
   ExecuteSSHCommand("rm -r /home/darwin/Linux");
+  ExecuteSSHCommand("rm -r /home/darwin/Data");
   emit updateProgressSignal(50);
   
   // Compile Framework 
