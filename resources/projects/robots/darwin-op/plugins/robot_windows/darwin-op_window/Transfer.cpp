@@ -489,6 +489,9 @@ void * Transfer::thread_controller(void *param) {
   // Close SFTP channel
   instance->CloseSFTPChannel();
 
+  instance->ExecuteSSHCommand("chmod 755 /darwin/Linux/project/webots/controllers/controller.zip");
+  instance->WaitEndSSHCommand();
+
   // Delete local archive
   QFile deleteArchive(controllerArchive);
   if(deleteArchive.exists())
@@ -673,7 +676,10 @@ int Transfer::installAPI() {
     return -1;
   }
   emit updateProgressSignal(40);
-  
+
+  ExecuteSSHCommand("chmod 755 /darwin/Linux/project/webots/install.zip");
+  WaitEndSSHCommand();
+
   // Delete local archive
   QFile deleteArchive(installArchive);
   if(deleteArchive.exists())
@@ -1105,7 +1111,10 @@ int Transfer::updateFramework() {
     return -1;
   }
   emit updateProgressSignal(30);
-  
+
+  ExecuteSSHCommand("chmod 755 /darwin/update.zip");
+  WaitEndSSHCommand();
+
   // Delete local archive
   QFile deleteArchive(installArchive);
   if(deleteArchive.exists())
