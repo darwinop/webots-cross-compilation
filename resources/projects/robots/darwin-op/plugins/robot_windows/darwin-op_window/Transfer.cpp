@@ -562,7 +562,7 @@ void * Transfer::thread_controller(void *param) {
       instance->ExecuteSSHCommand((char*)controllerExist.toStdString().c_str());
       instance->ChannelRead(processOutput, false);
       QString process(processOutput);
-      if(process.toInt() > 0) { // OK controller exist
+      if(process.left(1).toInt() > 0) { // OK controller exist
         // Start controller    
         emit instance->addToConsoleSignal(QString("\n---------------------------------------------------------- Starting controller ----------------------------------------------------------\n"));
         emit instance->updateStatusSignal("Status : Starting controller (7/7)"); 
