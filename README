@@ -100,6 +100,23 @@ E. Run the same controller on the DARwIn-OP
      To stop the controller press Ctrl+c
      You can now try the other examples presents in the directory "controllers"
 
+F. Run your controller on the robot from Webots (remote-control)
+
+- 1. On the DARwIn-OP, copy paste $GIT_REPOSITORY/resources/projects/robots/darwin-op/remote_control directory in /darwin/Linux/project/webots
+
+- 2. Compile remote control serveur on the DARwIn-OP
+     $ cd /darwin/Linux/project/webots/remote_control
+     $ make -f Makefile.darwin-op
+
+- 3. Start the remote serveur
+     $ /darwin/Linux/project/webots/remote_control/remote_control 1 1 (adjust parameters if camera resolution is not 320x240, example 2 1 for a resolution of 160x240)
+
+- 4. Set the robot in remote-control mode on Webots by adding the following lines in the controller
+     const char arguments[16] = "192.168.123.1";  // adjust IP adress if the robot is connected by wifi
+     setMode(MODE_REMOTE_CONTROL, (void *)arguments);
+
+- 5. Compile controller and revert world
+
 ----- Known issues ----- 
 
 - 1. In simulation, in the DARwInOPGaitManager, the lateral balance do not work as expected.
