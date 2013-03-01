@@ -328,9 +328,11 @@ void * Transfer::thread_remote(void *param) {
   emit instance->endWaitRemotSignal();
   emit instance->activateRemoteControlSignal();
   instance->mRemoteControlButton->setEnabled(true);
-  
+
   // Show output
+#ifndef WIN32
   instance->ShowOutputSSHCommand();
+#endif
 
   return NULL;
 }
@@ -575,11 +577,13 @@ void * Transfer::thread_controller(void *param) {
         instance->mSendControllerButton->setEnabled(true);
         instance->mSendControllerButton->setIcon(*instance->mStopControllerIcon);
         instance->mSendControllerButton->setToolTip("Stop the controller on the real robot.");
-        emit instance->updateStatusSignal("Status : Controller running"); 
-      
+        emit instance->updateStatusSignal("Status : Controller running");
+
         // Show controller output
+#ifndef WIN32
         while(1)
           instance->ShowOutputSSHCommand();
+#endif
         }
         else { // controller do not exist
           // Remove compilation files
