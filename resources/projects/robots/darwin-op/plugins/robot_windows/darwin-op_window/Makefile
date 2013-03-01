@@ -6,7 +6,7 @@ USE_C_API = true
 
 QT_UTILS = $(WEBOTS_HOME_PATH)/resources/projects/default/libraries/qt_utils
 INCLUDE = -I"$(QT_UTILS)" -I"$(WEBOTS_HOME_PATH)/include/libssh" -I"$(WEBOTS_HOME_PATH)/include/libzip"
-LIBRARIES = -L"$(QT_UTILS)" -lqt_utils -L"$(WEBOTS_HOME_PATH)/" -lssh -lzip
+LIBRARIES = -L"$(QT_UTILS)" -lqt_utils -L"$(WEBOTS_HOME_PATH)/" -lssh -lzip-2
 
 ifeq ($(OS),Windows_NT)
 LIBRARIES += -lpthreadGC2
