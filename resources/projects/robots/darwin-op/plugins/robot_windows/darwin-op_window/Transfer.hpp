@@ -45,6 +45,7 @@ public slots:
   void RemoteCanceledSlot();
   void resetRemoteButtonSlot();
   void resetControllerButtonSlot();
+  void SendControllerButtonSlot();
   
 signals:
   void updateProgressSignal(int);
@@ -59,6 +60,7 @@ signals:
   void endWaitRemotSignal();
   void resetRemoteButtonSignal();
   void resetControllerButtonSignal();
+  void SendControllerButtonSignal();
 
 private:
   //***  SSH  ***//
