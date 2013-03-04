@@ -1,4 +1,7 @@
-Webots 7.1.X
+Webots 7.1.1
+
+  Added remote-control
+  Added custom robot-window which allows to install Webots API on the robot, start remote-control and cross-compile easily
 
   Simulation :
 
