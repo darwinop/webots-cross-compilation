@@ -512,7 +512,7 @@ void * Transfer::thread_controller(void *param) {
   emit instance->updateProgressSignal(70);
     
   // Compile controller
-  emit instance->addToConsoleSignal(QString("\n--------------------------------------------------------- Compiling controller ---------------------------------------------------------\n"));
+  emit instance->addToConsoleSignal(QString("\n------ Compiling controller ------\n"));
   emit instance->updateStatusSignal("Status : Compiling controller (6/7)"); 
   QString makeClean = QString("make -C /darwin/Linux/project/webots/controllers/") + controller + QString(" -f Makefile.darwin-op clean");
   instance->ExecuteSSHCommand((char*)makeClean.toStdString().c_str());
@@ -565,7 +565,7 @@ void * Transfer::thread_controller(void *param) {
       QString process(processOutput);
       if(process.left(1).toInt() > 0) { // OK controller exist
         // Start controller    
-        emit instance->addToConsoleSignal(QString("\n---------------------------------------------------------- Starting controller ----------------------------------------------------------\n"));
+        emit instance->addToConsoleSignal(QString("\n------ Starting controller ------\n"));
         emit instance->updateStatusSignal("Status : Starting controller (7/7)"); 
         QString renameController = QString("mv /darwin/Linux/project/webots/controllers/") + controller + QString("/") + controller + QString(" /darwin/Linux/project/webots/controllers/") + controller + QString("/controller");
         instance->ExecuteSSHCommand((char*)renameController.toStdString().c_str());
