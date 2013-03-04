@@ -178,6 +178,7 @@ Transfer::Transfer(QWidget *parent):
   QObject::connect(this, SIGNAL(resetRemoteButtonSignal()), this, SLOT(resetRemoteButtonSlot()));
   QObject::connect(this, SIGNAL(resetControllerButtonSignal()), this, SLOT(resetControllerButtonSlot()));
   QObject::connect(this, SIGNAL(updateStatusSignal(QString)), this, SLOT(updateStatusSlot(QString)));
+  QObject::connect(this, SIGNAL(SendControllerButtonSignal()), this, SLOT(SendControllerButtonSlot()));
 }
 
 Transfer::~Transfer() {
@@ -327,10 +328,10 @@ void * Transfer::thread_remote(void *param) {
   
   emit instance->endWaitRemotSignal();
   emit instance->activateRemoteControlSignal();
-  instance->mRemoteControlButton->setEnabled(true);
+  emit instance->ActiveButtonsSignal();
 
   // Show output
-#ifndef WIN32
+#ifndef WIN32  // because otherwise stopping the thread while using the ssh connection cause problem on Windows
   instance->ShowOutputSSHCommand();
 #endif
 
@@ -574,13 +575,12 @@ void * Transfer::thread_controller(void *param) {
         emit instance->updateProgressSignal(100);
       
         instance->mConnectionState = true;
-        instance->mSendControllerButton->setEnabled(true);
-        instance->mSendControllerButton->setIcon(*instance->mStopControllerIcon);
-        instance->mSendControllerButton->setToolTip("Stop the controller on the real robot.");
-        emit instance->updateStatusSignal("Status : Controller running");
+        emit instance->ActiveButtonsSignal();
+        emit instance->SendControllerButtonSignal();
+        emit instance->updateStatusSignal("Status : Controller running"); 
 
         // Show controller output
-#ifndef WIN32
+#ifndef WIN32 // because otherwise stopping the thread while using the ssh connection cause problem on Windows
         while(1)
           instance->ShowOutputSSHCommand();
 #endif
@@ -1236,4 +1236,9 @@ void Transfer::wait(int duration) {
     usleep(1000000);
   usleep(1000 * milliSeconds);
 #endif
+}
+
+void Transfer::SendControllerButtonSlot() {
+  mSendControllerButton->setIcon(*mStopControllerIcon);
+  mSendControllerButton->setToolTip("Stop the controller on the real robot.");
 }
