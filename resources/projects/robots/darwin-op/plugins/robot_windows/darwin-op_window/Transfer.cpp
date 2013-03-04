@@ -148,15 +148,6 @@ Transfer::Transfer(QWidget *parent):
   setWidget(mContainerWidget);
   
   mRemoteTime = new QTimer(this);
-  mRemoteProgressDialog = new QProgressDialog("Copying files...", "Cancel", 0, 100, this);
-  mRemoteProgressDialog->setWindowModality(Qt::WindowModal);
-  mRemoteProgressDialog->setWindowTitle("Remote control");
-  mRemoteProgressDialog->setLabelText("Starting remot-control.\nPlease wait, it can take a few seconds.");
-  mRemoteProgressBar = new QProgressBar(mRemoteProgressDialog);
-  mRemoteProgressBar->setTextVisible(false);
-  mRemoteProgressBar->setMinimum(0);
-  mRemoteProgressBar->setMaximum(100);
-  mRemoteProgressDialog->setBar(mRemoteProgressBar);
   mRemoteStartingTime = mSettings->value("darwin-op_window/remote_starting_time", QString::number(-1)).toInt();
 
   QObject::connect(mRemoteTime, SIGNAL(timeout()), this, SLOT(waitRemoteSlot()));
@@ -174,7 +165,6 @@ Transfer::Transfer(QWidget *parent):
   QObject::connect(this, SIGNAL(activateRemoteControlSignal()), this, SLOT(activateRemoteControlSlot()));
   QObject::connect(this, SIGNAL(remoteCameraWarningSignal()), this, SLOT(remoteCameraWarningSlot()));
   QObject::connect(this, SIGNAL(endWaitRemotSignal()), this, SLOT(endWaitRemotSlot()));
-  QObject::connect(mRemoteProgressDialog, SIGNAL(canceled()), this, SLOT(RemoteCanceledSlot()));
   QObject::connect(this, SIGNAL(resetRemoteButtonSignal()), this, SLOT(resetRemoteButtonSlot()));
   QObject::connect(this, SIGNAL(resetControllerButtonSignal()), this, SLOT(resetControllerButtonSlot()));
   QObject::connect(this, SIGNAL(updateStatusSignal(QString)), this, SLOT(updateStatusSlot(QString)));
@@ -196,6 +186,16 @@ void Transfer::startRemoteControl() {
     mRemoteControlButton->setIcon(*mStopControllerIcon);
     mRemoteControlButton->setToolTip("Stop remote control.");
 
+    mRemoteProgressDialog = new QProgressDialog("Copying files...", "Cancel", 0, 100, this);
+    QObject::connect(mRemoteProgressDialog, SIGNAL(canceled()), this, SLOT(RemoteCanceledSlot()));
+    mRemoteProgressDialog->setWindowModality(Qt::WindowModal);
+    mRemoteProgressDialog->setWindowTitle("Remote control");
+    mRemoteProgressDialog->setLabelText("Starting remot-control.\nPlease wait, it can take a few seconds.");
+    mRemoteProgressBar = new QProgressBar(mRemoteProgressDialog);
+    mRemoteProgressBar->setTextVisible(false);
+    mRemoteProgressBar->setMinimum(0);
+    mRemoteProgressBar->setMaximum(100);
+    mRemoteProgressDialog->setBar(mRemoteProgressBar);
     mRemoteProgressDialog->show();
     mRemoteTime->start(10);
     
@@ -817,39 +817,40 @@ void Transfer::waitRemoteSlot() {
   int static i = 5;
   int static direction = 1;
   
-  if(!mRemoteProgressDialog->isVisible()) {
-	direction = 5;
-    i = 1;
-    mRemoteStartingTimeCounter = 0;
-  }
+  if(mRemoteProgressDialog != NULL) {
+    if(!mRemoteProgressDialog->isVisible()) {
+	  direction = 5;
+      i = 1;
+      mRemoteStartingTimeCounter = 0;
+    }
+      
+    mRemoteStartingTimeCounter++; // Count the number of times that the loop of 10ms is called -> time estimation for next time
     
-  mRemoteStartingTimeCounter++; // Count the number of times that the loop of 10ms is called -> time estimation for next time
-  
-  if(mRemoteStartingTime > 0) {  // time has already been tested and saved
-  
-	int minutes = (mRemoteStartingTime - mRemoteStartingTimeCounter) / 6000;  // 6000 = 0.01 * 60, 0.01 because loop is called every 10ms
-	if(minutes < 0)
-	  minutes = 0;
+    if(mRemoteStartingTime > 0) {  // time has already been tested and saved
+    
+	  int minutes = (mRemoteStartingTime - mRemoteStartingTimeCounter) / 6000;  // 6000 = 0.01 * 60, 0.01 because loop is called every 10ms
+	  if(minutes < 0)
+	    minutes = 0;
 	  
-	int seconds = (int)((mRemoteStartingTime - mRemoteStartingTimeCounter) * 0.01) % 60;
-	if(seconds < 0)
-	  seconds = 0;
+      int seconds = (int)((mRemoteStartingTime - mRemoteStartingTimeCounter) * 0.01) % 60;
+	  if(seconds < 0)
+	    seconds = 0;
 	
-    mRemoteProgressDialog->setLabelText(QString("Starting remot-control.\nPlease wait.\nApproximated remaining time : ") + QString::number(minutes) + QString("m") + QString::number(seconds) + QString("s"));
-  }
+      mRemoteProgressDialog->setLabelText(QString("Starting remot-control.\nPlease wait.\nApproximated remaining time : ") + QString::number(minutes) + QString("m") + QString::number(seconds) + QString("s"));
+    }
   
-  mRemoteProgressDialog->setValue(i);
-  i = i + direction;
+    mRemoteProgressDialog->setValue(i);
+    i = i + direction;
   
-  if(i > 95) {
-    direction = -1;
-    mRemoteProgressBar->setInvertedAppearance(true);
-  }
-  else if(i < 5) {
-    direction = 1;
-    mRemoteProgressBar->setInvertedAppearance(false);
-  }
-    
+    if(i > 95) {
+      direction = -1;
+      mRemoteProgressBar->setInvertedAppearance(true);
+    }
+    else if(i < 5) {
+      direction = 1;
+      mRemoteProgressBar->setInvertedAppearance(false);
+    }
+  } 
 }
 
 void Transfer::RemoteCanceledSlot() {
@@ -864,7 +865,10 @@ void Transfer::RemoteCanceledSlot() {
 
 void Transfer::endWaitRemotSlot() {
   mRemoteTime->stop();
-  mRemoteProgressDialog->hide();
+  delete mRemoteProgressBar;
+  delete mRemoteProgressDialog;
+  mRemoteProgressDialog = NULL;
+  mRemoteProgressBar = NULL;
 }
 
 void Transfer::activateRemoteControlSlot() {
