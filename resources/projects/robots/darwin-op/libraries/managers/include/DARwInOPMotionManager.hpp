@@ -27,23 +27,36 @@ namespace managers {
                        DARwInOPMotionManager(webots::Robot *robot);
       virtual         ~DARwInOPMotionManager();
       bool             isCorrectlyInitialized() { return mCorrectlyInitialized; }
-      void             playPage(int id);
+      void             playPage(int id, bool stepByStep = false);
+      void             Step(int ms);
+      bool             isMotionPlaying() { return mMotionPlaying; }
 
     private:
       webots::Robot   *mRobot;
       bool             mCorrectlyInitialized;
       Action          *mAction;
       int              mBasicTimeStep;
+      bool             mMotionPlaying;
 
 #ifndef CROSSCOMPILATION
       void             myStep();
       void             wait(int ms);
       void             achieveTarget(int msToAchieveTarget);
       double           valueToPosition(unsigned short value);
+      void             InitMotionAsync();
 
       webots::Servo   *mServos[DMM_NSERVOS];
       double           mTargetPositions[DMM_NSERVOS];
       double           mCurrentPositions[DMM_NSERVOS];
+      int              mRepeat;
+      int              mStepnum;
+      int              mWait;
+      int              mStepNumberToAchieveTarget;
+      void            *mPage;
+#else
+      static void     *MotionThread(void *param);// thread function
+
+      pthread_t        mMotionThread;// thread structure
 #endif
   };
 }
