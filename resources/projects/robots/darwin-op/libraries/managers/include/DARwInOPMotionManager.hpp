@@ -3,6 +3,7 @@
 // Description:   Facade between webots and the darwin-op framework
 //                allowing to play the Robotis motion files
 // Author:        fabien.rohrer@cyberbotics.com
+// Last Modifications: March 2013 david.mansolino@epfl.ch, added the possibility to use the motion manager step-by-step
 
 #ifndef DARWINOP_MOTION_MANAGER_HPP
 #define DARWINOP_MOTION_MANAGER_HPP
