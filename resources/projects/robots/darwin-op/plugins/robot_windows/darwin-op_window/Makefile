@@ -46,7 +46,7 @@ INCLUDE = -I"$(QT_UTILS)" -I"$(WEBOTS_HOME_PATH)/include/libssh" -I"$(WEBOTS_HOM
 LIBRARIES = -L"$(QT_UTILS)" -lqt_utils -L"$(WEBOTS_HOME_PATH)/lib" -lssh
 
 ifeq ($(OSTYPE),windows)
-LIBRARIES += -lpthreadGC2 -lzip-2
+LIBRARIES += -lpthread -lzip-2
 endif
 
 ifeq ($(OSTYPE),darwin)
