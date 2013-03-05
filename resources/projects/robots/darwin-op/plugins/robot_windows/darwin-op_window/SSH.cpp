@@ -341,10 +341,13 @@ int SSH::ChannelRead(char * buffer, bool channel = false) {
 int SSH::MakeRemoteDirectory(const char * directory) {
 #ifdef WIN32
   if(sftp_mkdir(mSFTPChannel, directory , 0) != 0)
+    return -1;
+  ExecuteSSHCommand((const char*)(QString("chmod 755 ") + QString(directory)).toStdString().c_str());
+  WaitEndSSHCommand();
 #else
   if(sftp_mkdir(mSFTPChannel, directory , S_IRWXU) != 0)
-#endif
     return -1;
+#endif
   return 1;
 }
 
