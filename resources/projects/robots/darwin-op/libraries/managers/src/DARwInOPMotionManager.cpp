@@ -232,14 +232,14 @@ void DARwInOPMotionManager::Step(int ms) {
     mWait--;
   }
   else {
-    if(mStepnum < (((Action::PAGE*)mPage)->header.stepnum -1)) {
-      mStepnum++;
+    if(mStepnum < ((Action::PAGE*)mPage)->header.stepnum) {
       for(int k=0; k<DMM_NSERVOS; k++)
         mTargetPositions[k] = valueToPosition(((Action::PAGE*)mPage)->step[mStepnum].position[k+1]);
       mStepNumberToAchieveTarget = (8*((Action::PAGE*)mPage)->step[mStepnum].time) / mBasicTimeStep;
       if(mStepNumberToAchieveTarget == 0)
         mStepNumberToAchieveTarget = 1;
       mWait = (8*((Action::PAGE*)mPage)->step[mStepnum].pause) / mBasicTimeStep + 0.5;
+      mStepnum++;
       Step(ms);
     }
     else if(mRepeat < (((Action::PAGE*)mPage)->header.repeat)) {
