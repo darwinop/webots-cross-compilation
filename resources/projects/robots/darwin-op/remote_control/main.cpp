@@ -206,8 +206,12 @@ int main(int argc, char *argv[]) {
         // Servos sensors Position
         for(c = 0; c<20; c++) {
           if(receiveBuffer[receivePos] == 'P') {
-            double servoPosition = remote->getRemoteServoPosition((int)receiveBuffer[receivePos+1]);
-            writeINT2Buffer(sendBuffer + sendPos, (int)servoPosition);
+            if((int)receiveBuffer[receivePos+1] < 20) {
+              double servoPosition = remote->getRemoteServoPosition((int)receiveBuffer[receivePos+1]);
+              writeINT2Buffer(sendBuffer + sendPos, (int)servoPosition);
+            }
+            else
+              writeINT2Buffer(sendBuffer + sendPos, 0);
             sendPos += 4;
             receivePos += 2;
           }
@@ -216,8 +220,12 @@ int main(int argc, char *argv[]) {
         // Servos sensors Force
         for(c = 0; c<20; c++) {
           if(receiveBuffer[receivePos] == 'F') {
-            double servoPosition = remote->getRemoteServoForce((int)receiveBuffer[receivePos+1]);
-            writeINT2Buffer(sendBuffer + sendPos, (int)servoPosition);
+            if((int)receiveBuffer[receivePos+1] < 20) {
+              double servoTorque = remote->getRemoteServoForce((int)receiveBuffer[receivePos+1]);
+              writeINT2Buffer(sendBuffer + sendPos, (int)servoTorque);
+            }
+            else
+              writeINT2Buffer(sendBuffer + sendPos, 0);
             sendPos += 4;
             receivePos += 2;
           }
