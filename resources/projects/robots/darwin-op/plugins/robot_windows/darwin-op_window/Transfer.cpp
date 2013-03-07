@@ -858,7 +858,9 @@ void Transfer::RemoteCanceledSlot() {
   endWaitRemotSlot();
   pthread_cancel(*mThread);
   emit ActiveButtonsSignal();
+#ifndef WIN32  // because it is not safe to stop ssh from another thread
   CloseAllSSH();
+#endif
   mStatusLabel->setText(QString("Status : Disconnected"));
   mRemoteEnable = false;
   emit resetRemoteButtonSignal();
