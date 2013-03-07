@@ -28,7 +28,7 @@ namespace managers {
                        DARwInOPMotionManager(webots::Robot *robot);
       virtual         ~DARwInOPMotionManager();
       bool             isCorrectlyInitialized() { return mCorrectlyInitialized; }
-      void             playPage(int id, bool stepByStep = false);
+      void             playPage(int id, bool sync = true);
       void             Step(int ms);
       bool             isMotionPlaying() { return mMotionPlaying; }
 

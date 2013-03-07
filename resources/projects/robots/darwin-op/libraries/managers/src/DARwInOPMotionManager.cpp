@@ -93,7 +93,7 @@ DARwInOPMotionManager::~DARwInOPMotionManager() {
     mAction->Stop();
 }
 
-void DARwInOPMotionManager::playPage(int id, bool stepByStep) {
+void DARwInOPMotionManager::playPage(int id, bool sync) {
   if (!mCorrectlyInitialized)
     return;
   
@@ -105,7 +105,7 @@ void DARwInOPMotionManager::playPage(int id, bool stepByStep) {
   MotionManager::GetInstance()->SetEnable(true);
   usleep(8000);
   Action::GetInstance()->Start(id);
-  if(!stepByStep) {
+  if(sync) {
     while(Action::GetInstance()->IsRunning())
       usleep(mBasicTimeStep*1000);
     
@@ -125,7 +125,7 @@ void DARwInOPMotionManager::playPage(int id, bool stepByStep) {
     }
   }
 #else
-  if(!stepByStep) {
+  if(sync) {
     Action::PAGE page;
     if (mAction->LoadPage(id, &page)) {
       // cout << "Play motion " << setw(2) << id << ": " << page.header.name << endl;
