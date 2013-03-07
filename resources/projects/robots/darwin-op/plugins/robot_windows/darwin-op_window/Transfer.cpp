@@ -1170,6 +1170,9 @@ int Transfer::updateFramework() {
 
 void Transfer::installControllerWarningSlot() {
   if(!mMakeDefaultControllerCheckBox->isChecked()) {
+#ifdef WIN32
+    mMakeDefaultControllerCheckBox->setChecked(true);
+#endif
     QMessageBox msgBox;
     msgBox.setWindowTitle("Controller installation");
     msgBox.setText("Installation of controller on the DARwIn-OP                     ");
@@ -1182,16 +1185,14 @@ void Transfer::installControllerWarningSlot() {
 }
 
 void Transfer::remoteCameraWarningSlot() {
-  if(!mMakeDefaultControllerCheckBox->isChecked()) {
-    QMessageBox msgBox;
-    msgBox.setWindowTitle("Warning camera resolution not supported");
-    msgBox.setText("Warning this camera resolution is not supported in remote control.");
-    msgBox.setInformativeText("The following resolutions are available:\n\tWidth :  320/160/80/40\n\tHeight : 240/120/60/30");
-    msgBox.setStandardButtons(QMessageBox::Ok);
-    msgBox.setDefaultButton(QMessageBox::Ok);
-    msgBox.setIcon(QMessageBox::Warning);
-    msgBox.exec();
-  }
+  QMessageBox msgBox;
+  msgBox.setWindowTitle("Warning camera resolution not supported");
+  msgBox.setText("Warning this camera resolution is not supported in remote control.");
+  msgBox.setInformativeText("The following resolutions are available:\n\tWidth :  320/160/80/40\n\tHeight : 240/120/60/30");
+  msgBox.setStandardButtons(QMessageBox::Ok);
+  msgBox.setDefaultButton(QMessageBox::Ok);
+  msgBox.setIcon(QMessageBox::Warning);
+  msgBox.exec();
 }
 
 void Transfer::updateStatusSlot(QString status) {
