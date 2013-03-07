@@ -144,10 +144,6 @@ void Wrapper::stopActuators() {
       s->resetSensorRequested();
   }
 
-  // reset actuators
-  for(int i=0; i<5; i++)  // cause problem when running simulation step-by-step!
-    ledSet(DeviceManager::instance()->led(i)->tag(), 0);
-
   // send the packet
   robotStep(0);
 }
