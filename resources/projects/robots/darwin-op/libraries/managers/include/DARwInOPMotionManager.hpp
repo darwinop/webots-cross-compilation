@@ -29,7 +29,7 @@ namespace managers {
       virtual         ~DARwInOPMotionManager();
       bool             isCorrectlyInitialized() { return mCorrectlyInitialized; }
       void             playPage(int id, bool sync = true);
-      void             Step(int ms);
+      void             step(int ms);
       bool             isMotionPlaying() { return mMotionPlaying; }
 
     private:

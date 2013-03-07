@@ -218,7 +218,7 @@ void DARwInOPMotionManager::InitMotionAsync() {
   mMotionPlaying = true;
 }
 
-void DARwInOPMotionManager::Step(int ms) {
+void DARwInOPMotionManager::step(int ms) {
   if(mStepNumberToAchieveTarget > 0) {
     for (int i=0; i<DMM_NSERVOS; i++) {
       double dX = mTargetPositions[i] - mCurrentPositions[i];
@@ -240,12 +240,12 @@ void DARwInOPMotionManager::Step(int ms) {
         mStepNumberToAchieveTarget = 1;
       mWait = (8*((Action::PAGE*)mPage)->step[mStepnum].pause) / mBasicTimeStep + 0.5;
       mStepnum++;
-      Step(ms);
+      step(ms);
     }
     else if(mRepeat < (((Action::PAGE*)mPage)->header.repeat)) {
       mRepeat++;
       mStepnum = 0;
-      Step(ms);
+      step(ms);
     }
     else if(((Action::PAGE*)mPage)->header.next != 0)
       playPage(((Action::PAGE*)mPage)->header.next, true);
