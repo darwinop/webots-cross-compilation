@@ -1153,6 +1153,12 @@ int Transfer::updateFramework() {
   ExecuteSSHCommand("make -C /darwin/Linux/build -f Makefile");
   ShowOutputSSHCommand();  
   
+  // Recompile demo program
+  ExecuteSSHCommand("make -C /darwin/Linux/project/demo -f Makefile clean");
+  ShowOutputSSHCommand();
+  ExecuteSSHCommand("make -C /darwin/Linux/project/demo -f Makefile");
+  ShowOutputSSHCommand();
+  
   // Delete version file of the Wrapper in order to force the update/recompilation of it
   ExecuteSSHCommand("rm /darwin/Linux/project/webots/config/version.txt");
   WaitEndSSHCommand();
