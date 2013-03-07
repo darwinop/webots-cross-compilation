@@ -758,6 +758,7 @@ void Transfer::uninstall() {
   msgBox.setStandardButtons(QMessageBox ::Yes | QMessageBox::No);
   msgBox.setDefaultButton(QMessageBox::No);
   msgBox.setIcon(QMessageBox::Warning);
+  msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
   msgBox.setDetailedText("Warning all the Webots API will be uninstall.\nThe controllers installed with Webots will be unistall too and the demo program will be restore.\n");
   int warning = msgBox.exec();
   if(warning == QMessageBox::Yes) {
@@ -857,7 +858,9 @@ void Transfer::RemoteCanceledSlot() {
   endWaitRemotSlot();
   pthread_cancel(*mThread);
   emit ActiveButtonsSignal();
+#ifndef WIN32  // because it is not safe to stop ssh from another thread
   CloseAllSSH();
+#endif
   mStatusLabel->setText(QString("Status : Disconnected"));
   mRemoteEnable = false;
   emit resetRemoteButtonSignal();
@@ -1042,6 +1045,7 @@ void Transfer::robotInstableSlot() {
     msgBox.setDetailedText("Warning, the robot doesn't seems to be in it's stable start-up position.\nWe recommand you to put the robot in the stable position and to retry.\nThe stable position is when the robot is sit down (illustration above).\nNevertheless if you want to start the controller in this position you can press Ignore, but be aware that the robot can make sudden movements to reach its start position and this can damage it!");
     msgBox.setIconPixmap(QPixmap((char*)imagePath.toStdString().c_str()));
     msgBox.setStandardButtons(QMessageBox::Retry | QMessageBox::Abort | QMessageBox::Ignore);
+    msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
     msgBox.setDefaultButton(QMessageBox::Retry);
     int warning = msgBox.exec();
     if(warning == QMessageBox::Abort)
@@ -1180,6 +1184,7 @@ void Transfer::installControllerWarningSlot() {
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Information);
+    msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
     msgBox.exec();
   }
 }
