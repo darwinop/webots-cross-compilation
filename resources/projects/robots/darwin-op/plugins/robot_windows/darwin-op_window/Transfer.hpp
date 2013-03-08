@@ -19,7 +19,7 @@ class Transfer : public QScrollArea, public SSH
 {
 
   Q_OBJECT
-	
+
 public:
   Transfer(QWidget *parent = 0);
   virtual ~Transfer();

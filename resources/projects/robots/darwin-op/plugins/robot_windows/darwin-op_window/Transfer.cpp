@@ -181,8 +181,8 @@ Transfer::~Transfer() {
 
 void Transfer::startRemoteControl() {
   if(mRemoteEnable == false) {
-	emit UnactiveButtonsSignal();
-	mRemoteEnable = true;
+    emit UnactiveButtonsSignal();
+    mRemoteEnable = true;
     mRemoteControlButton->setIcon(*mStopControllerIcon);
     mRemoteControlButton->setToolTip("Stop remote control.");
 
@@ -230,7 +230,7 @@ void * Transfer::thread_remote(void *param) {
   
   // Create SFTP Channel
   if(instance->OpenSFTPChannel() < 0) {
-	emit instance->updateStatusSignal(QString("Status : ") + QString(instance->mSSHError));
+    emit instance->updateStatusSignal(QString("Status : ") + QString(instance->mSSHError));
     emit instance->ActiveButtonsSignal();
     emit instance->endWaitRemotSignal();
     emit instance->resetRemoteButtonSignal();
@@ -276,7 +276,7 @@ void * Transfer::thread_remote(void *param) {
     instance->CloseAllSSH();
     return NULL;
   }
-  	
+  
   // Verfify wrapper version and update it if needed
   if(instance->isWrapperUpToDate())
     emit instance->updateStatusSignal("Status : Webots API up-to-date");
@@ -353,9 +353,9 @@ void Transfer::sendController() {
   else {
     // Stop Thread
     pthread_cancel(*mThread);
-	  
-	// Stop controller and clear 'controllers' directory
-	QString killallController = QString("killall controller");
+    
+    // Stop controller and clear 'controllers' directory
+    QString killallController = QString("killall controller");
     ExecuteSSHCommand((char*)killallController.toStdString().c_str());
     WaitEndSSHCommand();
     ExecuteSSHCommand("rm -r /darwin/Linux/project/webots/controllers");
@@ -391,14 +391,14 @@ void * Transfer::thread_controller(void *param) {
   
   // Create SFTP Channel
   if(instance->OpenSFTPChannel() < 0) {
-	emit instance->updateStatusSignal(QString("Status : ") + QString(instance->mSSHError));
+    emit instance->updateStatusSignal(QString("Status : ") + QString(instance->mSSHError));
     emit instance->ActiveButtonsSignal();
     emit instance->resetControllerButtonSignal();
     instance->CloseAllSSH();
     emit instance->updateProgressSignal(100);
     return NULL;
   }
-  	
+  
   // Verfify Framework version and update it if needed
   if(instance->isFrameworkUpToDate())
     emit instance->updateStatusSignal("Status : Framework up-to-date");
@@ -409,7 +409,7 @@ void * Transfer::thread_controller(void *param) {
     emit instance->updateProgressSignal(100);
     return NULL;
   }
-  	
+  
   // Verfify wrapper version and update it if needed
   if(instance->isWrapperUpToDate())
     emit instance->updateStatusSignal("Status : Webots API up-to-date");
@@ -471,7 +471,7 @@ void * Transfer::thread_controller(void *param) {
   instance->WaitEndSSHCommand();
   instance->ExecuteSSHCommand("mkdir /darwin/Linux/project/webots/controllers");
   instance->WaitEndSSHCommand();
-	  
+  
   // Send archive file
   emit instance->updateStatusSignal("Status : Sending files to the robot (4/7)"); 
   if(instance->SendFile((char*)controllerArchive.toStdString().c_str(), "/darwin/Linux/project/webots/controllers/controller.zip") < 0) {
@@ -525,8 +525,8 @@ void * Transfer::thread_controller(void *param) {
   emit instance->updateProgressSignal(90);
     
   if(instance->mMakeDefaultControllerCheckBox->isChecked()) {
-	emit instance->updateStatusSignal("Status : Installing controller (7/7)"); 
-	// Install controller
+    emit instance->updateStatusSignal("Status : Installing controller (7/7)"); 
+    // Install controller
     QString CPCommande = QString("cp /darwin/Linux/project/webots/controllers/") + controller + QString("/") + controller + QString(" /darwin/Linux/project/webots/default\n");
     instance->ExecuteSSHCommand((char*)CPCommande.toStdString().c_str());
     instance->WaitEndSSHCommand();
@@ -543,7 +543,7 @@ void * Transfer::thread_controller(void *param) {
     emit instance->updateProgressSignal(100);
   }
   else {
-	if(!instance->isRobotStable()) {
+    if(!instance->isRobotStable()) {
       emit instance->updateStatusSignal("Status : Robot not in a stable position");
       // Remove compilation files
       QString removeController = QString("rm -r /darwin/Linux/project/webots/controllers/") + controller;
@@ -820,7 +820,7 @@ void Transfer::waitRemoteSlot() {
   
   if(mRemoteProgressDialog != NULL) {
     if(!mRemoteProgressDialog->isVisible()) {
-	  direction = 5;
+      direction = 5;
       i = 1;
       mRemoteStartingTimeCounter = 0;
     }
@@ -829,14 +829,14 @@ void Transfer::waitRemoteSlot() {
     
     if(mRemoteStartingTime > 0) {  // time has already been tested and saved
     
-	  int minutes = (mRemoteStartingTime - mRemoteStartingTimeCounter) / 6000;  // 6000 = 0.01 * 60, 0.01 because loop is called every 10ms
-	  if(minutes < 0)
-	    minutes = 0;
-	  
+    int minutes = (mRemoteStartingTime - mRemoteStartingTimeCounter) / 6000;  // 6000 = 0.01 * 60, 0.01 because loop is called every 10ms
+      if(minutes < 0)
+        minutes = 0;
+      
       int seconds = (int)((mRemoteStartingTime - mRemoteStartingTimeCounter) * 0.01) % 60;
-	  if(seconds < 0)
-	    seconds = 0;
-	
+      if(seconds < 0)
+        seconds = 0;
+      
       mRemoteProgressDialog->setLabelText(QString("Starting remot-control.\nPlease wait.\nApproximated remaining time : ") + QString::number(minutes) + QString("m") + QString::number(seconds) + QString("s"));
     }
   
@@ -887,14 +887,14 @@ void Transfer::ShowOutputSSHCommand() {
   unsigned int nbytesStandard = 0, nbytesError = 0, i = 0, j = 0, k = 0;
   QString buffer1(""), buffer2("");
   do {
-	  
+    
     // Read standard output
     if((nbytesStandard = ChannelRead(console1, false)) > 0 && nbytesStandard < 250) { // if to many bytes are read, it means their was an error -> just skip it
       for(i = 0, j = 0; i < nbytesStandard; i++, j++) {
         console2[j] = QChar::fromAscii(console1[i]);
         if(console2[j] == newLineCaractere) { // if new line detected send this line
           console2[j] = endCaractere;
-		  buffer1 += QString(console2);
+          buffer1 += QString(console2);
           emit addToConsoleSignal(buffer1);
           buffer1 = QString(""); 
           j = -1;
@@ -907,16 +907,16 @@ void Transfer::ShowOutputSSHCommand() {
     // Read stderr output
     if(nbytesStandard == 0 && (nbytesError = ChannelRead(console1, true)) > 0) {
       for(i = 0, j = 0; i < nbytesError; i++, j++) {
-		while(console1[i] < 0) { // remove all bad caracters
-		  for(k = i; k < nbytesError; k++) {
-		    console1[k] = console1[k+1];
-		  }
-		  console1[nbytesError] = '\0';
-		}
+        while(console1[i] < 0) { // remove all bad caracters
+          for(k = i; k < nbytesError; k++) {
+            console1[k] = console1[k+1];
+          }
+          console1[nbytesError] = '\0';
+        }
         console2[j] = QChar::fromLatin1(console1[i]);
         if(console2[j] == newLineCaractere) { // if new line detected send this line
           console2[j] = endCaractere;
-		  buffer2 += QString(console2);
+          buffer2 += QString(console2);
           emit addToConsoleRedSignal(buffer2);
           buffer2 = QString(""); 
           j = -1;
@@ -1028,7 +1028,7 @@ bool Transfer::isRobotStable() {
     return true;
   else {
     mStabilityResponse = -1;
-	emit robotInstableSignal();
+    emit robotInstableSignal();
     while(mStabilityResponse == -1)
       {wait(1000);}
     return mStabilityResponse;
@@ -1036,8 +1036,8 @@ bool Transfer::isRobotStable() {
 }
 
 void Transfer::robotInstableSlot() {
-	QString imagePath;
-	imagePath = StandardPaths::getWebotsHomePath() + QString("resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/start_position.png.png");
+    QString imagePath;
+    imagePath = StandardPaths::getWebotsHomePath() + QString("resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/start_position.png.png");
     QMessageBox msgBox;
     msgBox.setWindowTitle("Stability check");
     msgBox.setText("The robot doesn't seems to be in a stable position.");

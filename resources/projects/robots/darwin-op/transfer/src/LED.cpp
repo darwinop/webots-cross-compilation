@@ -21,7 +21,7 @@ LED::~LED() {
 }
 
 void LED::set(int value) {
-	
+  
   CM730 *cm730 = getRobot()->getCM730();
 
   //RGB Led
@@ -39,22 +39,22 @@ void LED::set(int value) {
   
   // BackPannel Led
   else if(getName() == "BackLedRed") {
-	if(value == 1 && (0x01|mBackPanel) != mBackPanel)   	// Switch selected led on without changing the two others
-	  cm730->WriteByte(CM730::P_LED_PANNEL, 0x01|mBackPanel, NULL);
-	else if((0x06&mBackPanel) != mBackPanel)			// Switch selected led off without changing the two others
-	  cm730->WriteByte(CM730::P_LED_PANNEL, 0x06&mBackPanel, NULL);
+    if(value == 1 && (0x01|mBackPanel) != mBackPanel)   	// Switch selected led on without changing the two others
+      cm730->WriteByte(CM730::P_LED_PANNEL, 0x01|mBackPanel, NULL);
+    else if((0x06&mBackPanel) != mBackPanel)			// Switch selected led off without changing the two others
+      cm730->WriteByte(CM730::P_LED_PANNEL, 0x06&mBackPanel, NULL);
   }
   else if(getName() == "BackLedBlue") {
-	if(value == 1 && (0x02|mBackPanel) != mBackPanel)   	// Switch selected led on without changing the two others
-	  cm730->WriteByte(CM730::P_LED_PANNEL, 0x02|mBackPanel, NULL);
-	else if((0x05&mBackPanel) != mBackPanel)		// Switch selected led off without changing the two others
-	  cm730->WriteByte(CM730::P_LED_PANNEL, 0x05&mBackPanel, NULL);
+    if(value == 1 && (0x02|mBackPanel) != mBackPanel)   	// Switch selected led on without changing the two others
+      cm730->WriteByte(CM730::P_LED_PANNEL, 0x02|mBackPanel, NULL);
+    else if((0x05&mBackPanel) != mBackPanel)		// Switch selected led off without changing the two others
+      cm730->WriteByte(CM730::P_LED_PANNEL, 0x05&mBackPanel, NULL);
   }
   else if(getName() == "BackLedGreen") {
-	if(value == 1 && (0x04|mBackPanel) != mBackPanel)   	// Switch selected led on without changing the two others
-	  cm730->WriteByte(CM730::P_LED_PANNEL, 0x04|mBackPanel, NULL);
-	else if((0x03&mBackPanel) != mBackPanel)			// Switch selected led off without changing the two others
-	  cm730->WriteByte(CM730::P_LED_PANNEL, 0x03&mBackPanel, NULL);
+    if(value == 1 && (0x04|mBackPanel) != mBackPanel)   	// Switch selected led on without changing the two others
+      cm730->WriteByte(CM730::P_LED_PANNEL, 0x04|mBackPanel, NULL);
+    else if((0x03&mBackPanel) != mBackPanel)			// Switch selected led off without changing the two others
+      cm730->WriteByte(CM730::P_LED_PANNEL, 0x03&mBackPanel, NULL);
   }
 }
 

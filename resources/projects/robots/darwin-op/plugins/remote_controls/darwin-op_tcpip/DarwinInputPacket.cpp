@@ -69,10 +69,10 @@ void DarwinInputPacket::decode(int simulationTime, const DarwinOutputPacket &out
 
   // Camera
   if(outputPacket.isCameraRequested()) {
-	  
-	int image_length = readIntAt(currentPos);
-	currentPos += 4;
-	
+    
+    int image_length = readIntAt(currentPos);
+    currentPos += 4;
+    
     CameraR *camera = DeviceManager::instance()->camera();
 
     QImage image(mCameraWidth, mCameraHeight, QImage::Format_RGB32);
