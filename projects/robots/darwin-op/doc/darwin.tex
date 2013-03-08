@@ -318,6 +318,44 @@ void playPage(int id);
 
 This method only needs the id of the motion to be played.\\
 
+\subsubsection{Motion Manager in mode step-by-step}
+
+By default when starting a motion, the motion is run synchronously. That is the controller is stopped until the motion is finished. But it is also possible to run a motion asynchronously, in that case, the motion is started but the execution flow of the controller is not stopped. This can be done by calling the method \textit{playPage} with the second parameter set to false:\\
+\lstset{language=c++} 
+\lstset{commentstyle=\textit} 
+\begin{lstlisting} 
+void playPage(int id, bool sync = true);
+\end{lstlisting}
+
+This will initiate the motion, but not run it, then in order to play ms second of the motion, the following method need to be called (before the robot step):\\
+\lstset{language=c++} 
+\lstset{commentstyle=\textit} 
+\begin{lstlisting} 
+void step(int ms);
+\end{lstlisting}
+
+In order to know if the motion is finished, the following method can be called:\\
+\lstset{language=c++} 
+\lstset{commentstyle=\textit} 
+\begin{lstlisting} 
+bool isMotionPlaying();
+\end{lstlisting}
+
+A typical use of the motion manager in mode step-by-step will be the following:\\
+\lstset{language=c++} 
+\lstset{commentstyle=\textit} 
+\begin{lstlisting} 
+mMotionManager->playPage(1, false);
+while(mMotionManager->isMotionPlaying()) {
+  mMotionManager->step(mTimeStep);
+  /*
+   * Do something,
+   * like image processing for example
+   */
+  myStep();
+}
+\end{lstlisting}
+
 \newpage
 \subsection{Vision Manager}
 This manager implement the \textit{DARwInOPVisionManager} class. The constructor of this class is the following :\\

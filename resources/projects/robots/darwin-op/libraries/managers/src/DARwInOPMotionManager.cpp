@@ -41,8 +41,8 @@ DARwInOPMotionManager::DARwInOPMotionManager(webots::Robot *robot) :
     return;
   }
   mBasicTimeStep = mRobot->getBasicTimeStep();
-  
   string filename;
+  mMotionPlaying = false;
   
 #ifdef CROSSCOMPILATION
   DARwInOPMotionTimerManager::MotionTimerInit();
@@ -93,7 +93,7 @@ DARwInOPMotionManager::~DARwInOPMotionManager() {
     mAction->Stop();
 }
 
-void DARwInOPMotionManager::playPage(int id) {
+void DARwInOPMotionManager::playPage(int id, bool sync) {
   if (!mCorrectlyInitialized)
     return;
   
@@ -105,34 +105,50 @@ void DARwInOPMotionManager::playPage(int id) {
   MotionManager::GetInstance()->SetEnable(true);
   usleep(8000);
   Action::GetInstance()->Start(id);
-  while(Action::GetInstance()->IsRunning())
-    usleep(mBasicTimeStep*1000);
+  if(sync) {
+    while(Action::GetInstance()->IsRunning())
+      usleep(mBasicTimeStep*1000);
     
-  // Reset Goal Position of all servos after a motion //
-  for(i=0; i<DMM_NSERVOS; i++)
-    mRobot->getServo(servoNames[i])->setPosition(MX28::Value2Angle(mAction->m_Joint.GetValue(i+1))*(M_PI/180));
+    // Reset Goal Position of all servos after a motion //
+    for(i=0; i<DMM_NSERVOS; i++)
+      mRobot->getServo(servoNames[i])->setPosition(MX28::Value2Angle(mAction->m_Joint.GetValue(i+1))*(M_PI/180));
     
-  // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
-  mAction->m_Joint.SetEnableBody(false, true);
-  MotionStatus::m_CurrentJoints.SetEnableBody(false);
-  MotionManager::GetInstance()->SetEnable(false);   
-#else
-  Action::PAGE page;
-  if (mAction->LoadPage(id, &page)) {
-    // cout << "Play motion " << setw(2) << id << ": " << page.header.name << endl;
-    for(int i=0; i<page.header.repeat; i++) {
-      for(int j=0; j<page.header.stepnum; j++) {
-         for(int k=0; k<DMM_NSERVOS; k++)
-           mTargetPositions[k] = valueToPosition(page.step[j].position[k+1]);
-         achieveTarget(8*page.step[j].time);
-         wait(8*page.step[j].pause);
-      }
-    }
-    if(page.header.next != 0)
-      playPage(page.header.next);
+    // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
+    mAction->m_Joint.SetEnableBody(false, true);
+    MotionStatus::m_CurrentJoints.SetEnableBody(false);
+    MotionManager::GetInstance()->SetEnable(false);   
   }
-  else
-    cerr << "Cannot load the page" << endl;
+  else {
+    int error = 0;
+    if((error = pthread_create(&this->mMotionThread, NULL, this->MotionThread, this))!= 0) {
+      printf("Motion thread error = %d\n",error);
+    }
+  }
+#else
+  if(sync) {
+    Action::PAGE page;
+    if (mAction->LoadPage(id, &page)) {
+      // cout << "Play motion " << setw(2) << id << ": " << page.header.name << endl;
+      for(int i=0; i<page.header.repeat; i++) {
+        for(int j=0; j<page.header.stepnum; j++) {
+           for(int k=0; k<DMM_NSERVOS; k++)
+             mTargetPositions[k] = valueToPosition(page.step[j].position[k+1]);
+           achieveTarget(8*page.step[j].time);
+           wait(8*page.step[j].pause);
+        }
+      }
+      if(page.header.next != 0)
+        playPage(page.header.next);
+    }
+    else
+      cerr << "Cannot load the page" << endl;
+  }
+  else {
+    InitMotionAsync();
+    mPage = new Action::PAGE;
+    if(!(mAction->LoadPage(id, (Action::PAGE*)mPage)))
+      cerr << "Cannot load the page" << endl;
+  }
 #endif
 }
 
@@ -181,5 +197,82 @@ double DARwInOPMotionManager::valueToPosition(unsigned short value) {
   double degree = MX28::Value2Angle(value);
   double position = degree / 180.0 * M_PI;
   return position;
+}
+
+void DARwInOPMotionManager::InitMotionAsync() {
+  bool stepNeeded = false;
+  for (int i=0; i<DMM_NSERVOS; i++) {
+    if(mServos[i]->getPositionSamplingPeriod() <= 0) {
+      cerr << "The position feedback of servo "<<  servoNames[i] << " is not enabled. DARwInOPMotionManager need to read the position of all servos. The position will be automatically enable."<< endl;
+      mServos[i]->enablePosition(mBasicTimeStep);
+      stepNeeded = true;
+    }
+    if(stepNeeded)
+      myStep();
+     mCurrentPositions[i] = mServos[i]->getPosition();
+  }
+  mStepnum = 0;
+  mRepeat = 1;
+  mStepNumberToAchieveTarget = 0;
+  mWait = 0;
+  mMotionPlaying = true;
+}
+
+void DARwInOPMotionManager::step(int ms) {
+  if(mStepNumberToAchieveTarget > 0) {
+    for (int i=0; i<DMM_NSERVOS; i++) {
+      double dX = mTargetPositions[i] - mCurrentPositions[i];
+      double newPosition = mCurrentPositions[i] + dX / mStepNumberToAchieveTarget;
+      mCurrentPositions[i] = newPosition;
+      mServos[i]->setPosition(newPosition);
+    }
+    mStepNumberToAchieveTarget--;
+  }
+  else if(mWait > 0) {
+    mWait--;
+  }
+  else {
+    if(mStepnum < ((Action::PAGE*)mPage)->header.stepnum) {
+      for(int k=0; k<DMM_NSERVOS; k++)
+        mTargetPositions[k] = valueToPosition(((Action::PAGE*)mPage)->step[mStepnum].position[k+1]);
+      mStepNumberToAchieveTarget = (8*((Action::PAGE*)mPage)->step[mStepnum].time) / mBasicTimeStep;
+      if(mStepNumberToAchieveTarget == 0)
+        mStepNumberToAchieveTarget = 1;
+      mWait = (8*((Action::PAGE*)mPage)->step[mStepnum].pause) / mBasicTimeStep + 0.5;
+      mStepnum++;
+      step(ms);
+    }
+    else if(mRepeat < (((Action::PAGE*)mPage)->header.repeat)) {
+      mRepeat++;
+      mStepnum = 0;
+      step(ms);
+    }
+    else if(((Action::PAGE*)mPage)->header.next != 0)
+      playPage(((Action::PAGE*)mPage)->header.next, true);
+    else
+      mMotionPlaying = false;
+  }
+}
+#else
+
+void *DARwInOPMotionManager::MotionThread(void *param) {
+  DARwInOPMotionManager * instance = ((DARwInOPMotionManager*)param);
+  instance->mMotionPlaying = true;
+  while(Action::GetInstance()->IsRunning())
+    usleep(instance->mBasicTimeStep*1000);
+  
+  // Reset Goal Position of all servos after a motion //
+  for(int i=0; i<DMM_NSERVOS; i++)
+    instance->mRobot->getServo(servoNames[i])->setPosition(MX28::Value2Angle(instance->mAction->m_Joint.GetValue(i+1))*(M_PI/180));
+    
+  // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
+  instance->mAction->m_Joint.SetEnableBody(false, true);
+  MotionStatus::m_CurrentJoints.SetEnableBody(false);
+  MotionManager::GetInstance()->SetEnable(false); 
+  instance->mMotionPlaying = false;  
+  return NULL;
+}
+
+void DARwInOPMotionManager::Step(int ms) {
 }
 #endif
