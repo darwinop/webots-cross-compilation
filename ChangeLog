@@ -1,4 +1,18 @@
+Webots 7.X.X
+
+  Added the possibility to use MotionManager step-by-step (both for simulation and cross-compilation)
+
+  Simulation :
+
+    
+
+  Cross-Compilation:
+    
+    
+
 Webots 7.1.1
+
+Released on March XXth, 2013 (revision XXXXX) 
 
   Added remote-control
   Added custom robot-window which allows to install Webots API on the robot, start remote-control and cross-compile easily
@@ -16,7 +30,7 @@ Webots 7.1.1
 
 Webots 7.1.0
 
-Released on January 18th, 2012 (revision 13099) 
+Released on January 18th, 2013 (revision 13099) 
 
   Simulation :
 
