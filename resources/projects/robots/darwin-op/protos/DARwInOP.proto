@@ -1174,6 +1174,8 @@ Robot {
               width IS cameraWidth
               height IS cameraHeight
               pixelSize IS cameraPixelSize
+              zoom CameraZoom {
+              }
             }
             DEF DEyeLED LED {
               rotation 1 0 0 0
