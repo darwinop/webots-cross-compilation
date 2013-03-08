@@ -39,7 +39,7 @@ bool ZIP::AddFolder(struct zip *archive, QString folder, QString name, bool recu
   if(recursive) {
     directoryList = QDir(folder).entryList(QDir::AllDirs);
     for(int i = 2; i < directoryList.size(); i++) {
-	  if((directoryList.at(i) != ".") && (directoryList.at(i) != "..")) {
+      if((directoryList.at(i) != ".") && (directoryList.at(i) != "..")) {
         if(!(AddFolder(archive, (folder + QString("/") + directoryList.at(i)), (name + QString("/") + directoryList.at(i))))) {
           printf("Error while directory %s to archive\n", (char *)directoryList.at(i).toStdString().c_str());
           return false;

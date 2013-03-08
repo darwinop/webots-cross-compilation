@@ -105,7 +105,7 @@ void Keyboard::startListenKeyboard() {
   while (1)  {
     XNextEvent(display, &Report);
     switch(Report.type) {
-		
+      
       case Expose : { 
         XGetGeometry(display, window, &root_return, &x_return, &y_return, &width, &height, &border_width_return, &depth_return);
         XClearWindow(display, window);
@@ -115,11 +115,11 @@ void Keyboard::startListenKeyboard() {
         XFlush(display);
         XSync(display, False);
         } break;
-		
-	  case KeyPress : 
-	    if(XLookupKeysym(&Report.xkey, 0) < 123)
-	      setKeyPressed(XLookupKeysym(&Report.xkey, 0));
-	    else {
+      
+      case KeyPress : 
+        if(XLookupKeysym(&Report.xkey, 0) < 123)
+          setKeyPressed(XLookupKeysym(&Report.xkey, 0));
+        else {
           switch(XLookupKeysym(&Report.xkey, 0)) {
             case XK_Home : setKeyPressed(1);
               break;
@@ -188,23 +188,23 @@ void Keyboard::setKeyReleased(int key) {
 int Keyboard::getKeyPressed() {
   for(int c = 0; c < NKEYS; c++) {
     if(mKeyPressed[c] == PRESSED) {
-	  mKeyPressed[c] = VALIDATED_STILL_PRESSED;
-	  if(c > 0 && c < 10) // 1->10 for special caracters
-	    return SpecialKey[c];
-	  else if(c > 96 && c < 123)  // Always return ascii caracter of UpperCase
-	    return (c - 32);
-	  else
-	    return c;
-	}
-	else if(mKeyPressed[c] == PRESSED_AND_RELEASE) {
+      mKeyPressed[c] = VALIDATED_STILL_PRESSED;
+      if(c > 0 && c < 10) // 1->10 for special caracters
+        return SpecialKey[c];
+      else if(c > 96 && c < 123)  // Always return ascii caracter of UpperCase
+        return (c - 32);
+      else
+        return c;
+    }
+    else if(mKeyPressed[c] == PRESSED_AND_RELEASE) {
       mKeyPressed[c] = VALIDATED;
-	  if(c > 0 && c < 10) // 1->10 for special caracters
-	    return SpecialKey[c];
-	  else if(c > 96 && c < 123)  // Always return ascii caracter of UpperCase
-	    return (c - 32);
-	  else
-	    return c;
-	}
+      if(c > 0 && c < 10) // 1->10 for special caracters
+        return SpecialKey[c];
+      else if(c > 96 && c < 123)  // Always return ascii caracter of UpperCase
+        return (c - 32);
+      else
+        return c;
+    }
   }
   return 0;
 }

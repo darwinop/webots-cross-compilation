@@ -276,7 +276,7 @@ void webots::Robot::initDevices() {
 }
 
 void webots::Robot::initDarwinOP() {
-	char exepath[1024] = {0};
+  char exepath[1024] = {0};
   if(readlink("/proc/self/exe", exepath, sizeof(exepath)) != -1)  {
       if(chdir(dirname(exepath)))
           fprintf(stderr, "chdir error!! \n");

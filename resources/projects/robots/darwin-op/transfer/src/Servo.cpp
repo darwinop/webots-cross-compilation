@@ -137,7 +137,7 @@ void Servo::initStaticMap() {
 
 void Servo::setAcceleration(double force){
   mAcceleration = force;
-  if(force == -1)				// No Aceleration limitation -> restore previous Velocity limit
+  if(force == -1)               // No Aceleration limitation -> restore previous Velocity limit
     setVelocity(mMaxVelocity);
 }
 
@@ -250,7 +250,7 @@ void Servo::setPosition(double position) {
 }
 
 void Servo::updateSpeed(int ms) {
-	
+  
   if(mAcceleration != -1) {
     double speed = getSpeed();
     int     sens = sgn(speed);
@@ -261,10 +261,10 @@ void Servo::updateSpeed(int ms) {
       mActualVelocity = 0;
       setVelocity(0);
     }
-	
+    
     if(speed == 0)
       mActualVelocity = 0;
-	  
+    
     mActualVelocity = sens * (fabs(mActualVelocity) + ms * mAcceleration / 1000);
     setVelocity(mActualVelocity);
   }
