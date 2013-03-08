@@ -66,14 +66,15 @@ E. Run the same controller on the DARwIn-OP
 - 3. On the DARwIn-OP, recompile the Framework
 
      $ cd /darwin/Linux/build
-     $ make clean;make
+     $ make clean
+     $ make
 	 
-	 $ cd /darwin/Linux/project/demo
-	 $ make distclean;make
+     $ cd /darwin/Linux/project/demo
+     $ make distclean
+     $ make
 	 
-	 $ chown darwin.darwin /darwin
+     $ chown darwin.darwin /darwin
 	 
-
 - 4. On the DARwIn-OP, create a /darwin/Linux/project/webots directory
 
 - 5. Copy-paste the "libraries/managers/include", "transfer", and "libraries/managers/src" directories of the $GIT_REPOSITORY/resources/projects/robots/darwin-op
