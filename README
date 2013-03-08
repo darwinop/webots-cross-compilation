@@ -66,7 +66,13 @@ E. Run the same controller on the DARwIn-OP
 - 3. On the DARwIn-OP, recompile the Framework
 
      $ cd /darwin/Linux/build
-     $ make
+     $ make clean;make
+	 
+	 $ cd /darwin/Linux/project/demo
+	 $ make distclean;make
+	 
+	 $ chown darwin.darwin /darwin
+	 
 
 - 4. On the DARwIn-OP, create a /darwin/Linux/project/webots directory
 
