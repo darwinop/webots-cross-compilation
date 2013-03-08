@@ -29,7 +29,7 @@ int SSH::OpenSSHSession(QString IP, QString username, QString password) {
   // Open session and set options
   mSSHSession = ssh_new();
   if (mSSHSession == NULL) {
-	  strcpy(mSSHError, ssh_get_error(mSSHSession));
+      strcpy(mSSHError, ssh_get_error(mSSHSession));
       return -1;
   }
 
@@ -117,7 +117,7 @@ int SSH::ExecuteSSHCommand(const char * command) {
     return -1;
 
   if (ssh_channel_request_exec(mSSHChannel, command) != SSH_OK) {
-	strcpy(mSSHError, ssh_get_error(mSSHSession));
+    strcpy(mSSHError, ssh_get_error(mSSHSession));
     return -1;
   }
   return 1;
@@ -180,13 +180,13 @@ int SSH::OpenSFTPChannel() {
   // Open SFTP channel
   mSFTPChannel = sftp_new(mSSHSession);
   if (mSFTPChannel == NULL) {
-	strcpy(mSSHError, ssh_get_error(mSSHSession));
+    strcpy(mSSHError, ssh_get_error(mSSHSession));
     return -1;
   }
     
   // Initilize SFTP channel
   if (sftp_init(mSFTPChannel) != SSH_OK) {
-	strcpy(mSSHError, ssh_get_error(mSSHSession));
+    strcpy(mSSHError, ssh_get_error(mSSHSession));
     return -1;
   }
   return 1;

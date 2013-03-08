@@ -4,9 +4,8 @@
 class QString;
 struct zip;
 
-class ZIP
-{
-	
+class ZIP {
+
 public:
   ZIP();
   virtual ~ZIP();
@@ -26,7 +25,7 @@ public:
   static bool AddFolderToArchive(QString archiveName, QString folder, bool recursive = true, const char * firstFolder = "");
   
   static bool AddFileToArchive(QString archiveName, QString file, const char * nameInArchive = "");
-	
+
 private:
   static bool AddFolder(struct zip *archive, QString folder, QString name, bool recursive = true);
   static bool AddFile(struct zip *archive, QString file, QString name);
