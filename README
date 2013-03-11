@@ -77,12 +77,10 @@ E. Run the same controller on the DARwIn-OP
 	 
 - 4. On the DARwIn-OP, create a /darwin/Linux/project/webots directory
 
-- 5. Copy-paste the "libraries/managers/include", "transfer", and "libraries/managers/src" directories of the $GIT_REPOSITORY/resources/projects/robots/darwin-op
+- 5. Copy-paste the "libraries/managers/include", "libraries/managers/lib", "transfer", and "libraries/managers/src" directories of the $GIT_REPOSITORY/resources/projects/robots/darwin-op
      directory directly in the /darwin/Linux/project/webots directory
 
-- 6. Create a new directory /darwin/Linux/project/webots/lib and copy paste $GIT_REPOSITORY/resources/projects/robots/darwin-op/libraries/managers/lib/Makefile.darwin-op in it
-
-- 7. Do the same with the $GIT_REPOSITORY/projects/robots/darwin-op/controllers directory.
+- 6. Do the same with the $GIT_REPOSITORY/projects/robots/darwin-op/controllers directory.
      Note: From now, on the real DARwIn-OP, you should have these directories:
        /darwin/Linux/project/webots/include
        /darwin/Linux/project/webots/lib
@@ -90,19 +88,19 @@ E. Run the same controller on the DARwIn-OP
        /darwin/Linux/project/webots/src
        /darwin/Linux/project/webots/controllers
 
-- 8. Compile the wrapper library
+- 7. Compile the wrapper library
      $ cd /darwin/Linux/project/webots/transfer/lib
      $ make
 
-- 9. Compile the managers library
+- 8. Compile the managers library
      $ cd /darwin/Linux/project/webots/lib
      $ make -f Makefile.darwin-op
 
--10. Compile the controller
+- 9. Compile the controller
      $ cd /darwin/Linux/project/webots/controllers/symmetry
      $ make -f Makefile.darwin-op
 
--11. Start the controller
+-10. Start the controller
      $ ./symmetry
      To stop the controller press Ctrl+c
      You can now try the other examples presents in the directory "controllers"
