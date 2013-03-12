@@ -1,3 +1,12 @@
+/*
+When running this controller in the real robot
+do not interface via SSh client (i,e, PuTTY)
+The result will be on a segmentation fault error.
+
+Instead interface with the robot via remote desktop
+(i.e. VNC). Open a terminal window, compile controller
+and run.
+*/
 #include "walk.hpp"
 #include <webots/LED.hpp>
 #include <webots/Accelerometer.hpp>
