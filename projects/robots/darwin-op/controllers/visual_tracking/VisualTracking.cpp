@@ -53,8 +53,8 @@ void VisualTracking::run() {
   double vertical = 0.0;
 	
   cout << "---------------Visual Tracking---------------" << endl;
-  cout << "This example illustrate the possibilities of the vision manager." << endl;
-  cout << "Move the red ball by pressing ctrl + shift and selecting it (mouse left pressed)." << endl;
+  cout << "This example illustrates the possibilities of Vision Manager." << endl;
+  cout << "Move the red ball by holding ctrl + shift keys and select it (left mouse click)." << endl;
 	
   // First step to update sensors values
   myStep();
