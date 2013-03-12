@@ -37,12 +37,12 @@ void wbw_update_gui() {
 }
 
 void wbw_read_sensors() {
-  if (gViewer)
+  if (gViewer && gViewer->isVisible())
     gViewer->readSensors();
 }
 
 void wbw_write_actuators() {
-  if (gViewer)
+  if (gViewer && gViewer->isVisible())
     gViewer->writeActuators();
 }
 
