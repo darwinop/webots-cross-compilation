@@ -273,6 +273,4 @@ void *DARwInOPMotionManager::MotionThread(void *param) {
   return NULL;
 }
 
-//void DARwInOPMotionManager::Step(int ms) {
-//}
 #endif
