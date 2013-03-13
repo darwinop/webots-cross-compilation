@@ -1,4 +1,4 @@
-all: darwin.pdf
+all: darwin-op.pdf
 
 %.pdf: %.tex
 	pdflatex $<
