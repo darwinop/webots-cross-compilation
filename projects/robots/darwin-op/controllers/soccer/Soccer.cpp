@@ -95,8 +95,8 @@ bool Soccer::getBallCenter(double &x, double &y) {
 void Soccer::run() {
 	
   cout << "---------------Demo of DARwIn-OP---------------" << endl;
-  cout << "This demo illustrate all the possibilities available for the DARwIn-OP." << endl;
-  cout << "Including Motion play, walking algorithm and image processing." << endl;
+  cout << "This demo illustrates all the possibilities available for the DARwIn-OP." << endl;
+  cout << "This includes motion playback, walking algorithm and image processing." << endl;
 	
   // First step to update sensors values
   myStep();

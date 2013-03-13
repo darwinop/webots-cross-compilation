@@ -1,3 +1,12 @@
+/*
+When running this controller in the real robot
+do not interface via SSh client (i,e, PuTTY)
+The result will be on a segmentation fault error.
+
+Instead interface with the robot via remote desktop
+(i.e. VNC). Open a terminal window, compile controller
+and run.
+*/
 #include "walk.hpp"
 #include <webots/LED.hpp>
 #include <webots/Accelerometer.hpp>
@@ -69,9 +78,9 @@ void walk::wait(int ms) {
 void walk::run() {
 
   cout << "-------Walk example of DARwIn-OP-------" << endl;
-  cout << "This example illustrate the gait manager" << endl;
-  cout << "Press the space bar of the keyboard to make the robot start/stop walking" << endl;
-  cout << "Use the arrow keyboard to move the robot when walking" << endl;
+  cout << "This example illustrates Gait Manager" << endl;
+  cout << "Press the space bar to start/stop walking" << endl;
+  cout << "Use the arrow keys to move the robot while walking" << endl;
 
   // First step to update sensors values
   myStep();
