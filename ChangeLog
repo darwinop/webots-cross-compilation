@@ -1,13 +1,11 @@
-Webots 7.X.X
+Webots 7.1.2
+
+Released on March 11th, 2013 (revision 13812) 
 
   Added the possibility to use MotionManager step-by-step (both for simulation and cross-compilation)
 
-  Simulation :
-    
-
   Cross-Compilation:
     Minors debug when cross-compiling from the robot window on Windows (checkbox 'make default controller' now toogle correctly, message windows are not hidden behind the robot window anymore)
-
 
   Remote-control:
     Fixed problem of crash of the remote-server when sending command to servos who doesn't exist
