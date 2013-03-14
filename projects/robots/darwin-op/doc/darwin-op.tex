@@ -878,6 +878,24 @@ sudo apt-get purge bluez-alsa
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newpage
+\section{FAQ}
+
+\subsection*{An error occurs when compiling the framework and/or wrapper}
+Be sure to have the last framework version installed on the robot (1.5.0 or 1.5.1 downloadable at \url{http://sourceforge.net/projects/darwinop}). Then delete the file /darwin/version.txt on the robot (if installation is made thanks to the robot window in Webots) and retry.\\
+
+\subsection*{The servomotors have some bad behavior (unstablilities, oscillations, etc.)}
+This is due to wrong configuration of the servomotors (often due to one or several of the gains (P/I/D) wrong) or servomotors firmware not up to date. 
+Using Robotis tool in order to update the servomotors firmware should resolve the problem in both cases: \url{http://support.robotis.com/ko/product/darwin-op/development/tools/firmware_installer.htm}\\
+
+\subsection*{Keyboard inputs are not working in cross-compilation and/or result in a segmentation fault}
+
+Check that the keyboard window is oppened on the robot when enabling the keyboard and be sure to not unfocus the keyboard window on the robot.\\
+
+If you are starting the controller 'manually' by SSH, use the -X option when starting SSH, and use the command 'export DISPLAY=:0' before to start the controller.\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
 \section{Bibliography}
 
 For any information about Webots, please visit Cyberbotics website: \url{http://www.cyberbotics.com}\\
