@@ -516,7 +516,7 @@ void * Transfer::thread_controller(void *param) {
   emit instance->updateStatusSignal("Status : Compiling controller (6/7)"); 
   QString makeClean = QString("make -C /darwin/Linux/project/webots/controllers/") + controller + QString(" -f Makefile.darwin-op clean");
   instance->ExecuteSSHCommand((char*)makeClean.toStdString().c_str());
-  instance->ExecuteSSHCommand((char*)QString("find /darwin/Linux/project/webots/controllers/* -exec touch {} \\;").toStdString().c_str()); // time of all files is updated with the time of the robot (in order to avoid problems if time of the robot and computer are not synchronized)
+  instance->ExecuteSSHCommand("find /darwin/Linux/project/webots/controllers/* -exec touch {} \\;"); // time of all files is updated with the time of the robot (in order to avoid problems if time of the robot and computer are not synchronized)
   instance->WaitEndSSHCommand();
   QString makeController = QString("make -C /darwin/Linux/project/webots/controllers/") + controller + QString(" -f Makefile.darwin-op");
   instance->ExecuteSSHCommand((char*)makeController.toStdString().c_str());
