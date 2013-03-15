@@ -1,6 +1,10 @@
 #include "Symmetry.hpp"
 #include <webots/Servo.hpp>
 
+#ifdef CROSSCOMPILATION
+#include <webots/Speaker.hpp>
+#endif
+
 #include <cstdlib>
 #include <cmath>
 #include <iostream>
@@ -58,12 +62,17 @@ void Symmetry::wait(int ms) {
 // function containing the main feedback loop
 void Symmetry::run() {
   
+#ifdef CROSSCOMPILATION
+  getSpeaker("Speaker")->speak("Hello, my name is darwin OP.", "en", 120); // English version
+  // getSpeaker("Speaker")->speak("Bonjour, je m'appelle darwin OP.", "fr", 120); // French version
+#endif
+  
   cout << "-------Symmetry example of DARwIn-OP-------" << endl;
   cout << "The right arm is free while the left one mimic it." << endl;
   cout << "In order to move the left arm, select the robot with the mouse," << endl;
   cout << "press ctr+alt and select the right arm." << endl;
   cout << "Now you just have to move the mouse without releasing it." << endl;
-  cout << "This example also illustrates self-collision which is active by default" << endl;
+  cout << "This example illustrate also the selfCollision which is activated by default" << endl;
   
   double position[3] = {0,0,0};
   
