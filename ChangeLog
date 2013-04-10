@@ -1,3 +1,15 @@
+Webots 7.1.X
+
+Released ...
+
+  Simulation :
+
+  Cross-Compilation:
+    Corrected problem of controllers compilation errors if the time of the robot and of the computer are not synchronized.
+
+  Remote-control:
+
+
 Webots 7.1.2
 
 Released on March 11th, 2013 (revision 13812) 
