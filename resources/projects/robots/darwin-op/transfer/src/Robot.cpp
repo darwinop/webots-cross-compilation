@@ -43,9 +43,11 @@ webots::Robot::Robot() {
   int param[20*msgLength];
   
   for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ ) {
-    if(((Servo *) mDevices[(*servo_it).first])->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable((*servo_it).second))) {
-      param[n++] = (*servo_it).second;  // id
-      value = ((Servo *) mDevices[(*servo_it).first])->getGoalPosition(); // Start position
+    Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
+    int servoId = (*servo_it).second;
+    if(servo->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(servoId))) {
+      param[n++] = servoId;  // id
+      value = servo->getGoalPosition(); // Start position
       param[n++] = ::Robot::CM730::GetLowByte(value);
       param[n++] = ::Robot::CM730::GetHighByte(value);
       value = 100; // small speed 100 => 11.4 rpm => 1.2 rad/s
@@ -85,17 +87,19 @@ int webots::Robot::step(int ms) {
   int value;
   
   for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ ) {
-    if(((Servo *) mDevices[(*servo_it).first])->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable((*servo_it).second))) {
-      param[n++] = (*servo_it).second;
-      param[n++] = ((Servo *) mDevices[(*servo_it).first])->getPGain();
+    Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
+    int servoId = (*servo_it).second;
+    if(servo->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(servoId))) {
+      param[n++] = servoId;
+      param[n++] = servo->getPGain();
       param[n++] = 0; // Empty
-      value = ((Servo *) mDevices[(*servo_it).first])->getGoalPosition();
+      value = servo->getGoalPosition();
       param[n++] = ::Robot::CM730::GetLowByte(value);
       param[n++] = ::Robot::CM730::GetHighByte(value);
-      value = ((Servo *) mDevices[(*servo_it).first])->getMovingSpeed();
+      value = servo->getMovingSpeed();
       param[n++] = ::Robot::CM730::GetLowByte(value);
       param[n++] = ::Robot::CM730::GetHighByte(value);
-      value = ((Servo *) mDevices[(*servo_it).first])->getTorqueLimit();
+      value = servo->getTorqueLimit();
       param[n++] = ::Robot::CM730::GetLowByte(value);
       param[n++] = ::Robot::CM730::GetHighByte(value);
       changed_servos++;
@@ -109,9 +113,11 @@ int webots::Robot::step(int ms) {
 
   // Servos
   for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++) {
-    ((Servo *) mDevices[(*servo_it).first])->setPresentPosition( mCM730->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_POSITION_L));
-    ((Servo *) mDevices[(*servo_it).first])->setPresentSpeed( mCM730->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_SPEED_L));
-    ((Servo *) mDevices[(*servo_it).first])->setPresentLoad( mCM730->m_BulkReadData[(*servo_it).second].ReadWord(::Robot::MX28::P_PRESENT_LOAD_L));
+    Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
+    int servoId = (*servo_it).second;
+    servo->setPresentPosition( mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_PRESENT_POSITION_L));
+    servo->setPresentSpeed( mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_PRESENT_SPEED_L));
+    servo->setPresentLoad( mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_PRESENT_LOAD_L));
   }
   
   int values[3];
