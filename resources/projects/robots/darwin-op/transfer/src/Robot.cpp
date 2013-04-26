@@ -64,10 +64,10 @@ webots::Robot::Robot() {
   mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_EYE_L, 1984, 0);
 
   // deal the servo shutdown in case of alarm
-  if (cm730->WriteByte(id, MX28::P_ALARM_SHUTDOWN, 0x24, 0) != CM730::SUCCESS) {
-    fprintf(stderr, "Cannot write P_ALARM_SHUTDOWN\n");
+  if (mCM730->WriteByte(0xFE, ::Robot::MX28::P_ALARM_SHUTDOWN, 0x24, 0) != ::Robot::CM730::SUCCESS) {
+    fprintf(stderr, "Cannot write P_ALARM_SHUTDOWN to servo %d\n",servoId);
     exit(EXIT_FAILURE);
-  }  
+  }
 }
 
 webots::Robot::~Robot() {
