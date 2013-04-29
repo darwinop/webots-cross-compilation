@@ -64,7 +64,12 @@ webots::Robot::Robot() {
   mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_EYE_L, 1984, 0);
 
   // deal the servo shutdown in case of alarm
-  if (mCM730->WriteByte(0xFE, ::Robot::MX28::P_ALARM_SHUTDOWN, 0x24, 0) = ::Robot::CM730::SUCCESS) {
+  // -> make sure that P_ALARM_LED and P_ALARM_SHUTDOWN are well setup
+  if (mCM730->WriteByte(0xFE, ::Robot::MX28::P_ALARM_LED, 0x24, 0) != ::Robot::CM730::SUCCESS) {
+    fprintf(stderr, "Cannot write P_ALARM_LED to servos\n");
+    exit(EXIT_FAILURE);
+  }
+  if (mCM730->WriteByte(0xFE, ::Robot::MX28::P_ALARM_SHUTDOWN, 0x24, 0) != ::Robot::CM730::SUCCESS) {
     fprintf(stderr, "Cannot write P_ALARM_SHUTDOWN to servos\n");
     exit(EXIT_FAILURE);
   }
@@ -79,8 +84,15 @@ int webots::Robot::step(int ms) {
   std::map<const std::string, int>::iterator servo_it;
   
 // -------- Update speed of each servos, according to acceleration limit if set --------  //
-  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++  )
-    ((Servo *) mDevices[(*servo_it).first])->updateSpeed(stepDuration);
+  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++  ) {
+    Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
+    int servoId = (*servo_it).second;
+    if (servo->alarm()) {
+      fprintf(stderr, "Alarm detected on servo \"%s\" (id = %d)\n", servo->name().c_str(), servoId);
+      exit(EXIT_FAILURE);
+    }
+    servo->updateSpeed(stepDuration);
+  }
   
 // -------- Sync Write to actuators --------  //
   const int msgLength = 9; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
