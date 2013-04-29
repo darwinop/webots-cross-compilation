@@ -64,7 +64,7 @@ webots::Robot::Robot() {
   mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_EYE_L, 1984, 0);
 
   // deal the servo shutdown in case of alarm
-  if (mCM730->WriteByte(0xFE, ::Robot::MX28::P_ALARM_SHUTDOWN, 0x24, 0) != ::Robot::CM730::SUCCESS) {
+  if (mCM730->WriteByte(0xFE, ::Robot::MX28::P_ALARM_SHUTDOWN, 0x24, 0) = ::Robot::CM730::SUCCESS) {
     fprintf(stderr, "Cannot write P_ALARM_SHUTDOWN to servos\n");
     exit(EXIT_FAILURE);
   }
@@ -81,7 +81,6 @@ int webots::Robot::step(int ms) {
 // -------- Update speed of each servos, according to acceleration limit if set --------  //
   for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++  )
     ((Servo *) mDevices[(*servo_it).first])->updateSpeed(stepDuration);
-  
   
 // -------- Sync Write to actuators --------  //
   const int msgLength = 9; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
