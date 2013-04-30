@@ -88,7 +88,7 @@ int webots::Robot::step(int ms) {
     Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
     int servoId = (*servo_it).second;
     if (servo->alarm()) {
-      fprintf(stderr, "Alarm detected on servo \"%s\" (id = %d)\n", servo->name().c_str(), servoId);
+      fprintf(stderr, "Alarm detected on servo #%d\n", servoId);
       exit(EXIT_FAILURE);
     }
     servo->updateSpeed(stepDuration);
