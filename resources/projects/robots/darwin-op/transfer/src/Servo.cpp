@@ -339,6 +339,7 @@ int Servo::getType() const {
 }
 
 bool Servo::alarm() {
+  CM730 *cm730 = getRobot()->getCM730();
   int ledOn = false;
   if (cm730->ReadByte(mNamesToIDs[getName()], MX28::P_LED, &ledOn, 0) != CM730::SUCCESS) {
     printf("Can't read P_LED from \"%s\" (Dynamixel ID %d)\n", getName().c_str(), mNamesToIDs[getName()]);
