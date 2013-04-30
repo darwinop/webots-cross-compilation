@@ -38,7 +38,7 @@ namespace webots {
       virtual void  setPosition(double position);
       
               void  updateSpeed(int ms);
-              bool alarm();
+              int alarm();
 
     private:
       static void   initStaticMap();

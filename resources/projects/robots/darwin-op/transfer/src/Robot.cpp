@@ -65,11 +65,13 @@ webots::Robot::Robot() {
 
   // deal the servo shutdown in case of alarm
   // -> make sure that P_ALARM_LED and P_ALARM_SHUTDOWN are well setup
-  if (mCM730->WriteByte(0xFE, ::Robot::MX28::P_ALARM_LED, 0x24, 0) != ::Robot::CM730::SUCCESS) {
+  int ledOn = 0x24;
+  if (mCM730->WriteByte(::Robot::CM730::ID_BROADCAST, ::Robot::MX28::P_ALARM_LED, 0x24, 0) != ::Robot::CM730::SUCCESS) {
     fprintf(stderr, "Cannot write P_ALARM_LED to servos\n");
-    exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
+	
   }
-  if (mCM730->WriteByte(0xFE, ::Robot::MX28::P_ALARM_SHUTDOWN, 0x24, 0) != ::Robot::CM730::SUCCESS) {
+  if (mCM730->WriteByte(::Robot::CM730::ID_BROADCAST, ::Robot::MX28::P_ALARM_SHUTDOWN, 0x24, 0) != ::Robot::CM730::SUCCESS) {
     fprintf(stderr, "Cannot write P_ALARM_SHUTDOWN to servos\n");
     exit(EXIT_FAILURE);
   }
@@ -89,7 +91,9 @@ int webots::Robot::step(int ms) {
     int servoId = (*servo_it).second;
     if (servo->alarm()) {
       fprintf(stderr, "Alarm detected on servo #%d\n", servoId);
-      exit(EXIT_FAILURE);
+	  mCM730->WriteByte(::Robot::CM730::ID_BROADCAST, ::Robot::MX28::P_ALARM_SHUTDOWN, 0x24, 0);
+      //exit(EXIT_FAILURE);
+	  
     }
     servo->updateSpeed(stepDuration);
   }
