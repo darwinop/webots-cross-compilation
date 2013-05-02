@@ -193,12 +193,12 @@ void Servo::setMotorForce(double motor_force){
   //else if (cm730->WriteByte(CM730::ID_BROADCAST, MX28::P_ALARM_LED|MX28::P_ALARM_SHUTDOWN, 0x24, 0) != CM730::SUCCESS) {
   else if (cm730->ReadByte(CM730::ID_CM, MX28::P_ALARM_LED|MX28::P_ALARM_SHUTDOWN, &ledOn, 0) != CM730::SUCCESS) {
     mTorqueLimit = 0;
-    mTorqueEnable = 0;
+    //mTorqueEnable = 0;
     cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, 0, 0);
   }
   else {
     mTorqueLimit = 0;
-    mTorqueEnable = 0;
+    //mTorqueEnable = 0;
     cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, 0, 0);
   }
 }
