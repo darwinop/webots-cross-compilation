@@ -181,7 +181,6 @@ void Servo::setForce(double force){
 
 void Servo::setMotorForce(double motor_force){
   CM730 *cm730 = getRobot()->getCM730();
-  int ledOn = 0x24;
   if(motor_force > 2.5) {
     mTorqueEnable = 1;
     mTorqueLimit = 1023;
@@ -190,16 +189,10 @@ void Servo::setMotorForce(double motor_force){
     mTorqueEnable = 1;
     mTorqueLimit = (motor_force/2.5) * 1023;
   }
-  //else if (cm730->WriteByte(CM730::ID_BROADCAST, MX28::P_ALARM_LED|MX28::P_ALARM_SHUTDOWN, 0x24, 0) != CM730::SUCCESS) {
-  else if (cm730->ReadByte(CM730::ID_CM, MX28::P_ALARM_LED|MX28::P_ALARM_SHUTDOWN, &ledOn, 0) != CM730::SUCCESS) {
-    mTorqueLimit = 0;
-    //mTorqueEnable = 0;
-    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, 0, 0);
-  }
   else {
     mTorqueLimit = 0;
-    //mTorqueEnable = 0;
-    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_LIMIT_L, 0, 0);
+    mTorqueEnable = 0;
+    cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);
   }
 }
 
@@ -345,13 +338,13 @@ int Servo::getType() const {
   return WB_SERVO_ROTATIONAL;
 }
 
-/*
-int Servo::alarm() {
+bool Servo::alarm() {
   CM730 *cm730 = getRobot()->getCM730();
-  int ledOn = 0x24;
-  if (cm730->WriteByte(CM730::ID_BROADCAST, MX28::P_ALARM_LED|MX28::P_ALARM_SHUTDOWN, ledOn, 0) != CM730::SUCCESS)
+  int ledOn = false;
+  if (cm730->ReadByte(mNamesToIDs[getName()], MX28::P_LED, &ledOn, 0) != CM730::SUCCESS) {
     printf("Can't read P_LED from \"%s\" (Dynamixel ID %d)\n", getName().c_str(), mNamesToIDs[getName()]);
-	cm730->WriteByte(CM730::ID_BROADCAST, MX28::P_TORQUE_LIMIT_L, 0, 0);
+    exit(EXIT_FAILURE);
+  }
   return ledOn;
 }
-*/
+
