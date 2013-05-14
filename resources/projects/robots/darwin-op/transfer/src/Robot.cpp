@@ -86,7 +86,6 @@ int webots::Robot::step(int ms) {
 // -------- Update speed of each servos, according to acceleration limit if set --------  //
   for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++  ) {
     Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
-    int servoId = (*servo_it).second;
     servo->updateSpeed(stepDuration);
   }
   

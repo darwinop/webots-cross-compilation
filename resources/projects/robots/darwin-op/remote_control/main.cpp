@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     
   // Client socket
   SOCKADDR_IN csin;
-  SOCKET csock;
+  SOCKET csock=NULL;
   socklen_t crecsize = sizeof(csin);
     
   int sock_err;
