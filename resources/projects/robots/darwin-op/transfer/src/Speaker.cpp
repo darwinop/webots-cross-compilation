@@ -43,12 +43,13 @@ void Speaker::speak(const char * text, const char * voice, int speed) {
   case -1:
     fprintf(stderr, "Fork failed!! \n");
     break;
-  case 0:
+  case 0: {
     fprintf(stderr, "Saying \"%s\" ...\n", text);
-    char buffer[strlen(text) + 10];
+    char *buffer = (char *)malloc(strlen(text)+3);
     sprintf(buffer, "\"%s\"", text);
     execl("/usr/bin/espeak", "espeak", buffer, "-v", voice, "-s", speedBuffer, (char *)NULL);
-    fprintf(stderr, "exec failed!! \n");
+    free(buffer);
+    fprintf(stderr, "exec failed!! \n"); }
     break;
   default:
     break;
