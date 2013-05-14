@@ -32,7 +32,7 @@ AR = ar
 ARFLAGS = cr
 CXX = g++
 CXXFLAGS += -c -O2 -DLINUX -Wall $(INCLUDE_DIRS)
-LIBS += "../keyboard/keyboard.a" "/usr/lib/libX11.so.6"
+LIBS += ../keyboard/keyboard.a /usr/lib/libX11.so.6
 LINK_DEPENDENCIES = ../keyboard/keyboard.a
 DARWINOP_STATIC_LIBRARY = $(DARWINOP_ROOT)/Linux/lib/darwin.a
 
