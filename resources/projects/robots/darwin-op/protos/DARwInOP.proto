@@ -1348,7 +1348,7 @@ Robot {
           physics Physics {
             density -1
             mass 0.158042
-            centerOfMass 6.39198e-05 0.0185645 0.00766662
+            centerOfMass [6.39198e-05 0.0185645 0.00766662]
             inertiaMatrix [1.2396830e-04 1.1783781e-04 1.1583601e-04, 7.8494368e-07 -7.6459790e-08 1.2199205e-05]
           }
           maxForce 2.5
@@ -1366,7 +1366,7 @@ Robot {
       physics Physics {
         density -1
         mass 0.0243577
-        centerOfMass 0.00142428 -0.0165676 -0.000712811
+        centerOfMass [0.00142428 -0.0165676 -0.000712811]
         inertiaMatrix [5.1411124e-06 8.1915737e-06 1.1379812e-05, -5.7530255e-07 -2.4729049e-08 -1.9223094e-07]
       }
       maxForce 2.5
@@ -2464,7 +2464,7 @@ Robot {
                           physics Physics {
                             density -1
                             mass 0.0794462
-                            centerOfMass 0.00950588 -0.0259953 -0.000502877
+                            centerOfMass [0.00950588 -0.0259953 -0.000502877]
                             inertiaMatrix [6.8325629e-05 8.7890505e-05 3.5840758e-05, 2.5330463e-06 2.1869558e-07 9.7620541e-07]
                           }
                           maxForce 2.5
@@ -2482,7 +2482,7 @@ Robot {
                       physics Physics {
                         density -1
                         mass 0.167108
-                        centerOfMass -0.000213732 0.0138731 -0.0185361
+                        centerOfMass [-0.000213732 0.0138731 -0.0185361]
                         inertiaMatrix [1.2079175e-04 1.0885465e-04 4.1871103e-05, -7.9781067e-07 -3.9322246e-07 7.0770117e-06]
                       }
                       maxForce 2.5
@@ -2513,7 +2513,7 @@ Robot {
                   physics Physics {
                     density -1
 		    mass 0.0703098
-                    centerOfMass -0.000592469 -0.0539545 0.00654763
+                    centerOfMass [-0.000592469 -0.0539545 0.00654763]
                     inertiaMatrix [9.3369608e-05 4.6295534e-05 1.1351516e-04, -9.3567395e-07 -2.3992085e-07 -1.2858493e-05]
                   }
                   maxForce 2.5
@@ -2531,7 +2531,7 @@ Robot {
               physics Physics {
                 density -1
                 mass 0.119043
-                centerOfMass -0.000322635 -0.0629655 0.000691906
+                centerOfMass [-0.000322635 -0.0629655 0.000691906]
                 inertiaMatrix [9.7950272e-05 3.2848287e-05 1.1493509e-04, 1.2119368e-06 -2.1223016e-07 -1.9474021e-06]
               }
               maxForce 2.5
@@ -2549,7 +2549,7 @@ Robot {
           physics Physics {
             density -1
             mass 0.167108
-            centerOfMass 7.99828e-05 -0.0138731 -0.0182424
+            centerOfMass [7.99828e-05 -0.0138731 -0.0182424]
             inertiaMatrix [1.2259691e-04 1.1066637e-04 4.1877668e-05, 7.1127469e-07 8.1143913e-07 -7.1635476e-06]
           }
           maxForce 2.5
@@ -2567,7 +2567,7 @@ Robot {
       physics Physics {
         density -1
         mass 0.0270692
-        centerOfMass 0 0.0184372 0.000480135
+        centerOfMass [0 0.0184372 0.000480135]
         inertiaMatrix [1.5019148e-05 1.1328768e-05 6.1825529e-06, 0.0000000e+00 0.0000000e+00 -7.3350016e-07]
       }
       maxForce 2.5
@@ -3662,7 +3662,7 @@ Robot {
                           physics Physics {
                             density -1
                             mass 0.0794462
-                            centerOfMass -0.00950588 -0.0259953 -0.000502877
+                            centerOfMass [-0.00950588 -0.0259953 -0.000502877]
                             inertiaMatrix [6.8325629e-05 8.7890505e-05 3.5840758e-05, -2.5330463e-06 -2.1869558e-07 9.7620541e-07]
                           }
                           maxForce 2.5
@@ -3680,7 +3680,7 @@ Robot {
                       physics Physics {
                         density -1
                         mass 0.167108
-                        centerOfMass 0.000213732 0.0138731 -0.0185361
+                        centerOfMass [0.000213732 0.0138731 -0.0185361]
                         inertiaMatrix [1.2079175e-04 1.0885465e-04 4.1871103e-05, 7.9781067e-07 3.9322246e-07 7.0770117e-06]
                       }
                       maxForce 2.5
@@ -3711,7 +3711,7 @@ Robot {
                   physics Physics {
                     density -1
                     mass 0.0703098
-                    centerOfMass 0.000592469 -0.0539545 0.00654763
+                    centerOfMass [0.000592469 -0.0539545 0.00654763]
                     inertiaMatrix [9.3369608e-05 4.6295534e-05 1.1351516e-04, 9.3567395e-07 2.3992085e-07 -1.2858493e-05]
                   }
                   maxForce 2.5
@@ -3729,7 +3729,7 @@ Robot {
               physics Physics {
                 density -1
                 mass 0.119043
-                centerOfMass 0.000322635 -0.0629655 0.000691906
+                centerOfMass [0.000322635 -0.0629655 0.000691906]
                 inertiaMatrix [9.7950272e-05 3.2848287e-05 1.1493509e-04, -1.2119368e-06 2.1223016e-07 -1.9474021e-06]
               }
               maxForce 2.5
@@ -3747,7 +3747,7 @@ Robot {
           physics Physics {
             density -1
             mass 0.167108
-            centerOfMass -7.99828e-05 -0.0138731 -0.0182424
+            centerOfMass [-7.99828e-05 -0.0138731 -0.0182424]
             inertiaMatrix [1.2259691e-04 1.1066637e-04 4.1877668e-05, -7.1127469e-07 -8.1143913e-07 -7.1635476e-06]
           }
           maxForce 2.5
@@ -3765,7 +3765,7 @@ Robot {
       physics Physics {
         density -1
         mass 0.0270692
-        centerOfMass 0 0.0184372 0.000480135
+        centerOfMass [0 0.0184372 0.000480135]
         inertiaMatrix [1.5019148e-05 1.1328768e-05 6.1825529e-06, -0.0000000e+00 -0.0000000e+00 -7.3350016e-07]
       }
       maxForce 2.5
@@ -4617,7 +4617,7 @@ Robot {
               physics Physics {
                 density -1
                 mass 0.0592885
-                centerOfMass 0.00666564 -0.0458382 -0.0134901
+                centerOfMass [0.00666564 -0.0458382 -0.0134901]
                 inertiaMatrix [8.6855267e-05 2.1192085e-05 8.6845450e-05, 5.3020311e-06 4.3636051e-07 -6.4855932e-06]
               }
               maxForce 2.5
@@ -4647,7 +4647,7 @@ Robot {
           physics Physics {
             density -1
             mass 0.168377
-            centerOfMass 0.000659787 -0.036239 0.000734065
+            centerOfMass [0.000659787 -0.036239 0.000734065]
             inertiaMatrix [1.2202839e-04 3.8088441e-05 1.1340830e-04, -2.0812626e-06 -8.8143449e-07 1.8251448e-06]
           }
           maxForce 2.5
@@ -4666,7 +4666,7 @@ Robot {
       physics Physics {
         density -1
         mass 0.025913
-        centerOfMass -0.0135226 0.012641 0.00139357
+        centerOfMass [-0.0135226 0.012641 0.00139357]
         inertiaMatrix [9.7758165e-06 1.0511104e-05 5.4767980e-06, 1.6911839e-06 -4.5174329e-07 3.3406955e-07]
       }
       maxForce 2.5
@@ -5518,7 +5518,7 @@ Robot {
               physics Physics {
                 density -1
                 mass 0.0592885
-                centerOfMass -0.00666564 -0.0458382 -0.0134901
+                centerOfMass [-0.00666564 -0.0458382 -0.0134901]
                 inertiaMatrix [8.6855267e-05 2.1192085e-05 8.6845450e-05, -5.3020311e-06 -4.3636051e-07 -6.4855932e-06]
               }
               maxForce 2.5
@@ -5548,7 +5548,7 @@ Robot {
           physics Physics {
             density -1
             mass 0.168377
-            centerOfMass -0.000659787 -0.036239 0.000734065
+            centerOfMass [-0.000659787 -0.036239 0.000734065]
             inertiaMatrix [1.2202839e-04 3.8088441e-05 1.1340830e-04, 2.0812626e-06 8.8143449e-07 1.8251448e-06]
           }
           maxForce 2.5
@@ -5567,7 +5567,7 @@ Robot {
       physics Physics {
         density -1
         mass 0.025913
-        centerOfMass 0.0135226 0.010241 0.00139357
+        centerOfMass [0.0135226 0.010241 0.00139357]
         inertiaMatrix [9.7758165e-06 1.0511104e-05 5.4767980e-06, -1.6911839e-06 4.5174329e-07 3.3406955e-07]
       }
       maxForce 2.5
@@ -5642,7 +5642,7 @@ Robot {
   physics Physics {
     density -1
     mass 0.975599
-    centerOfMass 0.000 -0.08 -0.05
+    centerOfMass [0.0 -0.08 -0.05]
     inertiaMatrix [3.1081800e-03 6.3787776e-03 5.3316425e-03, -2.5460189e-04 2.0318174e-03 1.6417863e-04]
   }
   controller IS controller
