@@ -16,42 +16,52 @@
 
 #include <QtCore/QtCore>
 
-class SSH
-{
+class SSH : public QObject {
+  Q_OBJECT
 
 public:
-  SSH();
-  virtual ~SSH();
-  
-  char         mSSHError[256];
-  
-  void         CloseSSHSession();
-  int          OpenSSHSession(QString IP, QString username, QString password);
-  void         CloseSSHChannel();
-  int          OpenSSHChannel();
-  int          OpenSSHChannelWithPTY();
-  void         CloseSFTPChannel();
-  void         CloseAllSSH();
-  int          ChannelRead(char * buffer, bool channel);
-  int          ChannelWrite(const char * buffer);
-  int          ReadRemotFile(const char * fileName, char * buffer);
-  int          MakeRemoteDirectory(const char * directory);
-  int          OpenSFTPChannel();
-  int          verify_knownhost();
-  int          SendFile(const char * source, const char * target);
-  int          ExecuteSSHCommand(const char * command);
-  int          ExecuteSSHGraphicCommand(const char * command, int commandSize);
-  int          ExecuteSSHSudoCommand(const char * command, int commandSize, const char * password, int passwordSize);
-  void         WaitEndSSHCommand();
-  const char * getSSHError();
+               SSH(QObject *parent);
+  virtual     ~SSH();
+
+  int          startRemoteCompilation(const QString &IPAddress, const QString &username, const QString &password, bool makeDefaultConsoller);
+  int          startRemoteControl(const QString &IPAddress, const QString &username, const QString &password);
+  int          uninstall(const QString &IPAddress, const QString &username, const QString &password);
+  void         terminate() { mTerminate=true; }
+  const QString error();
+
+signals:
+  void         print(const QString &,bool err);
+  void         status(const QString &);
+  void         done();
+
+protected:
+  QString      mError;
+  QString      mStdout;
+  QString      mStderr;
 
 private:
-  
-  //***  SSH  ***//
+  int          openSSHSession(const QString &IPAddress, const QString &username, const QString &password);
+  void         closeSSHSession();
+  int          openSSHChannel();
+  int          openSFTPChannel();
+  void         closeSSHChannel();
+  void         closeSFTPChannel();
+  int          readRemoteFile(const QString &fileName, char *buffer, int buffer_size);
+  int          verifyKnownHost();
+  int          sendFile(const QString &source, const QString &target);
+  int          executeSSHCommand(const QString &command,bool display=true,bool wait=true);
+  void         readChannel(bool display, int err);
+  int          updateFrameworkIfNeeded();
+  bool         isFrameworkUpToDate();
+  int          updateFramework();
+  int          updateWrapperIfNeeded(const QString &root_password);
+  bool         isWrapperUpToDate();
+  int          updateWrapper(const QString &root_password);
   ssh_session  mSSHSession;
   ssh_channel  mSSHChannel;
   sftp_session mSFTPChannel;
-  sftp_file    mSFTPFile; 
+  sftp_file    mSFTPFile;
+  bool         mTerminate;
 };
 
 #endif
