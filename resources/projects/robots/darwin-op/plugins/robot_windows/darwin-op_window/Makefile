@@ -34,9 +34,8 @@ ifeq ($(OSTYPE),Darwin)
  OSTYPE = darwin
 endif
 
-
-CXX_SOURCES = $(wildcard *.cpp)
-HPP_FILES_TO_MOC = Transfer.hpp
+CXX_SOURCES = entry_points.cpp Viewer.cpp Transfer.cpp SSH.cpp ZIP.cpp 
+HPP_FILES_TO_MOC = Transfer.hpp SSH.hpp
 
 USE_QT = true
 USE_C_API = true
