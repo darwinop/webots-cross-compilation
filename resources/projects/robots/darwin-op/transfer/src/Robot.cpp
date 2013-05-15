@@ -90,7 +90,7 @@ int webots::Robot::step(int ms) {
   }
   
 // -------- Sync Write to actuators --------  //
-  const int msgLength = 9; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
+  const int msgLength = 7; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
 
   int param[20*msgLength];
   int n=0;
@@ -110,9 +110,9 @@ int webots::Robot::step(int ms) {
       value = servo->getMovingSpeed();
       param[n++] = ::Robot::CM730::GetLowByte(value);
       param[n++] = ::Robot::CM730::GetHighByte(value);
-      value = servo->getTorqueLimit();
-      param[n++] = ::Robot::CM730::GetLowByte(value);
-      param[n++] = ::Robot::CM730::GetHighByte(value);
+      //value = servo->getTorqueLimit();
+      //param[n++] = ::Robot::CM730::GetLowByte(value);
+      //param[n++] = ::Robot::CM730::GetHighByte(value);
       changed_servos++;
     }
   }
