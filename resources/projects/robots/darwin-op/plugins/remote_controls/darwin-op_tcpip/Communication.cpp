@@ -26,12 +26,19 @@ Communication::~Communication() {
 
 bool Communication::initialize(QString IP, int port) {
   socket->abort(); // Close previous connection (if any)
-  socket->connectToHost((char*)IP.toStdString().c_str(), port);
+  socket->connectToHost(IP, port);
+
+  // fixed timing issue:
+  //   without this delay there are some situations where the connection
+  //   can be not accepted at time in the server running on the DARwIn-OP
+  //   Note: this is mainly visible on Mac environment
+  usleep(50000);
+
   mInitialized = true;
-  if(!(socket->isOpen()))
-    return false;
-  else
+  if (socket->isOpen())
     return true;
+  else
+    return false;
 }
 
 void Communication::cleanup() {
@@ -50,7 +57,7 @@ bool Communication::sendPacket(const Packet *packet) {
     return false;
   }
   
-  if(socket->write(packet->data()->constData(), packet->size()) == -1) {
+  if(socket->write(packet->data()) == -1) {
     cerr << "WRITING ERROR" << endl;
     return false;
   }
