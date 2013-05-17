@@ -16,7 +16,7 @@ public:
   Packet(int maxSize);
   virtual ~Packet();
 
-  QByteArray *data() const { return mData; }
+  const QByteArray &data() const { return *mData; }
 
   virtual void clear() { mData->clear(); }
   int size() const { return mData->size(); }

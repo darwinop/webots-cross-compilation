@@ -14,11 +14,10 @@ Packet::Packet(int maxSize) :
 }
 
 Packet::~Packet() {
-
+  delete mData;
 }
 
 void Packet::append(QByteArray data) {
-
   mData->append(data);
 }
 
