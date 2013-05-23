@@ -62,17 +62,6 @@ webots::Robot::Robot() {
   // Switch LED to GREEN
   mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_HEAD_L, 1984, 0);
   mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_EYE_L, 1984, 0);
-
-  // deal the servo shutdown in case of alarm
-  // -> make sure that P_ALARM_LED and P_ALARM_SHUTDOWN are well setup
-  if (mCM730->WriteByte(::Robot::CM730::ID_BROADCAST, ::Robot::MX28::P_ALARM_LED, 0x24, 0) != ::Robot::CM730::SUCCESS) {
-    fprintf(stderr, "Cannot write P_ALARM_LED to servos\n");
-    exit(EXIT_FAILURE);
-  }
-  if (mCM730->WriteByte(::Robot::CM730::ID_BROADCAST, ::Robot::MX28::P_ALARM_SHUTDOWN, 0x24, 0) != ::Robot::CM730::SUCCESS) {
-    fprintf(stderr, "Cannot write P_ALARM_SHUTDOWN to servos\n");
-    exit(EXIT_FAILURE);
-  }
 }
 
 webots::Robot::~Robot() {
