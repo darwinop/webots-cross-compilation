@@ -89,6 +89,12 @@ int webots::Robot::step(int ms) {
     servo->setPresentPosition( mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_PRESENT_POSITION_L));
     servo->setPresentSpeed( mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_PRESENT_SPEED_L));
     servo->setPresentLoad( mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_PRESENT_LOAD_L));
+
+    int limit = mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_TORQUE_LIMIT_L);
+    if (limit == 0) {
+      fprintf(stderr, "Alarm detected on id = %d\n", servoId);
+      exit(EXIT_FAILURE);
+    }
   }
   
   int values[3];
