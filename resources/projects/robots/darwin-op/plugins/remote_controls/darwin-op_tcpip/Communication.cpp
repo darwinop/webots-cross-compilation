@@ -12,6 +12,10 @@
 #include <cstdlib>
 #include <cstring>
 
+#ifdef Q_OS_WIN
+#include <windows.h> // for the Sleep() function
+#endif
+
 using namespace std;
 
 Communication::Communication() :
@@ -32,7 +36,11 @@ bool Communication::initialize(QString IP, int port) {
   //   without this delay there are some situations where the connection
   //   can be not accepted at time in the server running on the DARwIn-OP
   //   Note: this is mainly visible on Mac environment
-  usleep(50000);
+#ifdef Q_OS_WIN
+    Sleep(50);
+#else
+    usleep(50000);
+#endif
 
   mInitialized = true;
   if (socket->isOpen())

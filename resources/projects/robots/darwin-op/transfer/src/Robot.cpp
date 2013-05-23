@@ -1,5 +1,3 @@
-//Modified by Chase
-
 #include <webots/Robot.hpp>
 #include <webots/Accelerometer.hpp>
 #include <webots/Camera.hpp>
@@ -74,39 +72,13 @@ int webots::Robot::step(int ms) {
   int stepDuration = actualTime - mPreviousStepTime;
   std::map<const std::string, int>::iterator servo_it;
   
-// -------- Update speed of each servos, according to acceleration limit if set --------  //
+  // -------- Update speed of each servos, according to acceleration limit if set --------  //
   for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++  ) {
     Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
     servo->updateSpeed(stepDuration);
   }
   
-// -------- Sync Write to actuators --------  //
-  const int msgLength = 7; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H)
-
-  int param[20*msgLength];
-  int n=0;
-  int changed_servos=0;
-  int value;
-  
-  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ ) {
-    Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
-    int servoId = (*servo_it).second;
-    if(servo->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(servoId))) {
-      param[n++] = servoId;
-      param[n++] = servo->getPGain();
-      param[n++] = 0; // Empty
-      value = servo->getGoalPosition();
-      param[n++] = ::Robot::CM730::GetLowByte(value);
-      param[n++] = ::Robot::CM730::GetHighByte(value);
-      value = servo->getMovingSpeed();
-      param[n++] = ::Robot::CM730::GetLowByte(value);
-      param[n++] = ::Robot::CM730::GetHighByte(value);
-      changed_servos++;
-    }
-  }
-  mCM730->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_servos , param);
-  
-// -------- Bulk Read to read the actuators states (position, speed and load) and body sensors -------- //
+  // -------- Bulk Read to read the actuators states (position, speed and load) and body sensors -------- //
   if(!(::Robot::MotionManager::GetInstance()->GetEnable())) // If MotionManager is enable, no need to execute the BulkRead, the MotionManager has allready done it.
     mCM730->BulkRead();
 
@@ -117,6 +89,12 @@ int webots::Robot::step(int ms) {
     servo->setPresentPosition( mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_PRESENT_POSITION_L));
     servo->setPresentSpeed( mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_PRESENT_SPEED_L));
     servo->setPresentLoad( mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_PRESENT_LOAD_L));
+
+    int limit = mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_TORQUE_LIMIT_L);
+    if (limit == 0) {
+      fprintf(stderr, "Alarm detected on id = %d\n", servoId);
+      exit(EXIT_FAILURE);
+    }
   }
   
   int values[3];
@@ -140,11 +118,40 @@ int webots::Robot::step(int ms) {
   ((LED *)mDevices["EyeLed"])->setColor(values[1]);
   LED::setBackPanel(values[2]);
 
-// -------- Keyboard Reset ----------- //
+  // -------- Sync Write to actuators --------  //
+  const int msgLength = 9; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
+  
+  int param[20*msgLength];
+  int n=0;
+  int changed_servos=0;
+  int value;
+  
+  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ ) {
+    Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
+    int servoId = (*servo_it).second;
+    if(servo->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(servoId))) {
+      param[n++] = servoId;
+      param[n++] = servo->getPGain();
+      param[n++] = 0; // Empty
+      value = servo->getGoalPosition();
+      param[n++] = ::Robot::CM730::GetLowByte(value);
+      param[n++] = ::Robot::CM730::GetHighByte(value);
+      value = servo->getMovingSpeed();
+      param[n++] = ::Robot::CM730::GetLowByte(value);
+      param[n++] = ::Robot::CM730::GetHighByte(value);
+      value = servo->getTorqueLimit();
+      param[n++] = ::Robot::CM730::GetLowByte(value);
+      param[n++] = ::Robot::CM730::GetHighByte(value);
+      changed_servos++;
+    }
+  }
+  mCM730->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_servos , param);
+
+  // -------- Keyboard Reset ----------- //
   if(mKeyboardEnable == true)
     mKeyboard->resetKeyPressed();
 
-// -------- Timing management -------- //
+  // -------- Timing management -------- //
   if(stepDuration < ms) { // Step to short -> wait remaining time
     usleep((ms - stepDuration) * 1000);
     mPreviousStepTime = actualTime;

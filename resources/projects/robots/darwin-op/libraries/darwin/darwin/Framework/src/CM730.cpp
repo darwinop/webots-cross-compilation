@@ -717,9 +717,9 @@ void CM730::MakeBulkReadPacketWb()
 
 		for(int id = 1; id < JointData::NUMBER_OF_JOINTS; id++)
 		{
-				m_BulkReadTxPacket[PARAMETER+3*number+1] = 6; // length (goal + speed + torque)
+				m_BulkReadTxPacket[PARAMETER+3*number+1] = 8; // length (limits + goal + speed + torque)
 				m_BulkReadTxPacket[PARAMETER+3*number+2] = id;	// id
-				m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_PRESENT_POSITION_L; // start address
+				m_BulkReadTxPacket[PARAMETER+3*number+3] = MX28::P_TORQUE_LIMIT_L; // start address
 				number++;
 		}
 

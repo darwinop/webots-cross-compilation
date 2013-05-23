@@ -65,7 +65,6 @@ int SSH::openSSHSession(const QString &IPAddress, const QString &username, const
 int SSH::verifyKnownHost() {
   int state, hlen;
   unsigned char *hash = NULL;
-  char *hexa;
 
   state = ssh_is_server_known(mSSHSession);
   hlen = ssh_get_pubkey_hash(mSSHSession, &hash);
@@ -76,46 +75,35 @@ int SSH::verifyKnownHost() {
   switch (state) {
     case SSH_SERVER_KNOWN_OK:
       break; // ok 
-    case SSH_SERVER_KNOWN_CHANGED:
-      fprintf(stderr, "Host key for server changed: it is now:\n");
-      ssh_print_hexa("Public key hash", hash, hlen);
-      fprintf(stderr, "For security reasons, connection will be stopped\n");
-      ssh_clean_pubkey_hash(&hash);
-      return -1;
     case SSH_SERVER_FOUND_OTHER:
-      fprintf(stderr, "The host key for this server was not found but an other type of key exists.\n");
-      fprintf(stderr, "An attacker might change the default server key to confuse your client into thinking the key does not exist\n");
+    case SSH_SERVER_KNOWN_CHANGED:
+      fprintf(stderr, "DARwIn-OP SSH-RSA key has changed.\n");
+      fprintf(stderr, "For security reasons, the connection will be stopped\n");
+
+      fprintf(stderr, "Please remove the old SSH-RSA key from the known_hosts file ("
+#ifdef WIN32
+        "C:\\Users\\<username>\\.ssh\\known_hosts"
+#elif defined(MACOS)
+        "/Users/<username>/.ssh/known_hosts"
+#else // Linux
+        "/home/<username>/.ssh/known_hosts"
+#endif
+        ")."
+      );
+
       ssh_clean_pubkey_hash(&hash);
       return -1;
     case SSH_SERVER_FILE_NOT_FOUND:
-      //fprintf(stderr, "Could not find known host file.\n");
-      //fprintf(stderr, "If you accept the host key here, the file will be automatically created.\n");
-    // fallback to SSH_SERVER_NOT_KNOWN behavior
+      // fallback to SSH_SERVER_NOT_KNOWN
     case SSH_SERVER_NOT_KNOWN:
-      hexa = ssh_get_hexa(hash, hlen);
-      //fprintf(stderr,"The server is unknown. Do you trust the host key?\n");
-      //fprintf(stderr, "Public key hash: %s\n", hexa);
-      free(hexa);
-      // This par is skipped to avoid user interaction
-      //char buf[10];
-      //if(fgets(buf, sizeof(buf), stdin) == NULL) {
-      //  ssh_clean_pubkey_hash(&hash);
-      //  return -1;
-      //}
-      //if(strncasecmp(buf, "yes", 3) != 0) {
-      //  ssh_clean_pubkey_hash(&hash);
-      //  return -1;
-      //}
       if(ssh_write_knownhost(mSSHSession) < 0) {
         mError = strerror(errno);
-        //fprintf(stderr, "Error %s\n", strerror(errno));
         ssh_clean_pubkey_hash(&hash);
         return -1;
       }
       break;
     case SSH_SERVER_ERROR:
       mError = ssh_get_error(mSSHSession);
-      //fprintf(stderr, "Error %s", ssh_get_error(mSSHSession));
       ssh_clean_pubkey_hash(&hash);
       return -1;
     }
@@ -319,7 +307,7 @@ const QString SSH::error() {
 }
 
 bool SSH::isFrameworkUpToDate() {
-  int index1 = 0, index2 = 0, index3 = 0;
+  int index1 = 0, index2 = 0;
   QString version, versionInstalled;
   QStringList versionList, versionInstalledList;
   QFile mFrameworkVersionFile(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME")+"/resources/projects/robots/darwin-op/libraries/darwin/darwin/version.txt");
@@ -333,7 +321,6 @@ bool SSH::isFrameworkUpToDate() {
         versionList = version.split(".");
         index1 = versionList.at(0).toInt();
         index2 = versionList.at(1).toInt();
-        index3 = versionList.at(2).toInt();
       }
       else
         return false; //PROBLEM file empty
@@ -352,7 +339,10 @@ bool SSH::isFrameworkUpToDate() {
 
   versionInstalled = QString(buffer);
   versionInstalledList = versionInstalled.split(".");
-  if( (index1 > versionInstalledList.at(0).toInt()) || (index2 > versionInstalledList.at(1).toInt()) || (index3 > versionInstalledList.at(2).toInt()) )
+  if (versionInstalledList.size() != 2)
+    return false;
+
+  if( (index1 > versionInstalledList.at(0).toInt()) || (index2 > versionInstalledList.at(1).toInt()))
     return false; // new version of the Framework
 
   return true;
@@ -628,11 +618,7 @@ int SSH::startRemoteCompilation(const QString &IPAddress, const QString &usernam
     // Install controller
     QString CPCommande = "cp /darwin/Linux/project/webots/controllers/" + controller + "/" + controller + " /darwin/Linux/project/webots/default";
     executeSSHCommand(CPCommande);
-#ifdef WIN32
-    Sleep(2000); // wait 2 seconds, FIXME: is it really useful?
-#else
     sleep(2); // wait 2 seconds, FIXME: is it really useful?
-#endif
     // Remove compilation files
     executeSSHCommand("rm -r /darwin/Linux/project/webots/controllers/*");
   } else {
