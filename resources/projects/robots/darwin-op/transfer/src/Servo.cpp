@@ -194,6 +194,10 @@ void Servo::setMotorForce(double motor_force){
     mTorqueEnable = 0;
     cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);
   }
+
+  // don't override the servo alarm
+  if (mTorqueLimit <= 0)
+    mTorqueLimit = 1;
 }
 
 void Servo::setControlP(double p){
