@@ -78,35 +78,6 @@ int webots::Robot::step(int ms) {
     servo->updateSpeed(stepDuration);
   }
   
-  // -------- Sync Write to actuators --------  //
-  const int msgLength = 9; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
-
-  int param[20*msgLength];
-  int n=0;
-  int changed_servos=0;
-  int value;
-  
-  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ ) {
-    Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
-    int servoId = (*servo_it).second;
-    if(servo->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(servoId))) {
-      param[n++] = servoId;
-      param[n++] = servo->getPGain();
-      param[n++] = 0; // Empty
-      value = servo->getGoalPosition();
-      param[n++] = ::Robot::CM730::GetLowByte(value);
-      param[n++] = ::Robot::CM730::GetHighByte(value);
-      value = servo->getMovingSpeed();
-      param[n++] = ::Robot::CM730::GetLowByte(value);
-      param[n++] = ::Robot::CM730::GetHighByte(value);
-      value = servo->getTorqueLimit();
-      param[n++] = ::Robot::CM730::GetLowByte(value);
-      param[n++] = ::Robot::CM730::GetHighByte(value);
-      changed_servos++;
-    }
-  }
-  mCM730->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_servos , param);
-  
   // -------- Bulk Read to read the actuators states (position, speed and load) and body sensors -------- //
   if(!(::Robot::MotionManager::GetInstance()->GetEnable())) // If MotionManager is enable, no need to execute the BulkRead, the MotionManager has allready done it.
     mCM730->BulkRead();
@@ -140,6 +111,35 @@ int webots::Robot::step(int ms) {
   ((LED *)mDevices["HeadLed"])->setColor(values[0]);
   ((LED *)mDevices["EyeLed"])->setColor(values[1]);
   LED::setBackPanel(values[2]);
+
+  // -------- Sync Write to actuators --------  //
+  const int msgLength = 9; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
+  
+  int param[20*msgLength];
+  int n=0;
+  int changed_servos=0;
+  int value;
+  
+  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ ) {
+    Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
+    int servoId = (*servo_it).second;
+    if(servo->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(servoId))) {
+      param[n++] = servoId;
+      param[n++] = servo->getPGain();
+      param[n++] = 0; // Empty
+      value = servo->getGoalPosition();
+      param[n++] = ::Robot::CM730::GetLowByte(value);
+      param[n++] = ::Robot::CM730::GetHighByte(value);
+      value = servo->getMovingSpeed();
+      param[n++] = ::Robot::CM730::GetLowByte(value);
+      param[n++] = ::Robot::CM730::GetHighByte(value);
+      value = servo->getTorqueLimit();
+      param[n++] = ::Robot::CM730::GetLowByte(value);
+      param[n++] = ::Robot::CM730::GetHighByte(value);
+      changed_servos++;
+    }
+  }
+  mCM730->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_servos , param);
 
   // -------- Keyboard Reset ----------- //
   if(mKeyboardEnable == true)
