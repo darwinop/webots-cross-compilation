@@ -72,13 +72,13 @@ int webots::Robot::step(int ms) {
   int stepDuration = actualTime - mPreviousStepTime;
   std::map<const std::string, int>::iterator servo_it;
   
-// -------- Update speed of each servos, according to acceleration limit if set --------  //
+  // -------- Update speed of each servos, according to acceleration limit if set --------  //
   for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++  ) {
     Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
     servo->updateSpeed(stepDuration);
   }
   
-// -------- Sync Write to actuators --------  //
+  // -------- Sync Write to actuators --------  //
   const int msgLength = 9; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
 
   int param[20*msgLength];
@@ -107,7 +107,7 @@ int webots::Robot::step(int ms) {
   }
   mCM730->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_servos , param);
   
-// -------- Bulk Read to read the actuators states (position, speed and load) and body sensors -------- //
+  // -------- Bulk Read to read the actuators states (position, speed and load) and body sensors -------- //
   if(!(::Robot::MotionManager::GetInstance()->GetEnable())) // If MotionManager is enable, no need to execute the BulkRead, the MotionManager has allready done it.
     mCM730->BulkRead();
 
@@ -141,11 +141,11 @@ int webots::Robot::step(int ms) {
   ((LED *)mDevices["EyeLed"])->setColor(values[1]);
   LED::setBackPanel(values[2]);
 
-// -------- Keyboard Reset ----------- //
+  // -------- Keyboard Reset ----------- //
   if(mKeyboardEnable == true)
     mKeyboard->resetKeyPressed();
 
-// -------- Timing management -------- //
+  // -------- Timing management -------- //
   if(stepDuration < ms) { // Step to short -> wait remaining time
     usleep((ms - stepDuration) * 1000);
     mPreviousStepTime = actualTime;
