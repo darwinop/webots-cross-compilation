@@ -307,7 +307,7 @@ const QString SSH::error() {
 }
 
 bool SSH::isFrameworkUpToDate() {
-  int index1 = 0, index2 = 0, index3 = 0;
+  int index1 = 0, index2 = 0;
   QString version, versionInstalled;
   QStringList versionList, versionInstalledList;
   QFile mFrameworkVersionFile(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME")+"/resources/projects/robots/darwin-op/libraries/darwin/darwin/version.txt");
@@ -321,7 +321,6 @@ bool SSH::isFrameworkUpToDate() {
         versionList = version.split(".");
         index1 = versionList.at(0).toInt();
         index2 = versionList.at(1).toInt();
-        index3 = versionList.at(2).toInt();
       }
       else
         return false; //PROBLEM file empty
@@ -340,7 +339,10 @@ bool SSH::isFrameworkUpToDate() {
 
   versionInstalled = QString(buffer);
   versionInstalledList = versionInstalled.split(".");
-  if( (index1 > versionInstalledList.at(0).toInt()) || (index2 > versionInstalledList.at(1).toInt()) || (index3 > versionInstalledList.at(2).toInt()) )
+  if (versionInstalledList.size() != 2)
+    return false;
+
+  if( (index1 > versionInstalledList.at(0).toInt()) || (index2 > versionInstalledList.at(1).toInt()))
     return false; // new version of the Framework
 
   return true;
