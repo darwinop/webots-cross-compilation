@@ -174,11 +174,13 @@ void DARwInOPMotionManager::achieveTarget(int msToAchieveTarget) {
     if(mServos[i]->getPositionSamplingPeriod() <= 0) {
       cerr << "The position feedback of servo "<<  servoNames[i] << " is not enabled. DARwInOPMotionManager need to read the position of all servos. The position will be automatically enable."<< endl;
       mServos[i]->enablePosition(mBasicTimeStep);
+	  mServos[i]->enableMotorForceFeedback(mBasicTimeStep);
       stepNeeded = true;
     }
     if(stepNeeded)
       myStep();
     mCurrentPositions[i] = mServos[i]->getPosition();
+	mCurrentPositions[i] = mServos[i]->getMotorForceFeedback();
   }
   
   while (stepNumberToAchieveTarget > 0) {
@@ -205,11 +207,13 @@ void DARwInOPMotionManager::InitMotionAsync() {
     if(mServos[i]->getPositionSamplingPeriod() <= 0) {
       cerr << "The position feedback of servo "<<  servoNames[i] << " is not enabled. DARwInOPMotionManager need to read the position of all servos. The position will be automatically enable."<< endl;
       mServos[i]->enablePosition(mBasicTimeStep);
+	  mServos[i]->enableMotorForceFeedback(mBasicTimeStep);
       stepNeeded = true;
     }
     if(stepNeeded)
       myStep();
      mCurrentPositions[i] = mServos[i]->getPosition();
+	 mCurrentPositions[i] = mServos[i]->getMotorForceFeedback();
   }
   mStepnum = 0;
   mRepeat = 1;
