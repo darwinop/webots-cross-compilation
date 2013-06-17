@@ -6,7 +6,7 @@
 #ifndef VISUALTRACKING_HPP
 #define VISUALTRACKING_HPP
 
-#define NSERVOS 20
+#define NMOTORS 20
 
 #include <webots/Robot.hpp>
 
@@ -15,7 +15,7 @@ namespace managers {
 }
 
 namespace webots {
-  class Servo;
+  class Motor;
   class LED;
   class Camera;
 
@@ -31,7 +31,7 @@ namespace webots {
       
       void                             myStep();
       
-      Servo                           *mServos[NSERVOS];
+      Motor                           *mMotors[NMOTORS];
       LED                             *mEyeLED;
       LED                             *mHeadLED;
       Camera                          *mCamera;

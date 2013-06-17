@@ -5,7 +5,7 @@
 #include "DeviceManager.hpp"
 #include "DarwinOutputPacket.hpp"
 #include "Sensor.hpp"
-#include "Servo.hpp"
+#include "Motor.hpp"
 #include "TripleValuesSensor.hpp"
 #include "SingleValueSensor.hpp"
 
@@ -94,25 +94,25 @@ void DarwinInputPacket::decode(int simulationTime, const DarwinOutputPacket &out
     currentPos += image_length;
   }
   
-  // Servo position feedback
+  // Motor position feedback
   for(int i=0; i<20; i++) {
-    if(outputPacket.isServoPositionFeedback(i)) {
+    if(outputPacket.isMotorPositionFeedback(i)) {
       double value = (double)readIntAt(currentPos)  / 10000;
       currentPos += 4;
-      ServoR *servo = DeviceManager::instance()->servo(i);
-      wbr_servo_set_position_feedback(servo->tag(), value);
-      servo->resetSensorRequested();
+      MotorR *motor = DeviceManager::instance()->motor(i);
+      wbr_motor_set_position_feedback(motor->tag(), value);
+      motor->resetSensorRequested();
     }
   }
   
-  // Servo force feedback
+  // Motor torque feedback
   for(int i=0; i<20; i++) {
-    if(outputPacket.isServoForceFeedback(i)) {
+    if(outputPacket.isMotorForceFeedback(i)) {
       double value = (double)readIntAt(currentPos) / 10000;
       currentPos += 4;
-      SingleValueSensor *servoForceFeedback = DeviceManager::instance()->servoForceFeedback(i);
-      wbr_servo_set_motor_force_feedback(servoForceFeedback->tag(), value);
-      servoForceFeedback->resetSensorRequested();
+      SingleValueSensor *motorForceFeedback = DeviceManager::instance()->motorForceFeedback(i);
+      wbr_motor_set_torque_feedback(motorForceFeedback->tag(), value);
+      motorForceFeedback->resetSensorRequested();
     }
   }
   

@@ -19,7 +19,7 @@ namespace webots {
   class LED;
   class Emitter;
   class Receiver;
-  class Servo;
+  class Motor;
 }
 
 namespace managers {
@@ -39,7 +39,7 @@ public:
   bool isBlue() const;
   bool isRed() const;
   
-  enum { NSERVOS = 20 };
+  enum { NMOTORS = 20 };
   
   // pure virtual: effective implementation in derived classes
   virtual void run() = 0;
@@ -50,7 +50,7 @@ public:
 protected:
   virtual void runStep();
   virtual void sleepSteps(int steps);
-  virtual void resetAllServos(int wait_ms = 1000);
+  virtual void resetAllMotors(int wait_ms = 1000);
   
   // global control step (must be a multiple of WorldInfo.basicTimeStep)
   static const int SIMULATION_STEP;
@@ -60,7 +60,7 @@ protected:
 
   // devices
   Camera *camera;
-  Servo *servos[NSERVOS];
+  Motor *motors[NMOTORS];
   Accelerometer *accelerometer;
   Gyro *gyro;
   LED *eyeLed, *headLed;

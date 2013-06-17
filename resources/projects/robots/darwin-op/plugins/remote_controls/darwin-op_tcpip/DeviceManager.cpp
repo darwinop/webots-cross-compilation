@@ -3,15 +3,15 @@
 #include "Device.hpp"
 #include "Camera.hpp"
 #include "Led.hpp"
-#include "Servo.hpp"
+#include "Motor.hpp"
 #include "SingleValueSensor.hpp"
 #include "TripleValuesSensor.hpp"
 
 #include <webots/robot.h>
 
-#define NSERVOS 20
+#define NMOTORS 20
 
-static const char *servoNames[NSERVOS] = {
+static const char *motorNames[NMOTORS] = {
   "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
   "ArmLowerR" /*ID5 */, "ArmLowerL" /*ID6 */, "PelvYR"    /*ID7 */, "PelvYL"    /*ID8 */,
   "PelvR"     /*ID9 */, "PelvL"     /*ID10*/, "LegUpperR" /*ID11*/, "LegUpperL" /*ID12*/,
@@ -57,11 +57,11 @@ DeviceManager::DeviceManager() {
   }
   
   for (int i=0; i<20; i++) {
-    mServos[i] = new ServoR(wb_robot_get_device(servoNames[i]), i);
-    mDevices.push_back(mServos[i]);   
+    mMotors[i] = new MotorR(wb_robot_get_device(motorNames[i]), i);
+    mDevices.push_back(mMotors[i]);   
     
-    mServosForceFeedback[i] = new SingleValueSensor(wb_robot_get_device(servoNames[i]), i);
-    mDevices.push_back(mServosForceFeedback[i]);
+    mMotorsForceFeedback[i] = new SingleValueSensor(wb_robot_get_device(motorNames[i]), i);
+    mDevices.push_back(mMotorsForceFeedback[i]);
   }
 }
 
@@ -94,8 +94,8 @@ void DeviceManager::clear() {
     mLeds[i] = NULL;
     
   for (int i=0; i<20; i++) {
-    mServos[i] = NULL;
-    mServosForceFeedback[i] = NULL;
+    mMotors[i] = NULL;
+    mMotorsForceFeedback[i] = NULL;
   }
     
 }

@@ -7,7 +7,7 @@
 #ifndef SOCCER_HPP
 #define SOCCER_HPP
 
-#define NSERVOS 20
+#define NMOTORS 20
 
 #include <webots/Robot.hpp>
 
@@ -18,7 +18,7 @@ namespace managers {
 }
 
 namespace webots {
-  class Servo;
+  class Motor;
   class LED;
   class Camera;
   class Accelerometer;
@@ -38,7 +38,7 @@ namespace webots {
       void                             wait(int ms);
       bool                             getBallCenter(double &x, double &y);
       
-      Servo                           *mServos[NSERVOS];
+      Motor                           *mMotors[NMOTORS];
       LED                             *mEyeLED;
       LED                             *mHeadLED;
       LED                             *mBackLedRed;

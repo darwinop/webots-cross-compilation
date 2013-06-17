@@ -1,50 +1,50 @@
 /*
- * File:         Servos.hpp
+ * File:         Motors.hpp
  * Date:         January 2013
- * Description:  Abstraction of a servo
+ * Description:  Abstraction of a motor
  * Author:       david.mansolino@epfl.ch
  * Modifications:
  */
 
-#ifndef SERVO_HPP
-#define SERVO_HPP
+#ifndef MOTOR_HPP
+#define MOTOR_HPP
 
 #include "SingleValueSensor.hpp"
 #include "Device.hpp"
 
-class ServoR : public SingleValueSensor {
+class MotorR : public SingleValueSensor {
 public:
   // Device Manager is responsible to create/destroy devices
-  ServoR(WbDeviceTag tag, int index) :
+  MotorR(WbDeviceTag tag, int index) :
     SingleValueSensor(tag, index),
-    mServoRequested(false),
+    mMotorRequested(false),
     mPositionRequested(false),
     mVelocityRequested(false),
     mAccelerationRequested(false),
-    mMotorForceRequested(false),
+    mMotorAvailableTorqueRequested(false),
     mControlPRequested(false),
-    mForceRequested(false)
+    mTorqueRequested(false)
   {}
-  virtual ~ServoR() {}
+  virtual ~MotorR() {}
   
-  bool isServoRequested() const { return mServoRequested; }
-  void resetServoRequested() { mServoRequested = false; }
-  void setServoRequested() { mServoRequested = true; }
+  bool isMotorRequested() const { return mMotorRequested; }
+  void resetMotorRequested() { mMotorRequested = false; }
+  void setMotorRequested() { mMotorRequested = true; }
 
   // Actuators part
   void setPosition(double position) { mPosition = position; }
   void setVelocity(double vel) { mVelocity = vel; }
-  void setAcceleration(double force) { mAcceleration = force; }
-  void setMotorForce(double motor_force) { mMotorForce = motor_force; }
+  void setAcceleration(double acceleration) { mAcceleration = acceleration; }
+  void setAvailableTorque(double torque) { mMotorAvailableTorque = torque; }
   void setControlP(double p) { mControlP = p; }
-  void setForce(double force) { mForce = force; }
+  void setTorque(double torque) { mTorque = torque; }
   
   double position() { return mPosition; }
   double velocity() { return mVelocity; }
   double acceleration() { return mAcceleration; }
-  double motorForce() { return mMotorForce; }
+  double motorForce() { return mMotorAvailableTorque; }
   double controlP() { return mControlP; }
-  double force() { return mForce; }
+  double torque() { return mTorque; }
   
   bool isPositionRequested() const { return mPositionRequested; }
   void resetPositionRequested() { mPositionRequested = false; }
@@ -58,36 +58,36 @@ public:
   void resetAccelerationRequested() { mAccelerationRequested = false; }
   void setAccelerationRequested() { mAccelerationRequested = true; }
   
-  bool isMotorForceRequested() const { return mMotorForceRequested; }
-  void resetMotorForceRequested() { mMotorForceRequested = false; }
-  void setMotorForceRequested() { mMotorForceRequested = true; }
+  bool isMotorForceRequested() const { return mMotorAvailableTorqueRequested; }
+  void resetAvailableTorqueRequested() { mMotorAvailableTorqueRequested = false; }
+  void setAvailableTorqueRequested() { mMotorAvailableTorqueRequested = true; }
   
   bool isControlPRequested() const { return mControlPRequested; }
   void resetControlPRequested() { mControlPRequested = false; }
   void setControlPRequested() { mControlPRequested = true; }
   
-  bool isForceRequested() const { return mForceRequested; }
-  void resetForceRequested() { mForceRequested = false; }
-  void setForceRequested() { mForceRequested = true; }
+  bool isForceRequested() const { return mTorqueRequested; }
+  void resetTorqueRequested() { mTorqueRequested = false; }
+  void setTorqueRequested() { mTorqueRequested = true; }
 
 private:
 
-  bool mServoRequested;
+  bool mMotorRequested;
 
   // Actuators part
   double mPosition;
   double mVelocity;
   double mAcceleration;
-  double mMotorForce;
+  double mMotorAvailableTorque;
   double mControlP;
-  double mForce;
+  double mTorque;
   
   bool mPositionRequested;
   bool mVelocityRequested;
   bool mAccelerationRequested;
-  bool mMotorForceRequested;
+  bool mMotorAvailableTorqueRequested;
   bool mControlPRequested;
-  bool mForceRequested;
+  bool mTorqueRequested;
 };
 
 #endif

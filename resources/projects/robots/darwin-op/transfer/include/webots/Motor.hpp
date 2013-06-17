@@ -1,39 +1,39 @@
 /*******************************************************************************************************/
-/* File:         Servo.hpp                                                                             */
+/* File:         Motor.hpp                                                                             */
 /* Date:         Sep 11                                                                                */
-/* Description:  Wrapper of the Servo Webots API for the DARwIn-OP real robot                          */
+/* Description:  Wrapper of the Motor Webots API for the DARwIn-OP real robot                          */
 /* Author:       fabien.rohrer@cyberbotics.com                                                         */
 /* Copyright (c) 2011 Cyberbotics - www.cyberbotics.com                                                */
 /*******************************************************************************************************/
 
-#ifndef SERVO_HPP
-#define SERVO_HPP
+#ifndef MOTOR_HPP
+#define MOTOR_HPP
 
 #include <webots/Robot.hpp>
 #include <webots/Device.hpp>
 #include <map>
 
 namespace webots {
-  class Servo: public Device  {
+  class Motor: public Device  {
     public:
-      enum { WB_SERVO_ROTATIONAL = 0 };
-                    Servo(const std::string &name, const Robot *robot); //Use Robot::getServo() instead
-      virtual      ~Servo();
-      virtual void  setAcceleration(double force);
+      enum { ROTATIONAL = 0 };
+                    Motor(const std::string &name, const Robot *robot); //Use Robot::getMotor() instead
+      virtual      ~Motor();
+      virtual void  setAcceleration(double acceleration);
       virtual void  setVelocity(double vel);
       virtual void  enablePosition(int ms);
       virtual void  disablePosition();
-      virtual void  setForce(double force);
-      virtual void  setMotorForce(double motor_force);
+      virtual void  setTorque(double torque);
+      virtual void  setAvailableTorque(double availableTorque);
       virtual void  setControlP(double p);
-      virtual void  enableMotorForceFeedback(int ms);
-      virtual void  disableMotorForceFeedback();
-      double getMotorForceFeedback() const;
-      double getPosition() const;
-      double getTargetPosition();
-      double getMinPosition();
-      double getMaxPosition();
-      int           getSamplingPeriod();
+      virtual void  enableTorqueFeedback(int ms);
+      virtual void  disableTorqueFeedback();
+      double        getTorqueFeedback() const;
+      double        getPosition() const;
+      double        getTargetPosition();
+      double        getMinPosition();
+      double        getMaxPosition();
+      int           getPositionSamplingPeriod();
       int           getType() const;
       virtual void  setPosition(double position);
       
@@ -76,4 +76,4 @@ namespace webots {
   };
 }
 
-#endif //SERVO_HPP
+#endif //MOTOR_HPP

@@ -17,8 +17,6 @@
 
 #include <pthread.h>
 
-#define NSERVOS 20
-
 namespace Robot {
   class CM730;
   class LinuxCM730;
@@ -32,7 +30,7 @@ namespace webots {
   class Camera;
   class Gyro;
   class LED;
-  class Servo;
+  class Motor;
   class Speaker;
   
   class Robot {
@@ -70,7 +68,7 @@ namespace webots {
       Camera              *getCamera(const std::string &name) const;
       Gyro                *getGyro(const std::string &name) const;
       LED                 *getLED(const std::string &name) const;
-      Servo               *getServo(const std::string &name) const;
+      Motor               *getMotor(const std::string &name) const;
       Speaker             *getSpeaker(const std::string &name) const;
       virtual void         keyboardEnable(int ms);
       virtual void         keyboardDisable();

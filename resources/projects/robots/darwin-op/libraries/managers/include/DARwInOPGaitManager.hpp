@@ -14,7 +14,7 @@
 
 namespace webots {
   class Robot;
-  class Servo;
+  class Motor;
 }
 
 namespace Robot {
@@ -54,7 +54,7 @@ namespace managers {
 #ifndef CROSSCOMPILATION
       void             myStep();
       double           valueToPosition(unsigned short value);
-      webots::Servo   *mServos[DGM_NSERVOS];
+      webots::Motor   *mMotors[DGM_NSERVOS];
 #endif
   };
 }

@@ -16,7 +16,7 @@
 class Device;
 class CameraR;
 class Led;
-class ServoR;
+class MotorR;
 class SingleValueSensor;
 class TripleValuesSensor;
 
@@ -30,8 +30,8 @@ public:
 
   CameraR *camera() const { return mCamera; }
   Led *led(int at) const { return mLeds[at]; }
-  ServoR *servo(int at) const { return mServos[at]; }
-  SingleValueSensor *servoForceFeedback(int at) const { return mServosForceFeedback[at]; }
+  MotorR *motor(int at) const { return mMotors[at]; }
+  SingleValueSensor *motorForceFeedback(int at) const { return mMotorsForceFeedback[at]; }
   TripleValuesSensor *accelerometer() const { return mAccelerometer; }
   TripleValuesSensor *gyro() const { return mGyro; }
 
@@ -49,8 +49,8 @@ private:
 
   CameraR *mCamera;
   Led *mLeds[5];
-  ServoR *mServos[20];
-  SingleValueSensor *mServosForceFeedback[20];
+  MotorR *mMotors[20];
+  SingleValueSensor *mMotorsForceFeedback[20];
   TripleValuesSensor *mAccelerometer;
   TripleValuesSensor *mGyro;
 };

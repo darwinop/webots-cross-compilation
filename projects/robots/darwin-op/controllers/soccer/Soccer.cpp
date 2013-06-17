@@ -1,5 +1,5 @@
 #include "Soccer.hpp"
-#include <webots/Servo.hpp>
+#include <webots/Motor.hpp>
 #include <webots/LED.hpp>
 #include <webots/Camera.hpp>
 #include <webots/Accelerometer.hpp>
@@ -17,7 +17,7 @@ using namespace webots;
 using namespace managers;
 using namespace std;
 
-static const char *servoNames[NSERVOS] = {
+static const char *motorNames[NMOTORS] = {
   "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
   "ArmLowerR" /*ID5 */, "ArmLowerL" /*ID6 */, "PelvYR"    /*ID7 */, "PelvYL"    /*ID8 */,
   "PelvR"     /*ID9 */, "PelvL"     /*ID10*/, "LegUpperR" /*ID11*/, "LegUpperL" /*ID12*/,
@@ -43,9 +43,9 @@ Soccer::Soccer():
   mGyro = getGyro("Gyro");
   mGyro->enable(mTimeStep);
   
-  for (int i=0; i<NSERVOS; i++) {
-    mServos[i] = getServo(servoNames[i]);
-    mServos[i]->enablePosition(mTimeStep);
+  for (int i=0; i<NMOTORS; i++) {
+    mMotors[i] = getMotor(motorNames[i]);
+    mMotors[i]->enablePosition(mTimeStep);
   }
   
   mMotionManager = new DARwInOPMotionManager(this);
@@ -175,8 +175,8 @@ void Soccer::run() {
       mGaitManager->step(mTimeStep);
       
       // Move head
-      mServos[18]->setPosition(-x);
-      mServos[19]->setPosition(-y);
+      mMotors[18]->setPosition(-x);
+      mMotors[19]->setPosition(-y);
       
       // if the ball is close enough
       // kick the ball with the right foot
@@ -208,7 +208,7 @@ void Soccer::run() {
       mGaitManager->step(mTimeStep);
       
       // move the head vertically
-      mServos[19]->setPosition(0.7*sin(2.0*getTime()));
+      mMotors[19]->setPosition(0.7*sin(2.0*getTime()));
     }
     
     // step

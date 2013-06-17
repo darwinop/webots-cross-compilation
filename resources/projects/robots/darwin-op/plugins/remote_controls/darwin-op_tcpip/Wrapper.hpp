@@ -29,14 +29,14 @@ public:
 
   // redefined functions
   static void setRefreshRate(WbDeviceTag tag, int rate);
-  static void setMotorForceRefreshRate(WbDeviceTag tag, int rate);
+  static void setTorqueRefreshRate(WbDeviceTag tag, int rate);
   static void ledSet(WbDeviceTag tag, int state);
-  static void servoSetPosition(WbDeviceTag tag, double position);
-  static void servoSetVelocity(WbDeviceTag tag, double velocity);
-  static void servoSetAcceleration(WbDeviceTag tag, double acceleration);
-  static void servoSetMotorForce(WbDeviceTag tag, double force);
-  static void servoSetForce(WbDeviceTag tag, double force);
-  static void servoSetControlP(WbDeviceTag tag, double p); 
+  static void motorSetPosition(WbDeviceTag tag, double position);
+  static void motorSetVelocity(WbDeviceTag tag, double velocity);
+  static void motorSetAcceleration(WbDeviceTag tag, double acceleration);
+  static void motorSetAvailableTorque(WbDeviceTag tag, double torque);
+  static void motorSetTorque(WbDeviceTag tag, double torque);
+  static void motorSetControlP(WbDeviceTag tag, double p); 
 
   // unimplemented required functions
   static void cameraSetFOV(WbDeviceTag tag, double fov) {}

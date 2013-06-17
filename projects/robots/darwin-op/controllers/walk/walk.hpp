@@ -7,7 +7,7 @@
 #ifndef WALK_HPP
 #define WALK_HPP
 
-#define NSERVOS 20
+#define NMOTORS 20
 
 #include <webots/Robot.hpp>
 
@@ -17,7 +17,7 @@ namespace managers {
 }
 
 namespace webots {
-  class Servo;
+  class Motor;
   class LED;
   class Camera;
   class Accelerometer;
@@ -37,7 +37,7 @@ namespace webots {
       void                             myStep();
       void                             wait(int ms);
       
-      Servo                           *mServos[NSERVOS];
+      Motor                           *mMotors[NMOTORS];
       LED                             *mEyeLED;
       LED                             *mHeadLED;
       Accelerometer                   *mAccelerometer;

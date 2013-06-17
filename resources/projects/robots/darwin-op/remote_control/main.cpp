@@ -165,50 +165,50 @@ int main(int argc, char *argv[]) {
         }
       }
 
-      // Servos Actuator
+      // Motors Actuator
       for (c = 0; c < 20; c++) {
         if (receiveBuffer[receivePos] == 'S') {
-          int servoNumber = (int)receiveBuffer[receivePos+1];
+          int motorNumber = (int)receiveBuffer[receivePos+1];
           receivePos+= 2;
           if (receiveBuffer[receivePos] == 'p') { // Position
             int value = readINTFromBuffer(receiveBuffer + receivePos + 1);
-            remote->setRemoteServoPosition(servoNumber, value);
+            remote->setRemoteMotorPosition(motorNumber, value);
             receivePos += 5;
           }
           if (receiveBuffer[receivePos] == 'v') { // Velocity
             int value = readINTFromBuffer(receiveBuffer + receivePos + 1);
-            remote->setRemoteServoVelocity(servoNumber, value);
+            remote->setRemoteMotorVelocity(motorNumber, value);
             receivePos += 5;
           }
           if (receiveBuffer[receivePos] == 'a') { // Acceleration
             int value = readINTFromBuffer(receiveBuffer + receivePos + 1);
-            remote->setRemoteServoAcceleration(servoNumber, value);
+            remote->setRemoteMotorAcceleration(motorNumber, value);
             receivePos += 5;
           }
-          if (receiveBuffer[receivePos] == 'm') { // MotorForce
+          if (receiveBuffer[receivePos] == 'm') { // AvailableTorque
             int value = readINTFromBuffer(receiveBuffer + receivePos + 1);
-            remote->setRemoteServoMotorForce(servoNumber, value);
+            remote->setRemoteMotorAvailableTorque(motorNumber, value);
             receivePos += 5;
           }
           if (receiveBuffer[receivePos] == 'c') { // ControlP
             int value = readINTFromBuffer(receiveBuffer + receivePos + 1);
-            remote->setRemoteServoControlP(servoNumber, value);
+            remote->setRemoteMotorControlP(motorNumber, value);
             receivePos += 5;
           }
-          if (receiveBuffer[receivePos] == 'f') { // Force
+          if (receiveBuffer[receivePos] == 'f') { // Torque
             int value = readINTFromBuffer(receiveBuffer + receivePos + 1);
-            remote->setRemoteServoForce(servoNumber, value);
+            remote->setRemoteMotorTorque(motorNumber, value);
             receivePos += 5;
           }
         }
       }
       
-      // Servos sensors Position
+      // Motors sensors Position
       for (c = 0; c < 20; c++) {
         if (receiveBuffer[receivePos] == 'P') {
           if ((int)receiveBuffer[receivePos+1] < 20) {
-            double servoPosition = remote->getRemoteServoPosition((int)receiveBuffer[receivePos+1]);
-            writeINT2Buffer(sendBuffer + sendPos, (int)servoPosition);
+            double motorPosition = remote->getRemoteMotorPosition((int)receiveBuffer[receivePos+1]);
+            writeINT2Buffer(sendBuffer + sendPos, (int)motorPosition);
           }
           else
             writeINT2Buffer(sendBuffer + sendPos, 0);
@@ -217,12 +217,12 @@ int main(int argc, char *argv[]) {
         }
       }
 
-      // Servos sensors Force
+      // Motors sensors torque
       for (c = 0; c < 20; c++) {
         if (receiveBuffer[receivePos] == 'F') {
           if ((int)receiveBuffer[receivePos+1] < 20) {
-            double servoTorque = remote->getRemoteServoForce((int)receiveBuffer[receivePos+1]);
-            writeINT2Buffer(sendBuffer + sendPos, (int)servoTorque);
+            double motorTorque = remote->getRemoteMotorTorque((int)receiveBuffer[receivePos+1]);
+            writeINT2Buffer(sendBuffer + sendPos, (int)motorTorque);
           } else
             writeINT2Buffer(sendBuffer + sendPos, 0);
           sendPos += 4;
