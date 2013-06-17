@@ -1,4 +1,4 @@
-#include <webots/Servo.hpp>
+#include <webots/Motor.hpp>
 #include <webots/Robot.hpp>
 
 #include <JointData.h>
@@ -12,10 +12,10 @@
 using namespace webots;
 using namespace Robot;
 
-std::map<const std::string, int> Servo::mNamesToIDs;
-std::map<const std::string, int> Servo::mNamesToLimUp;
-std::map<const std::string, int> Servo::mNamesToLimDown;
-std::map<const std::string, int> Servo::mNamesToInitPos;
+std::map<const std::string, int> Motor::mNamesToIDs;
+std::map<const std::string, int> Motor::mNamesToLimUp;
+std::map<const std::string, int> Motor::mNamesToLimDown;
+std::map<const std::string, int> Motor::mNamesToInitPos;
 
 template <typename T> int sgn(T val) {
   if(val >= 0)
@@ -24,7 +24,7 @@ template <typename T> int sgn(T val) {
     return -1;
 }
 
-Servo::Servo(const std::string &name, const Robot *robot) :
+Motor::Motor(const std::string &name, const Robot *robot) :
   Device(name, robot)
 {
   initStaticMap();
@@ -41,10 +41,10 @@ Servo::Servo(const std::string &name, const Robot *robot) :
   mPresentLoad = 0;
 }
 
-Servo::~Servo() {
+Motor::~Motor() {
 }
 
-void Servo::initStaticMap() {
+void Motor::initStaticMap() {
   static bool firstCall=true;
   if (firstCall) {
     firstCall = false;
@@ -135,13 +135,13 @@ void Servo::initStaticMap() {
   }
 }
 
-void Servo::setAcceleration(double force){
-  mAcceleration = force;
-  if(force == -1)               // No Aceleration limitation -> restore previous Velocity limit
+void Motor::setAcceleration(double acceleration){
+  mAcceleration = acceleration;
+  if(acceleration == -1)               // No Aceleration limitation -> restore previous Velocity limit
     setVelocity(mMaxVelocity);
 }
 
-void Servo::setVelocity(double vel){
+void Motor::setVelocity(double vel){
   int value = fabs((vel*30/M_PI)/0.114);  // Need to be verified
   if(value > 1023)
     value = 1023;
@@ -152,42 +152,42 @@ void Servo::setVelocity(double vel){
     mMaxVelocity = vel;
 }
 
-void Servo::enablePosition(int ms){  //EMPTY
+void Motor::enablePosition(int ms){  //EMPTY
 }
 
-void Servo::disablePosition(){  //EMPTY
+void Motor::disablePosition(){  //EMPTY
 }
 
-void Servo::setForce(double force){
+void Motor::setTorque(double torque){
   CM730 *cm730 = getRobot()->getCM730();
-  if(force == 0)
+  if(torque == 0)
     cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);
   else{
 
-    this->setMotorForce(fabs(force));
+    this->setAvailableTorque(fabs(torque));
     int firm_ver = 0;
     if(cm730->ReadByte(JointData::ID_HEAD_PAN, MX28::P_VERSION, &firm_ver, 0) != CM730::SUCCESS)
       printf("Can't read firmware version from Dynamixel ID %d!\n", JointData::ID_HEAD_PAN);
     else if(27 <= firm_ver){
-      if(force > 0)
+      if(torque > 0)
         mGoalPosition = mNamesToLimDown[getName()];
       else
         mGoalPosition = mNamesToLimUp[getName()];
      }
      else
-       printf("Servo::setForce not available for this version of Dynamixel firmware, please update it.\n");
+       printf("Motor::setTorque not available for this version of Dynamixel firmware, please update it.\n");
   }
 }
 
-void Servo::setMotorForce(double motor_force){
+void Motor::setAvailableTorque(double availableTorque){
   CM730 *cm730 = getRobot()->getCM730();
-  if(motor_force > 2.5) {
+  if(availableTorque > 2.5) {
     mTorqueEnable = 1;
     mTorqueLimit = 1023;
   }
-  else if (motor_force  >  0) {
+  else if (availableTorque  >  0) {
     mTorqueEnable = 1;
-    mTorqueLimit = (motor_force/2.5) * 1023;
+    mTorqueLimit = (availableTorque/2.5) * 1023;
   }
   else {
     mTorqueLimit = 0;
@@ -195,12 +195,12 @@ void Servo::setMotorForce(double motor_force){
     cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);
   }
 
-  // don't override the servo alarm
+  // don't override the motor alarm
   if (mTorqueLimit <= 0)
     mTorqueLimit = 1;
 }
 
-void Servo::setControlP(double p){
+void Motor::setControlP(double p){
 
   if(p < 3)
     printf("WARNING : A small value of P can cause differences between simulation and reality.\n");
@@ -212,31 +212,31 @@ void Servo::setControlP(double p){
   }
 }
 
-void Servo::enableMotorForceFeedback(int ms){  //EMPTY
+void Motor::enableTorqueFeedback(int ms){  //EMPTY
 }
 
-void Servo::disableMotorForceFeedback(){  //EMPTY
+void Motor::disableTorqueFeedback(){  //EMPTY
 }
 
-double Servo::getMotorForceFeedback() const{
+double Motor::getTorqueFeedback() const{
 
-  double force = 0;
+  double torque = 0;
   if(mPresentLoad < 1024)
-    force = -2.5 * mPresentLoad / 1023.0;
+    torque = -2.5 * mPresentLoad / 1023.0;
   else
-    force = 2.5 * (mPresentLoad - 1023) / 1023.0;
+    torque = 2.5 * (mPresentLoad - 1023) / 1023.0;
 
-  return force;
+  return torque;
 }
 
-double Servo::getPosition() const{
+double Motor::getPosition() const{
 
   double position = 0;
   position = (MX28::Value2Angle(mPresentPosition)*M_PI) / 180;
   return position;
 }
 
-void Servo::setPosition(double position) {
+void Motor::setPosition(double position) {
 
   int value = MX28::Angle2Value(position*180.0/M_PI);
 
@@ -253,7 +253,7 @@ void Servo::setPosition(double position) {
   }
 }
 
-void Servo::updateSpeed(int ms) {
+void Motor::updateSpeed(int ms) {
   
   if(mAcceleration != -1) {
     double speed = getSpeed();
@@ -275,7 +275,7 @@ void Servo::updateSpeed(int ms) {
 }
     
 
-double Servo::getSpeed() const {
+double Motor::getSpeed() const {
 
   int value = 0;
   double speed = 0;
@@ -289,56 +289,55 @@ double Servo::getSpeed() const {
   return speed;
 }
 
-int Servo::getGoalPosition() {
+int Motor::getGoalPosition() {
   return mGoalPosition;
 }
 
-int Servo::getTorqueEnable() {
+int Motor::getTorqueEnable() {
   return mTorqueEnable;
 }
 
-int Servo::getPGain() {
+int Motor::getPGain() {
   return mPGain;
 }
 
-int Servo::getMovingSpeed() {
+int Motor::getMovingSpeed() {
   return mMovingSpeed;
 }
 
-int Servo::getTorqueLimit() {
+int Motor::getTorqueLimit() {
   return mTorqueLimit;
 }
 
-
-void Servo::setPresentPosition(int position) {
+void Motor::setPresentPosition(int position) {
   mPresentPosition = position;
 }
 
-void Servo::setPresentSpeed(int speed) {
+void Motor::setPresentSpeed(int speed) {
   mPresentSpeed = speed;
 }
 
-void Servo::setPresentLoad(int load) {
+void Motor::setPresentLoad(int load) {
   mPresentLoad = load;
 }
 
-int Servo::getSamplingPeriod() {
+int Motor::getPositionSamplingPeriod() {
   return getRobot()->getBasicTimeStep();
 }
 
-double Servo::getTargetPosition() {
+double Motor::getTargetPosition() {
   return mGoalPosition;
 }
 
-double Servo::getMinPosition() {
+double Motor::getMinPosition() {
   return (MX28::Value2Angle(mNamesToLimDown[getName()]) * (M_PI/180.0));
 }
 
-double Servo::getMaxPosition() {
+double Motor::getMaxPosition() {
   return (MX28::Value2Angle(mNamesToLimUp[getName()]) * (M_PI/180.0));
 }
 
-int Servo::getType() const {
-  return WB_SERVO_ROTATIONAL;
+int Motor::getType() const {
+  return ROTATIONAL;
 }
 

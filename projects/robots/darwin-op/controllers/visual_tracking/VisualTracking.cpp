@@ -1,5 +1,5 @@
 #include "VisualTracking.hpp"
-#include <webots/Servo.hpp>
+#include <webots/Motor.hpp>
 #include <webots/LED.hpp>
 #include <webots/Camera.hpp>
 #include <DARwInOPVisionManager.hpp>
@@ -13,7 +13,7 @@ using namespace webots;
 using namespace managers;
 using namespace std;
 
-static const char *servoNames[NSERVOS] = {
+static const char *motorNames[NMOTORS] = {
   "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
   "ArmLowerR" /*ID5 */, "ArmLowerL" /*ID6 */, "PelvYR"    /*ID7 */, "PelvYL"    /*ID8 */,
   "PelvR"     /*ID9 */, "PelvL"     /*ID10*/, "LegUpperR" /*ID11*/, "LegUpperL" /*ID12*/,
@@ -31,8 +31,8 @@ VisualTracking::VisualTracking():
   mCamera = getCamera("Camera");
   mCamera->enable(2*mTimeStep);
   
-  for (int i=0; i<NSERVOS; i++)
-    mServos[i] = getServo(servoNames[i]);
+  for (int i=0; i<NMOTORS; i++)
+    mMotors[i] = getMotor(motorNames[i]);
 
   
   mVisionManager = new DARwInOPVisionManager(mCamera->getWidth(), mCamera->getHeight(), 355, 15, 60, 15, 0.1, 30);
@@ -83,8 +83,8 @@ void VisualTracking::run() {
         vertical += 0.02;
     }
     
-    mServos[18]->setPosition(horizontal);
-    mServos[19]->setPosition(vertical);
+    mMotors[18]->setPosition(horizontal);
+    mMotors[19]->setPosition(vertical);
     
     // step
     myStep();

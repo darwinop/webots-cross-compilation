@@ -2,11 +2,11 @@
 #include "../nao_soccer_supervisor/RoboCupGameControlData.h"
 #include <webots/Accelerometer.hpp>
 #include <webots/Gyro.hpp>
-#include <webots/Servo.hpp>
+#include <webots/Motor.hpp>
 #include <webots/LED.hpp>
 #include <webots/Emitter.hpp>
 #include <webots/Receiver.hpp>
-#include <webots/Servo.hpp>
+#include <webots/Motor.hpp>
 #include <DARwInOPMotionManager.hpp>
 #include <DARwInOPGaitManager.hpp>
 
@@ -22,7 +22,7 @@ using namespace managers;
 
 const int Player::SIMULATION_STEP = 40;  // milliseconds
 
-static const char *servoNames[Player::NSERVOS] = {
+static const char *motorNames[Player::NMOTORS] = {
   "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
   "ArmLowerR" /*ID5 */, "ArmLowerL" /*ID6 */, "PelvYR"    /*ID7 */, "PelvYL"    /*ID8 */,
   "PelvR"     /*ID9 */, "PelvL"     /*ID10*/, "LegUpperR" /*ID11*/, "LegUpperL" /*ID12*/,
@@ -30,7 +30,7 @@ static const char *servoNames[Player::NSERVOS] = {
   "FootR"     /*ID17*/, "FootL"     /*ID18*/, "Neck"      /*ID19*/, "Head"      /*ID20*/
 };
 
-static double servoInitPositions[Player::NSERVOS];
+static double motorInitPositions[Player::NMOTORS];
 
 Player::Player(int playerID, int teamID) {
  
@@ -68,18 +68,18 @@ Player::Player(int playerID, int teamID) {
   // for sending 'move' request to Supervisor
   superEmitter = getEmitter("super_emitter");
 
-  // get servos
-  for (int i=0; i<NSERVOS; i++) {
-    servos[i] = getServo(servoNames[i]);
-    servos[i]->enablePosition(SIMULATION_STEP);
+  // get motors
+  for (int i=0; i<NMOTORS; i++) {
+    motors[i] = getMotor(motorNames[i]);
+    motors[i]->enablePosition(SIMULATION_STEP);
   }
 
-  while (isnan(servos[0]->getPosition()))
+  while (isnan(motors[0]->getPosition()))
     step(SIMULATION_STEP);
   
   // get the init positions
-  for (int i=0; i<NSERVOS; i++)
-    servoInitPositions[i] = servos[i]->getPosition();
+  for (int i=0; i<NMOTORS; i++)
+    motorInitPositions[i] = motors[i]->getPosition();
 }
 
 Player::~Player() {
@@ -195,11 +195,11 @@ void Player::sleepSteps(int steps) {
     step(SIMULATION_STEP);
 }
 
-// set all the servo position to 0 and
+// set all the motor position to 0 and
 // wait at lest wait_ms milliseconds
-void Player::resetAllServos(int wait_ms) {
-  for (int i=0; i<NSERVOS; i++)
-    servos[i]->setPosition(servoInitPositions[i]);
+void Player::resetAllMotors(int wait_ms) {
+  for (int i=0; i<NMOTORS; i++)
+    motors[i]->setPosition(motorInitPositions[i]);
 
   int steps_to_wait = wait_ms / SIMULATION_STEP;
   sleepSteps(steps_to_wait);

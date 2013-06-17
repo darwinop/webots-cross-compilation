@@ -7,7 +7,7 @@
 #include "DarwinOutputPacket.hpp"
 #include "DarwinInputPacket.hpp"
 #include "Led.hpp"
-#include "Servo.hpp"
+#include "Motor.hpp"
 #include "Sensor.hpp"
 #include "Time.hpp"
 
@@ -158,12 +158,12 @@ void Wrapper::setRefreshRate(WbDeviceTag tag, int rate) {
     cerr << "Wrapper::setRefreshRate: unknown device" << endl;
 }
 
-void Wrapper::setMotorForceRefreshRate(WbDeviceTag tag, int rate) {
+void Wrapper::setTorqueRefreshRate(WbDeviceTag tag, int rate) {
   Device *device = DeviceManager::instance()->findDeviceFromTag(tag);
-  SingleValueSensor *servoForceFeedback = DeviceManager::instance()->servoForceFeedback(device->index());
-  if (servoForceFeedback) {
-    servoForceFeedback->setLastRefreshTime(0);
-    servoForceFeedback->setRate(rate);
+  SingleValueSensor *motorForceFeedback = DeviceManager::instance()->motorForceFeedback(device->index());
+  if (motorForceFeedback) {
+    motorForceFeedback->setLastRefreshTime(0);
+    motorForceFeedback->setRate(rate);
   } else
     cerr << "Wrapper::setRefreshRate: unknown device" << endl;
 }
@@ -177,62 +177,62 @@ void Wrapper::ledSet(WbDeviceTag tag, int state) {
   }
 }
 
-void Wrapper::servoSetPosition(WbDeviceTag tag, double position) {
+void Wrapper::motorSetPosition(WbDeviceTag tag, double position) {
   Device *device = DeviceManager::instance()->findDeviceFromTag(tag);
-  ServoR *servo = dynamic_cast<ServoR *>(device);
-  if (servo) {
-    servo->setServoRequested();
-    servo->setPositionRequested();
-    servo->setPosition(position);
+  MotorR *motor = dynamic_cast<MotorR *>(device);
+  if (motor) {
+    motor->setMotorRequested();
+    motor->setPositionRequested();
+    motor->setPosition(position);
   }
 }
 
 
-void Wrapper::servoSetVelocity(WbDeviceTag tag, double velocity) {
+void Wrapper::motorSetVelocity(WbDeviceTag tag, double velocity) {
   Device *device = DeviceManager::instance()->findDeviceFromTag(tag);
-  ServoR *servo = dynamic_cast<ServoR *>(device);
-  if (servo) {
-    servo->setServoRequested();
-    servo->setVelocityRequested();
-    servo->setVelocity(velocity);
+  MotorR *motor = dynamic_cast<MotorR *>(device);
+  if (motor) {
+    motor->setMotorRequested();
+    motor->setVelocityRequested();
+    motor->setVelocity(velocity);
   }
 }
 
-void Wrapper::servoSetAcceleration(WbDeviceTag tag, double acceleration) {
+void Wrapper::motorSetAcceleration(WbDeviceTag tag, double acceleration) {
   Device *device = DeviceManager::instance()->findDeviceFromTag(tag);
-  ServoR *servo = dynamic_cast<ServoR *>(device);
-  if (servo) {
-    servo->setServoRequested();
-    servo->setAccelerationRequested();
-    servo->setAcceleration(acceleration);
+  MotorR *motor = dynamic_cast<MotorR *>(device);
+  if (motor) {
+    motor->setMotorRequested();
+    motor->setAccelerationRequested();
+    motor->setAcceleration(acceleration);
   }
 }
 
-void Wrapper::servoSetMotorForce(WbDeviceTag tag, double force) {
+void Wrapper::motorSetAvailableTorque(WbDeviceTag tag, double torque) {
   Device *device = DeviceManager::instance()->findDeviceFromTag(tag);
-  ServoR *servo = dynamic_cast<ServoR *>(device);
-  if (servo) {
-    servo->setServoRequested();
-    servo->setMotorForceRequested();
-    servo->setMotorForce(force);
+  MotorR *motor = dynamic_cast<MotorR *>(device);
+  if (motor) {
+    motor->setMotorRequested();
+    motor->setAvailableTorqueRequested();
+    motor->setAvailableTorque(torque);
   }
 }
 
-void Wrapper::servoSetForce(WbDeviceTag tag, double force) {
+void Wrapper::motorSetTorque(WbDeviceTag tag, double torque) {
   Device *device = DeviceManager::instance()->findDeviceFromTag(tag);
-  ServoR *servo = dynamic_cast<ServoR *>(device);
-  if (servo) {
-    servo->setServoRequested();
-    servo->setForceRequested();
-    servo->setForce(force);
+  MotorR *motor = dynamic_cast<MotorR *>(device);
+  if (motor) {
+    motor->setMotorRequested();
+    motor->setTorqueRequested();
+    motor->setTorque(torque);
   }
 }
-void Wrapper::servoSetControlP(WbDeviceTag tag, double p) {
+void Wrapper::motorSetControlP(WbDeviceTag tag, double p) {
   Device *device = DeviceManager::instance()->findDeviceFromTag(tag);
-  ServoR *servo = dynamic_cast<ServoR *>(device);
-  if (servo) {
-    servo->setServoRequested();
-    servo->setControlPRequested();
-    servo->setControlP(p);
+  MotorR *motor = dynamic_cast<MotorR *>(device);
+  if (motor) {
+    motor->setMotorRequested();
+    motor->setControlPRequested();
+    motor->setControlP(p);
   }
 }

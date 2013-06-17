@@ -27,8 +27,8 @@ public:
   bool isAccelerometerRequested() const { return mAccelerometerRequested; }
   bool isGyroRequested() const { return mGyroRequested; }
   bool isCameraRequested() const { return mCameraRequested; }
-  bool isServoPositionFeedback(int at) const { return mServoPositionFeedback[at]; }
-  bool isServoForceFeedback(int at) const { return mServoForceFeedback[at]; }
+  bool isMotorPositionFeedback(int at) const { return mMotorPositionFeedback[at]; }
+  bool isMotorForceFeedback(int at) const { return mMotorTorqueFeedback[at]; }
 
 private:
   int mAnswerSize;
@@ -36,8 +36,8 @@ private:
   bool mAccelerometerRequested;
   bool mGyroRequested;
   bool mCameraRequested;
-  bool mServoPositionFeedback[20];
-  bool mServoForceFeedback[20];
+  bool mMotorPositionFeedback[20];
+  bool mMotorTorqueFeedback[20];
 };
 
 #endif

@@ -4,7 +4,7 @@
 #include "Device.hpp"
 #include "DeviceManager.hpp"
 #include "Led.hpp"
-#include "Servo.hpp"
+#include "Motor.hpp"
 #include "Sensor.hpp"
 #include "TripleValuesSensor.hpp"
 #include "SingleValueSensor.hpp"
@@ -25,8 +25,8 @@ DarwinOutputPacket::DarwinOutputPacket() :
   mCameraRequested(false)
 { 
   for(int c=0; c<20; c++) {
-    mServoPositionFeedback[c] = false;
-    mServoForceFeedback[c] = false;
+    mMotorPositionFeedback[c] = false;
+    mMotorTorqueFeedback[c] = false;
   }
 }
 
@@ -43,8 +43,8 @@ void DarwinOutputPacket::clear() {
   mCameraRequested = false;
   
   for(int c=0; c<20; c++) {
-    mServoPositionFeedback[c] = false;
-    mServoForceFeedback[c] = false;
+    mMotorPositionFeedback[c] = false;
+    mMotorTorqueFeedback[c] = false;
   }
 }
 
@@ -103,75 +103,75 @@ void DarwinOutputPacket::apply(int simulationTime) {
     }
   }
   
-  // Servos management
+  // Motors management
   for (int i=0; i<20; i++) {
-    ServoR *servo = DeviceManager::instance()->servo(i);
-    if (servo->isServoRequested()) {
+    MotorR *motor = DeviceManager::instance()->motor(i);
+    if (motor->isMotorRequested()) {
       append(QByteArray(1, 'S'));
-      append(QByteArray(1, ((servo->index()) & 0xFF)));
+      append(QByteArray(1, ((motor->index()) & 0xFF)));
       
       // Position
-      if (servo->isPositionRequested()) {
+      if (motor->isPositionRequested()) {
         append(QByteArray(1, 'p'));
-        int value = (int)((servo->position() * 2048) / M_PI);
+        int value = (int)((motor->position() * 2048) / M_PI);
         appendINT(value);
-        servo->resetPositionRequested();
+        motor->resetPositionRequested();
       }
       // Velocity
-      if (servo->isVelocityRequested()) {
+      if (motor->isVelocityRequested()) {
         append(QByteArray(1, 'v'));
-        int value = (int)((servo->velocity() * 30) / (0.114 * M_PI));
+        int value = (int)((motor->velocity() * 30) / (0.114 * M_PI));
         appendINT(value);
-        servo->resetVelocityRequested();
+        motor->resetVelocityRequested();
       }
       // Acceleration
-      if (servo->isAccelerationRequested()) {
+      if (motor->isAccelerationRequested()) {
         append(QByteArray(1, 'a'));
-        int value = (int)(servo->acceleration() * 100000);
+        int value = (int)(motor->acceleration() * 100000);
         appendINT(value);
-        servo->resetAccelerationRequested();
+        motor->resetAccelerationRequested();
       }
       // MotorForce
-      if (servo->isMotorForceRequested()) {
+      if (motor->isMotorForceRequested()) {
         append(QByteArray(1, 'm'));
-        int value = (int)((servo->motorForce() * 1023) / 2.5);
+        int value = (int)((motor->motorForce() * 1023) / 2.5);
         appendINT(value);
-        servo->resetMotorForceRequested();
+        motor->resetAvailableTorqueRequested();
       }
       // ControlP
-      if (servo->isControlPRequested()) {
+      if (motor->isControlPRequested()) {
         append(QByteArray(1, 'c'));
-        int value = (int)(servo->controlP() * 1000);
+        int value = (int)(motor->controlP() * 1000);
         appendINT(value);
-        servo->resetControlPRequested();
+        motor->resetControlPRequested();
       }
       // Force
-      if (servo->isForceRequested()) {
+      if (motor->isForceRequested()) {
         append(QByteArray(1, 'f'));
-        int value = (int)((servo->force() * 1023) / 2.5);
+        int value = (int)((motor->torque() * 1023) / 2.5);
         appendINT(value);
-        servo->resetForceRequested();
+        motor->resetTorqueRequested();
       }
-      servo->resetServoRequested();
+      motor->resetMotorRequested();
     }
   }
 
   for (int i=0; i<20; i++) {
-    ServoR *servo = DeviceManager::instance()->servo(i);
-    if (servo->isSensorRequested()) {
-      mServoPositionFeedback[i] = true;
+    MotorR *motor = DeviceManager::instance()->motor(i);
+    if (motor->isSensorRequested()) {
+      mMotorPositionFeedback[i] = true;
       append(QByteArray(1, 'P'));
-      append(QByteArray(1, ((servo->index()) & 0xFF)));
+      append(QByteArray(1, ((motor->index()) & 0xFF)));
       mAnswerSize += 4;
     }
   }
   
   for (int i=0; i<20; i++) {
-    SingleValueSensor *servoForceFeedback = DeviceManager::instance()->servoForceFeedback(i);
-    if (servoForceFeedback->isSensorRequested()) {
-      mServoForceFeedback[i] = true;
+    SingleValueSensor *motorForceFeedback = DeviceManager::instance()->motorForceFeedback(i);
+    if (motorForceFeedback->isSensorRequested()) {
+      mMotorTorqueFeedback[i] = true;
       append(QByteArray(1, 'F'));
-      append(QByteArray(1, ((servoForceFeedback->index()) & 0xFF)));
+      append(QByteArray(1, ((motorForceFeedback->index()) & 0xFF)));
       mAnswerSize += 4;
     }
   }

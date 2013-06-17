@@ -19,7 +19,7 @@ DARWINOP_ROOT = /darwin
 TARGET = wrapper.a
 CXX_SOURCES = \
   ../src/Robot.cpp \
-  ../src/Servo.cpp \
+  ../src/Motor.cpp \
   ../src/LED.cpp \
   ../src/Accelerometer.cpp \
   ../src/Gyro.cpp \

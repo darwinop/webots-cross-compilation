@@ -6,12 +6,12 @@
 #ifndef REMOTE_HPP
 #define REMOTE_HPP
 
-#define NSERVOS 20
+#define NMOTORS 20
 
 #include <webots/Robot.hpp>
 
 namespace webots {
-  class Servo;
+  class Motor;
   class LED;
   class Camera;
   class Accelerometer;
@@ -26,14 +26,14 @@ namespace webots {
       const double *                   getRemoteGyro() const;
       const unsigned char *            getRemoteImage() const;
       void                             setRemoteLED(int index, int value); 
-      void                             setRemoteServoPosition(int index, int value);
-      void                             setRemoteServoVelocity(int index, int value);
-      void                             setRemoteServoAcceleration(int index, int value);
-      void                             setRemoteServoMotorForce(int index, int value);
-      void                             setRemoteServoForce(int index, int value);
-      void                             setRemoteServoControlP(int index, int value);
-      double                           getRemoteServoPosition(int index);
-      double                           getRemoteServoForce(int index);
+      void                             setRemoteMotorPosition(int index, int value);
+      void                             setRemoteMotorVelocity(int index, int value);
+      void                             setRemoteMotorAcceleration(int index, int value);
+      void                             setRemoteMotorAvailableTorque(int index, int value);
+      void                             setRemoteMotorTorque(int index, int value);
+      void                             setRemoteMotorControlP(int index, int value);
+      double                           getRemoteMotorPosition(int index);
+      double                           getRemoteMotorTorque(int index);
       double                           getRemoteTime() const;
 
     private:
@@ -42,7 +42,7 @@ namespace webots {
       void                             wait(int ms);
       void                             myStep();
       
-      Servo                           *mServos[NSERVOS];
+      Motor                           *mMotors[NMOTORS];
       LED                             *mEyeLed;
       LED                             *mHeadLed;
       LED                             *mBackLedRed;

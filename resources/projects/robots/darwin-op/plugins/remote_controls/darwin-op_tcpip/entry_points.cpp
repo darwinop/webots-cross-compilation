@@ -11,18 +11,18 @@ bool wbr_init(WbrInterface *ri) {
   ri->mandatory.wbr_stop_actuators = Wrapper::stopActuators;
 
   ri->wbr_set_refresh_rate = Wrapper::setRefreshRate;
-  ri->wbr_servo_set_motor_force_refresh_rate = Wrapper::setMotorForceRefreshRate;
+  ri->wbr_motor_set_torque_refresh_rate = Wrapper::setTorqueRefreshRate;
   
   ri->wbr_led_set = Wrapper::ledSet;
   
   ri->wbr_camera_set_fov = Wrapper::cameraSetFOV;
   
-  ri->wbr_servo_set_position = Wrapper::servoSetPosition;
-  ri->wbr_servo_set_velocity = Wrapper::servoSetVelocity;
-  ri->wbr_servo_set_acceleration = Wrapper::servoSetAcceleration;
-  ri->wbr_servo_set_motor_force = Wrapper::servoSetMotorForce;
-  ri->wbr_servo_set_force = Wrapper::servoSetForce;
-  ri->wbr_servo_set_control_p = Wrapper::servoSetControlP;
+  ri->wbr_motor_set_position = Wrapper::motorSetPosition;
+  ri->wbr_motor_set_velocity = Wrapper::motorSetVelocity;
+  ri->wbr_motor_set_acceleration = Wrapper::motorSetAcceleration;
+  ri->wbr_motor_set_available_torque = Wrapper::motorSetAvailableTorque;
+  ri->wbr_motor_set_torque = Wrapper::motorSetTorque;
+  ri->wbr_motor_set_control_p = Wrapper::motorSetControlP;
 
   return true;
 }

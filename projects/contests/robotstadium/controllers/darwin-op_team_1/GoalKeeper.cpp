@@ -13,7 +13,7 @@ void GoalKeeper::run() {
   step(SIMULATION_STEP);
 
   while (true) {
-    resetAllServos();
+    resetAllMotors();
     runStep();
   }
 }

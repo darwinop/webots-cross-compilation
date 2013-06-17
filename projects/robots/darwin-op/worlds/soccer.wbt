@@ -7,12 +7,12 @@ WorldInfo {
     "Date: May 2011"
   ]
   title "Robotis DARwIn-OP"
-  basicTimeStep 16
-  displayRefresh 2
+  basicTimeStep 16 
+  displayRefresh 2 
 }
 Viewpoint {
-  orientation 0.173742 -0.968733 -0.177116 4.65765
-  position 0.515177 0.604776 -0.420919
+  orientation 0.173742 -0.968733 -0.177116 4.65765 
+  position 0.515177 0.604776 -0.420919 
   follow "DARwIn-OP"
 }
 Background {
@@ -21,33 +21,33 @@ Background {
   ]
 }
 DirectionalLight {
-  ambientIntensity 1.6
-  direction -0.5 -2 -0.5
-  intensity 0.7
-  castShadows TRUE
+  ambientIntensity 1.6 
+  direction -0.5 -2 -0.5 
+  intensity 0.7 
+  castShadows TRUE 
 }
 DirectionalLight {
-  ambientIntensity 1.6
-  direction 0.5 -0.5 0.5
-  intensity 0.7
+  ambientIntensity 1.6 
+  direction 0.5 -0.5 0.5 
+  intensity 0.7 
 }
 SoccerField {
 }
 Walls {
 }
 DEF YELLOW_GOAL Goal {
-  translation 3 0 0
-  postColor 0.992157 0.854902 0.219608
+  translation 3 0 0 
+  postColor 0.992157 0.854902 0.219608 
 }
 DEF BLUE_GOAL Goal {
-  translation -3 0 0
-  rotation 0 1 0 3.14159
-  postColor 0.152941 0.505882 0.733333
+  translation -3 0 0 
+  rotation 0 1 0 3.14159 
+  postColor 0.152941 0.505882 0.733333 
 }
 DEF BALL Ball {
 }
 DARwInOP {
-  translation -0.413972 0.236 -0.396853
-  rotation 0.1023 0.9930 -0.0596 1.06235
+  translation -0.413972 0.236 -0.396853 
+  rotation 0.1023 0.9930 -0.0596 1.06235 
   controller "soccer"
 }

@@ -1,7 +1,7 @@
 #include "DARwInOPGaitManager.hpp"
 
 #include <webots/Robot.hpp>
-#include <webots/Servo.hpp>
+#include <webots/Motor.hpp>
 #include <webots/Gyro.hpp>
 #include <MX28.h>
 #include <Walking.h>
@@ -23,7 +23,7 @@ using namespace managers;
 using namespace webots;
 using namespace std;
 
-static const string servoNames[DGM_NSERVOS] = {
+static const string sotorNames[DGM_NSERVOS] = {
   "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
   "ArmLowerR" /*ID5 */, "ArmLowerL" /*ID6 */, "PelvYR"    /*ID7 */, "PelvYL"    /*ID8 */,
   "PelvR"     /*ID9 */, "PelvL"     /*ID10*/, "LegUpperR" /*ID11*/, "LegUpperL" /*ID12*/,
@@ -50,7 +50,7 @@ DARwInOPGaitManager::DARwInOPGaitManager(webots::Robot *robot, const std::string
 
 #ifndef CROSSCOMPILATION
   for (int i=0; i<DGM_NSERVOS; i++)
-    mServos[i] = mRobot->getServo(servoNames[i]);
+    mMotors[i] = mRobot->getMotor(sotorNames[i]);
 #endif
   
   minIni ini(iniFilename.c_str());
@@ -105,7 +105,7 @@ void DARwInOPGaitManager::step(int step) {
   }
 
   for (int i=0; i<(DGM_NSERVOS-2); i++)
-    mServos[i]->setPosition(valueToPosition(mWalking->m_Joint.GetValue(i+1)));
+    mMotors[i]->setPosition(valueToPosition(mWalking->m_Joint.GetValue(i+1)));
 #endif
 }
 
@@ -115,9 +115,9 @@ void DARwInOPGaitManager::stop() {
   while(mWalking->IsRunning())
     this->step(8);
 #ifdef CROSSCOMPILATION
-  // Reset Goal Position of all servos (except Head) after walking //
+  // Reset Goal Position of all motors (except Head) after walking //
   for(int i=0; i<(DGM_NSERVOS-2); i++)
-    mRobot->getServo(servoNames[i])->setPosition(MX28::Value2Angle(mWalking->m_Joint.GetValue(i+1))*(M_PI/180));
+    mRobot->getMotor(sotorNames[i])->setPosition(MX28::Value2Angle(mWalking->m_Joint.GetValue(i+1))*(M_PI/180));
   
   // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
   mWalking->m_Joint.SetEnableBodyWithoutHead(false, true);
