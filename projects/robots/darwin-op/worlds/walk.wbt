@@ -7,12 +7,12 @@ WorldInfo {
     "Date: May 2011"
   ]
   title "Robotis DARwIn-OP"
-  basicTimeStep 16
-  displayRefresh 2
+  basicTimeStep 16 
+  displayRefresh 2 
 }
 Viewpoint {
-  orientation -0.0569195 -0.992739 -0.105969 2.15554
-  position -1.45785 0.51179 -1.08934
+  orientation -0.0569195 -0.992739 -0.105969 2.15554 
+  position -1.45785 0.51179 -1.08934 
   follow "DARwIn-OP"
 }
 Background {
@@ -21,26 +21,26 @@ Background {
   ]
 }
 DirectionalLight {
-  ambientIntensity 1.6
-  direction -0.5 -2 -0.5
-  intensity 0.7
-  castShadows TRUE
+  ambientIntensity 1.6 
+  direction -0.5 -2 -0.5 
+  intensity 0.7 
+  castShadows TRUE 
 }
 DirectionalLight {
-  ambientIntensity 1.6
-  direction 0.5 -0.5 0.5
-  intensity 0.7
+  ambientIntensity 1.6 
+  direction 0.5 -0.5 0.5 
+  intensity 0.7 
 }
 DARwInOP {
-  translation -0.413972 0.236 -0.396853
-  rotation 0.102297 0.992967 -0.059598 1.06235
+  translation -0.413972 0.236 -0.396853 
+  rotation 0.102297 0.992967 -0.059598 1.06235 
   controller "walk"
-  selfCollision TRUE
-  cameraPixelSize 0
+  selfCollision TRUE 
+  cameraPixelSize 0 
 }
 Floor {
-  size 1000 1000
-  scale 500 500
+  size 1000 1000 
+  scale 500 500 
   texture [
     "textures/grass.png"
   ]

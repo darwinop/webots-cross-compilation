@@ -63,7 +63,7 @@ void FieldPlayer::run() {
 
   while (true) {
     if (gameControlData->state != STATE_PLAYING) {
-      resetAllServos();
+      resetAllMotors();
       wasWaiting = true;
       continue;
     }
@@ -125,8 +125,8 @@ void FieldPlayer::run() {
       gaitManager->step(SIMULATION_STEP);
       
       // Move head
-      servos[18]->setPosition(-x);
-      servos[19]->setPosition(-y);
+      motors[18]->setPosition(-x);
+      motors[19]->setPosition(-y);
       
       // if the ball is close enough
       // kick the ball with the right foot
@@ -151,8 +151,8 @@ void FieldPlayer::run() {
       gaitManager->step(SIMULATION_STEP);
       
       // move the head vertically
-      servos[18]->setPosition(0.0);
-      servos[19]->setPosition(-0.7*sin(2.0*getTime()));
+      motors[18]->setPosition(0.0);
+      motors[19]->setPosition(-0.7*sin(2.0*getTime()));
     }
     
     // step

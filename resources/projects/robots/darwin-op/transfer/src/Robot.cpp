@@ -3,7 +3,7 @@
 #include <webots/Camera.hpp>
 #include <webots/Gyro.hpp>
 #include <webots/LED.hpp>
-#include <webots/Servo.hpp>
+#include <webots/Motor.hpp>
 #include <webots/Device.hpp>
 #include <webots/Speaker.hpp>
 #include "LinuxDARwIn.h"
@@ -30,33 +30,33 @@ webots::Robot::Robot() {
   mCM730->MakeBulkReadPacketWb(); // Create the BulkReadPacket to read the actuators states in Robot::step
   
   // Unactive all Joints in the Motion Manager //
-  std::map<const std::string, int>::iterator servo_it;
-  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ ) {
-    ::Robot::MotionStatus::m_CurrentJoints.SetEnable((*servo_it).second, 0);
-    ::Robot::MotionStatus::m_CurrentJoints.SetValue((*servo_it).second, ((Servo *) mDevices[(*servo_it).first])->getGoalPosition());
+  std::map<const std::string, int>::iterator motor_it;
+  for(motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++ ) {
+    ::Robot::MotionStatus::m_CurrentJoints.SetEnable((*motor_it).second, 0);
+    ::Robot::MotionStatus::m_CurrentJoints.SetValue((*motor_it).second, ((Motor *) mDevices[(*motor_it).first])->getGoalPosition());
   }
 
 
-  // Make each servos go to the start position slowly
+  // Make each motors go to the start position slowly
   const int msgLength = 5; // id + Goal Position (L + H) + Moving speed (L + H)
-  int value=0, changed_servos=0, n=0;
+  int value=0, changed_motors=0, n=0;
   int param[20*msgLength];
   
-  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ ) {
-    Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
-    int servoId = (*servo_it).second;
-    if(servo->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(servoId))) {
-      param[n++] = servoId;  // id
-      value = servo->getGoalPosition(); // Start position
+  for(motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++ ) {
+    Motor *motor = static_cast <Motor *> (mDevices[(*motor_it).first]);
+    int motorId = (*motor_it).second;
+    if(motor->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(motorId))) {
+      param[n++] = motorId;  // id
+      value = motor->getGoalPosition(); // Start position
       param[n++] = ::Robot::CM730::GetLowByte(value);
       param[n++] = ::Robot::CM730::GetHighByte(value);
       value = 100; // small speed 100 => 11.4 rpm => 1.2 rad/s
       param[n++] = ::Robot::CM730::GetLowByte(value);
       param[n++] = ::Robot::CM730::GetHighByte(value);
-      changed_servos++;
+      changed_motors++;
     }
   }
-  mCM730->SyncWrite(::Robot::MX28::P_GOAL_POSITION_L, msgLength, changed_servos , param);
+  mCM730->SyncWrite(::Robot::MX28::P_GOAL_POSITION_L, msgLength, changed_motors , param);
   usleep(2000000); // wait a moment to reach start position
 
   // Switch LED to GREEN
@@ -70,29 +70,29 @@ webots::Robot::~Robot() {
 int webots::Robot::step(int ms) {
   double actualTime = getTime() * 1000;
   int stepDuration = actualTime - mPreviousStepTime;
-  std::map<const std::string, int>::iterator servo_it;
+  std::map<const std::string, int>::iterator motor_it;
   
-  // -------- Update speed of each servos, according to acceleration limit if set --------  //
-  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++  ) {
-    Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
-    servo->updateSpeed(stepDuration);
+  // -------- Update speed of each motors, according to acceleration limit if set --------  //
+  for(motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++  ) {
+    Motor *motor = static_cast <Motor *> (mDevices[(*motor_it).first]);
+    motor->updateSpeed(stepDuration);
   }
   
   // -------- Bulk Read to read the actuators states (position, speed and load) and body sensors -------- //
   if(!(::Robot::MotionManager::GetInstance()->GetEnable())) // If MotionManager is enable, no need to execute the BulkRead, the MotionManager has allready done it.
     mCM730->BulkRead();
 
-  // Servos
-  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++) {
-    Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
-    int servoId = (*servo_it).second;
-    servo->setPresentPosition( mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_PRESENT_POSITION_L));
-    servo->setPresentSpeed( mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_PRESENT_SPEED_L));
-    servo->setPresentLoad( mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_PRESENT_LOAD_L));
+  // Motors
+  for(motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++) {
+    Motor *motor = static_cast <Motor *> (mDevices[(*motor_it).first]);
+    int motorId = (*motor_it).second;
+    motor->setPresentPosition( mCM730->m_BulkReadData[motorId].ReadWord(::Robot::MX28::P_PRESENT_POSITION_L));
+    motor->setPresentSpeed( mCM730->m_BulkReadData[motorId].ReadWord(::Robot::MX28::P_PRESENT_SPEED_L));
+    motor->setPresentLoad( mCM730->m_BulkReadData[motorId].ReadWord(::Robot::MX28::P_PRESENT_LOAD_L));
 
-    int limit = mCM730->m_BulkReadData[servoId].ReadWord(::Robot::MX28::P_TORQUE_LIMIT_L);
+    int limit = mCM730->m_BulkReadData[motorId].ReadWord(::Robot::MX28::P_TORQUE_LIMIT_L);
     if (limit == 0) {
-      fprintf(stderr, "Alarm detected on id = %d\n", servoId);
+      fprintf(stderr, "Alarm detected on id = %d\n", motorId);
       exit(EXIT_FAILURE);
     }
   }
@@ -123,29 +123,29 @@ int webots::Robot::step(int ms) {
   
   int param[20*msgLength];
   int n=0;
-  int changed_servos=0;
+  int changed_motors=0;
   int value;
   
-  for(servo_it = Servo::mNamesToIDs.begin() ; servo_it != Servo::mNamesToIDs.end(); servo_it++ ) {
-    Servo *servo = static_cast <Servo *> (mDevices[(*servo_it).first]);
-    int servoId = (*servo_it).second;
-    if(servo->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(servoId))) {
-      param[n++] = servoId;
-      param[n++] = servo->getPGain();
+  for(motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++ ) {
+    Motor *motor = static_cast <Motor *> (mDevices[(*motor_it).first]);
+    int motorId = (*motor_it).second;
+    if(motor->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(motorId))) {
+      param[n++] = motorId;
+      param[n++] = motor->getPGain();
       param[n++] = 0; // Empty
-      value = servo->getGoalPosition();
+      value = motor->getGoalPosition();
       param[n++] = ::Robot::CM730::GetLowByte(value);
       param[n++] = ::Robot::CM730::GetHighByte(value);
-      value = servo->getMovingSpeed();
+      value = motor->getMovingSpeed();
       param[n++] = ::Robot::CM730::GetLowByte(value);
       param[n++] = ::Robot::CM730::GetHighByte(value);
-      value = servo->getTorqueLimit();
+      value = motor->getTorqueLimit();
       param[n++] = ::Robot::CM730::GetLowByte(value);
       param[n++] = ::Robot::CM730::GetHighByte(value);
-      changed_servos++;
+      changed_motors++;
     }
   }
-  mCM730->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_servos , param);
+  mCM730->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_motors , param);
 
   // -------- Keyboard Reset ----------- //
   if(mKeyboardEnable == true)
@@ -225,12 +225,12 @@ webots::Gyro *webots::Robot::getGyro(const std::string &name) const {
   return NULL;
 }
 
-webots::Servo *webots::Robot::getServo(const std::string &name) const {
+webots::Motor *webots::Robot::getMotor(const std::string &name) const {
   webots::Device *device = getDevice(name);
   if (device) {
-    webots::Servo *servo = dynamic_cast<webots::Servo *> (device);
-    if (servo)
-      return servo;
+    webots::Motor *motor = dynamic_cast<webots::Motor *> (device);
+    if (motor)
+      return motor;
   }
   return NULL;
 }
@@ -264,26 +264,26 @@ void webots::Robot::initDevices() {
   mDevices["BackLedRed"]    = new webots::LED          ("BackLedRed",    this);
   mDevices["BackLedGreen"]  = new webots::LED          ("BackLedGreen",  this);
   mDevices["BackLedBlue"]   = new webots::LED          ("BackLedBlue",   this);
-  mDevices["ShoulderR"]     = new webots::Servo        ("ShoulderR",     this);
-  mDevices["ShoulderL"]     = new webots::Servo        ("ShoulderL",     this);
-  mDevices["ArmUpperR"]     = new webots::Servo        ("ArmUpperR",     this);
-  mDevices["ArmUpperL"]     = new webots::Servo        ("ArmUpperL",     this);
-  mDevices["ArmLowerR"]     = new webots::Servo        ("ArmLowerR",     this);
-  mDevices["ArmLowerL"]     = new webots::Servo        ("ArmLowerL",     this);
-  mDevices["PelvYR"]        = new webots::Servo        ("PelvYR",        this);
-  mDevices["PelvYL"]        = new webots::Servo        ("PelvYL",        this);
-  mDevices["PelvR"]         = new webots::Servo        ("PelvR",         this);
-  mDevices["PelvL"]         = new webots::Servo        ("PelvL",         this);
-  mDevices["LegUpperR"]     = new webots::Servo        ("LegUpperR",     this);
-  mDevices["LegUpperL"]     = new webots::Servo        ("LegUpperL",     this);
-  mDevices["LegLowerR"]     = new webots::Servo        ("LegLowerR",     this);
-  mDevices["LegLowerL"]     = new webots::Servo        ("LegLowerL",     this);
-  mDevices["AnkleR"]        = new webots::Servo        ("AnkleR",        this);
-  mDevices["AnkleL"]        = new webots::Servo        ("AnkleL",        this);
-  mDevices["FootR"]         = new webots::Servo        ("FootR",         this);
-  mDevices["FootL"]         = new webots::Servo        ("FootL",         this);
-  mDevices["Neck"]          = new webots::Servo        ("Neck",          this);
-  mDevices["Head"]          = new webots::Servo        ("Head",          this);
+  mDevices["ShoulderR"]     = new webots::Motor        ("ShoulderR",     this);
+  mDevices["ShoulderL"]     = new webots::Motor        ("ShoulderL",     this);
+  mDevices["ArmUpperR"]     = new webots::Motor        ("ArmUpperR",     this);
+  mDevices["ArmUpperL"]     = new webots::Motor        ("ArmUpperL",     this);
+  mDevices["ArmLowerR"]     = new webots::Motor        ("ArmLowerR",     this);
+  mDevices["ArmLowerL"]     = new webots::Motor        ("ArmLowerL",     this);
+  mDevices["PelvYR"]        = new webots::Motor        ("PelvYR",        this);
+  mDevices["PelvYL"]        = new webots::Motor        ("PelvYL",        this);
+  mDevices["PelvR"]         = new webots::Motor        ("PelvR",         this);
+  mDevices["PelvL"]         = new webots::Motor        ("PelvL",         this);
+  mDevices["LegUpperR"]     = new webots::Motor        ("LegUpperR",     this);
+  mDevices["LegUpperL"]     = new webots::Motor        ("LegUpperL",     this);
+  mDevices["LegLowerR"]     = new webots::Motor        ("LegLowerR",     this);
+  mDevices["LegLowerL"]     = new webots::Motor        ("LegLowerL",     this);
+  mDevices["AnkleR"]        = new webots::Motor        ("AnkleR",        this);
+  mDevices["AnkleL"]        = new webots::Motor        ("AnkleL",        this);
+  mDevices["FootR"]         = new webots::Motor        ("FootR",         this);
+  mDevices["FootL"]         = new webots::Motor        ("FootL",         this);
+  mDevices["Neck"]          = new webots::Motor        ("Neck",          this);
+  mDevices["Head"]          = new webots::Motor        ("Head",          this);
   mDevices["Speaker"]       = new webots::Speaker      ("Speaker",       this);
 }
 

@@ -14,7 +14,7 @@
 
 namespace webots {
   class Robot;
-  class Servo;
+  class Motor;
 }
 
 namespace Robot {
@@ -46,7 +46,7 @@ namespace managers {
       double           valueToPosition(unsigned short value);
       void             InitMotionAsync();
 
-      webots::Servo   *mServos[DMM_NSERVOS];
+      webots::Motor   *mMotors[DMM_NSERVOS];
       double           mTargetPositions[DMM_NSERVOS];
       double           mCurrentPositions[DMM_NSERVOS];
       int              mRepeat;
