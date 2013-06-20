@@ -29,7 +29,7 @@ Remote::Remote():
   mAccelerometer = getAccelerometer("Accelerometer");
   mGyro = getGyro("Gyro");
   mCamera = getCamera("Camera");
-  //mCamera->enable(16);
+  mCamera->enable(16);
 
   mEyeLed = getLED("EyeLed");
   mHeadLed = getLED("HeadLed");
