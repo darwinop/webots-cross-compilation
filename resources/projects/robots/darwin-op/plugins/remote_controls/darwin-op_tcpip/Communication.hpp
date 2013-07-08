@@ -32,7 +32,7 @@ public:
 
 private:
   bool mInitialized;
-  QTcpSocket *socket; // Serveur socket
+  QTcpSocket *mSocket; // socket server
 
 };
 

@@ -29,7 +29,7 @@ public:
   int readIntAt(int pos);
   const unsigned char * getBufferFromPos(int pos);
 
-private:
+protected:
   int mMaxSize;
   QByteArray *mData;
 };

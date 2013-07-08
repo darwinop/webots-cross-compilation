@@ -52,7 +52,8 @@ void DarwinOutputPacket::apply(int simulationTime) {
 
   mAnswerSize = 1;
   append(QByteArray(1, 'W'));
-
+  append(QByteArray(1, 0)); // the total size of the packet
+  append(QByteArray(1, 0)); // will be stored here
   // ---
   // Sensors
   // ---
@@ -175,8 +176,12 @@ void DarwinOutputPacket::apply(int simulationTime) {
       mAnswerSize += 4;
     }
   }
-
   // This is require to end the packet
   // even if the size is correct
   append('\0');
+  int s = size();
+  char sc[2];
+  sc[0] = (unsigned char)(s%256);
+  sc[1] = (unsigned char)(s/256);
+  mData->replace(1,2,sc,2); // write the size of the packet
 }
