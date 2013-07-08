@@ -1,13 +1,13 @@
-#include "Transfer.hpp"
 #include "SSH.hpp"
+#include "Transfer.hpp"
 #include "ZIP.hpp"
 
 #include <webots/robot.h>
 #include <webots/camera.h>
 #include <core/StandardPaths.hpp>
 
-#include <QtGui/QtGui>
-#include <QtCore/QtCore>
+#include <QtConcurrent/QtConcurrent>
+
 #include <cassert>
 
 using namespace webotsQtUtils;
@@ -221,7 +221,8 @@ void Transfer::sendController() {
 void Transfer::remoteControl() {
   if (mStatus==DISCONNECTED) { // start the remote control
     showProgressBox(tr("Starting remote control..."),tr("Initializing"));
-    mFuture = QtConcurrent::run(mSSH,&SSH::startRemoteControl,mIPAddressLineEdit->text(),mUsernameLineEdit->text(),mPasswordLineEdit->text());
+    static QString ip = mIPAddressLineEdit->text();
+    mFuture = QtConcurrent::run(mSSH,&SSH::startRemoteControl,ip,mUsernameLineEdit->text(),mPasswordLineEdit->text());
     mFutureWatcher.setFuture(mFuture);
     mStatus = START_REMOTE_CONTROL;
   } else if (mStatus==RUN_REMOTE_CONTROL) { // stop the remote control

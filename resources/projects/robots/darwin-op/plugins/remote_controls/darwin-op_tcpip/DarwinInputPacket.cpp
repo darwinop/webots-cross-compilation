@@ -16,7 +16,11 @@
 #include <cstdlib>
 
 #include <QtCore/QtCore>
+#if QT_VERSION >= 0x050000
+#include <QtWidgets/QtWidgets>
+#else
 #include <QtGui/QtGui>
+#endif
 
 #include <core/StandardPaths.hpp>
 

@@ -153,7 +153,6 @@ void SSH::readChannel(bool display, int err) {
   char c[32];
   int i,n;
   int max = sizeof(c)-1;
-  
   for(;;) {
     n = ssh_channel_poll_timeout(mSSHChannel,500,err);
     if (n==0 || n==SSH_EOF || ssh_channel_is_eof(mSSHChannel) || mTerminate) break;
@@ -174,7 +173,6 @@ void SSH::readChannel(bool display, int err) {
 
 int SSH::executeSSHCommand(const QString &command,bool display,bool wait) {
   assert(mSSHSession);
-
   openSSHChannel();
   assert(mSSHChannel);
   QString cmd(command);
@@ -673,7 +671,6 @@ int SSH::startRemoteControl(const QString &IPAddress, const QString &username, c
   executeSSHCommand("/darwin/Linux/project/webots/remote_control/remote_control "
                     +QString::number(320/cameraWidth)+" "
                     +QString::number(240/cameraHeight),true,false); // wait until we terminate it
-  executeSSHCommand("killall -q remote_control");
   closeSFTPChannel();
   closeSSHSession();
   return 1;

@@ -11,6 +11,7 @@
 
 #include <QtGui/QtGui>
 #include <QtCore/QtCore>
+#include <QtWidgets/QtWidgets>
 
 #include <pthread.h>
 

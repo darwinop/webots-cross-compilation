@@ -37,12 +37,12 @@ endif
 CXX_SOURCES = entry_points.cpp Viewer.cpp Transfer.cpp SSH.cpp ZIP.cpp 
 HPP_FILES_TO_MOC = Transfer.hpp SSH.hpp
 
-USE_QT = true
+QT = core gui widgets concurrent
 USE_C_API = true
 
-QT_UTILS = $(WEBOTS_HOME_PATH)/resources/projects/default/libraries/qt_utils
-INCLUDE = -I"$(QT_UTILS)" -I"$(WEBOTS_HOME_PATH)/include/libssh" -I"$(WEBOTS_HOME_PATH)/include/libzip"
-LIBRARIES = -L"$(QT_UTILS)" -lqt_utils -L"$(WEBOTS_HOME_PATH)/lib" -lssh
+QT_UTILS = $(WEBOTS_HOME)/resources/projects/default/libraries/qt_utils
+INCLUDE = -I"$(QT_UTILS)" -I"$(WEBOTS_HOME)/include/libssh" -I"$(WEBOTS_HOME)/include/libzip"
+LIBRARIES = -L"$(QT_UTILS)" -lqt_utils -L"$(WEBOTS_HOME)/lib" -lssh
 
 ifeq ($(OSTYPE),windows)
 LIBRARIES += -lpthread -lzip-2
