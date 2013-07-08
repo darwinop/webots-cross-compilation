@@ -51,3 +51,7 @@ void wbw_show() {
     gViewer->showWindow();
 }
 
+unsigned long long wbw_get_id() {
+  if (gViewer) return gViewer->winId();
+  else return 0;
+}

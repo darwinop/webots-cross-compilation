@@ -21,7 +21,7 @@ using namespace std;
 Communication::Communication() :
   mInitialized(false)
 {
-  socket = new QTcpSocket();
+  mSocket = new QTcpSocket();
 }
 
 Communication::~Communication() {
@@ -29,8 +29,8 @@ Communication::~Communication() {
 }
 
 bool Communication::initialize(QString IP, int port) {
-  socket->abort(); // Close previous connection (if any)
-  socket->connectToHost(IP, port);
+  mSocket->abort(); // Close previous connection (if any)
+  mSocket->connectToHost(IP, port);
 
   // fixed timing issue:
   //   without this delay there are some situations where the connection
@@ -43,34 +43,34 @@ bool Communication::initialize(QString IP, int port) {
 #endif
 
   mInitialized = true;
-  if (socket->isOpen())
+  if (mSocket->isOpen())
     return true;
   else
     return false;
 }
 
 void Communication::cleanup() {
-  socket->abort();
+  mSocket->abort();
 }
 
 bool Communication::sendPacket(const Packet *packet) {
   
-  if(!(socket->isOpen())) {
+  if (!(mSocket->isOpen())) {
     cerr << "SOCKET NOT OPEN" << endl;
     return false;
   }
   
-  if(!(socket->isWritable())) {
+  if (!(mSocket->isWritable())) {
     cerr << "SOCKET NOT WRITABLE" << endl;
     return false;
   }
   
-  if(socket->write(packet->data()) == -1) {
+  if (mSocket->write(packet->data()) == -1) {
     cerr << "WRITING ERROR" << endl;
     return false;
   }
   
-  if(socket->waitForBytesWritten(-1) == -1) {
+  if (mSocket->waitForBytesWritten(-1) == -1) {
     cerr << "BYTES NOT WRITTEN" << endl;
     return false;
   }
@@ -81,28 +81,28 @@ bool Communication::sendPacket(const Packet *packet) {
 bool Communication::receivePacket(Packet *packet) {
 
   packet->clear();
-  
-  if(socket->waitForReadyRead(-1) == -1) {
+  if(mSocket->waitForReadyRead(-1) == -1) {
     cerr << "RECEIVING PACKET NOT READABLE" << endl;
     return false;
   }
 
-  socket->setReadBufferSize(0);
+  mSocket->setReadBufferSize(0);
 
-  while(socket->bytesAvailable() < 5) // Wait until at least W + packet size has been transmitted
-    {Time::wait(1);}
-  
+  // it may hang here if the remote_control process crashed...
+  while(mSocket->bytesAvailable() < 5) { // Wait until at least W + packet size has been transmitted
+    if (mSocket->state()!=QAbstractSocket::ConnectedState) return false; // broken connection
+    Time::wait(1);
+  }
   QByteArray startPacket;
-  startPacket = socket->readAll();
+  startPacket = mSocket->readAll();
   if(startPacket[0] != 'W')  // if packet do not start by 'W' -> skip this packet
     return receivePacket(packet);
   packet->append(startPacket);  // Read beginning of the packet
-    
   int packet_size = packet->readIntAt(1); // extract packet size from the beginning of the packet
-  
+
   while(packet->size() < packet_size) {
-    socket->waitForReadyRead(-1);
-    packet->append(socket->readAll()); 
+    mSocket->waitForReadyRead(-1);
+    packet->append(mSocket->readAll()); 
   }
 
   return true;
