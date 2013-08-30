@@ -63,8 +63,8 @@ void Symmetry::wait(int ms) {
 void Symmetry::run() {
   
 #ifdef CROSSCOMPILATION
-  getSpeaker("Speaker")->speak("Hello, my name is darwin OP.", "en", 120); // English version
-  // getSpeaker("Speaker")->speak("Bonjour, je m'appelle darwin OP.", "fr", 120); // French version
+  getSpeaker("Speaker")->speak("Hello, my name is darwin OP. Please move my right arm, and I will move the left one symmetrically.", "en", 120); // English version
+  //getSpeaker("Speaker")->speak("Bonjour, je m'appelle darwin OP. Bougez mon bras droit, et je bougerai le gauche symmetriquement.", "fr", 120); // French version
 #endif
   
   cout << "-------Symmetry example of DARwIn-OP-------" << endl;
