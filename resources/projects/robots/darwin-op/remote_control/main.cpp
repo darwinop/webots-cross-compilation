@@ -26,6 +26,13 @@ void writeINT2Buffer(char * buffer, int value);
 int readINTFromBuffer(char * buffer);
 
 int main(int argc, char *argv[]) {
+
+  // we need to set stdout and stderr non-buffered
+  // so that messages are actually displayed in the
+  // DARwIn-OP console of the robot window
+  setvbuf(stdout,NULL,_IONBF,0);
+  setvbuf(stderr,NULL,_IONBF,0);
+
   int cameraWidthZoomFactor = 1;
   int cameraHeightZoomFactor = 1;
 
@@ -50,9 +57,7 @@ int main(int argc, char *argv[]) {
   sock = socket(AF_INET, SOCK_STREAM, 0);
   
   // If  socket is valid
-  if (sock != INVALID_SOCKET) {
-    printf("The socket %d is now open in mode TCP/IP\n", sock);
-    
+  if (sock != INVALID_SOCKET) {    
     // Configuration
     sin.sin_addr.s_addr = htonl(INADDR_ANY);  // Adresse IP automatic
     sin.sin_family = AF_INET;                 // Protocole familial (IP)
@@ -68,15 +73,13 @@ int main(int argc, char *argv[]) {
     if(sock_err != SOCKET_ERROR) {
       // Starting port Listening (server mode)
       sock_err = listen(sock, 1); // only one connexion 
-      printf("Listening of port %d...\n", PORT);
 
       // If socket works
       if(sock_err != SOCKET_ERROR) {
         // Wait until a client connect
-        printf("Please wait until client connect to port  %d...\n", PORT);
-
+        printf("Waiting for client connection on port %d...\n", PORT);
         csock = accept(sock, (SOCKADDR*)&csin, &crecsize);
-        printf("Client is connecting with socket %d of %s:%d\n", csock, inet_ntoa(csin.sin_addr), htons(csin.sin_port));
+        printf("Client connected.\n");
       } else
         perror("listen");
     }
@@ -89,21 +92,33 @@ int main(int argc, char *argv[]) {
     const double *gyro;
     const unsigned char *image;
 
-    char receiveBuffer[1024] = "";
-    char sendBuffer[350000] = "";
+    char *receiveBuffer = (char *)malloc(1024);
+    char *sendBuffer = (char *)malloc(350000);
+    receiveBuffer[0]='\0';
+    sendBuffer[0]='\0';
 
     Image rgbImage((320/cameraWidthZoomFactor), (240/cameraHeightZoomFactor), Image::RGB_PIXEL_SIZE);
     unsigned char jpeg_buffer[rgbImage.m_ImageSize];
     
     int c = 0;
-
+    int n;
     while(1) {
       // Wait for message
-      do { // If message do not start by 'W' this is a wrong message, skip it
-        recv(csock, receiveBuffer, sizeof(receiveBuffer), 0);
-      } while (receiveBuffer[0] != 'W');
+      n=0;
+      do
+        n += recv(csock, &receiveBuffer[n], 1024-n, 0);
+      while(n<3);
+      if (receiveBuffer[0]!='W') {
+        printf("Error: wrong TCP message received\n");
+        continue;
+      }
+      int total = (unsigned char)receiveBuffer[1]+(unsigned char)receiveBuffer[2]*256;
+      while(n<total)
+        n += recv(csock, &receiveBuffer[n], 1024-n, 0);
 
-      int receivePos = 1, sendPos = 5;
+      receiveBuffer[total]=0; // set the final 0
+
+      int receivePos = 3, sendPos = 5;
 
       // Accelerometer
       if (receiveBuffer[receivePos] == 'A') {
@@ -229,12 +244,17 @@ int main(int argc, char *argv[]) {
           receivePos += 2;
         }
       }
+      if (receiveBuffer[receivePos]!=0)
+        printf("Error: received unknown message: %c\n",receiveBuffer[receivePos]);
 
       // Terminate the buffer and send it
       sendBuffer[0] = 'W';
       writeINT2Buffer(sendBuffer+1, sendPos); // Write size of buffer at the beginning
-      sendBuffer[sendPos] = '\0';
-      send(csock, sendBuffer, sendPos+1, 0);
+      sendBuffer[sendPos++] = '\0';
+      n=0;
+      do
+        n += send(csock, &sendBuffer[n], sendPos-n, 0);
+      while (n!=sendPos);
       remote->remoteStep();
     }
 
@@ -243,10 +263,11 @@ int main(int argc, char *argv[]) {
     closesocket(csock);
     printf("Closing server socket\n");
     closesocket(sock);
+    free(receiveBuffer);
+    free(sendBuffer);
   }
   else
     perror("socket");
-
   return EXIT_SUCCESS;
 }
 

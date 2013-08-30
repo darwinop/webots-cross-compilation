@@ -8,7 +8,6 @@ WorldInfo {
   ]
   title "Robotis DARwIn-OP"
   basicTimeStep 16 
-  displayRefresh 2 
 }
 Viewpoint {
   orientation -0.0569195 -0.992739 -0.105969 2.15554 

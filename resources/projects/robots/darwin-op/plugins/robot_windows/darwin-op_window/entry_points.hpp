@@ -17,7 +17,6 @@ extern "C" {
   void wbw_read_sensors();
   void wbw_write_actuators();
   void wbw_show();
-  unsigned long long wbw_get_id();
 }
 
 #endif

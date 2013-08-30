@@ -67,9 +67,7 @@ Transfer::Transfer(QWidget *parent): QScrollArea(parent) {
   iconPath = StandardPaths::getWebotsHomePath() + QString("resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/stop.png");
   mStopControllerIcon = new QIcon(QPixmap((char*)iconPath.toStdString().c_str()));
   mSendControllerButton = new QPushButton(this);
-  mSendControllerButton->setIcon(*mSendControllerIcon);
   mSendControllerButton->setIconSize(QSize(64,64));
-  mSendControllerButton->setToolTip(tr("Send the controller curently used in simulation on the real robot and play it"));
   mActionGridLayout->addWidget(mSendControllerButton, 0, 0, 1, 1);
 
   // Make default controller
@@ -83,9 +81,7 @@ Transfer::Transfer(QWidget *parent): QScrollArea(parent) {
   iconPath = StandardPaths::getWebotsHomePath() + QString("resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/remote.png");
   mRemoteControlIcon = new QIcon(QPixmap((char*)iconPath.toStdString().c_str()));
   mRemoteControlButton = new QPushButton(this);
-  mRemoteControlButton->setIcon(*mRemoteControlIcon);
   mRemoteControlButton->setIconSize(QSize(64,64));
-  mRemoteControlButton->setToolTip(tr("Start remote control"));
   mActionGridLayout->addWidget(mRemoteControlButton, 0, 1, 1, 1);
 
   // Wrapper
@@ -105,8 +101,7 @@ Transfer::Transfer(QWidget *parent): QScrollArea(parent) {
   mOutputGroupBox = new QGroupBox(tr("DARwIn-OP console"), this);
 
   // Status label and progress bar
-  mStatus = DISCONNECTED;
-  mStatusLabel = new QLabel(tr("Status: Disconnected"), this);
+  mStatusLabel = new QLabel(this);
   mOutputGridLayout->addWidget(mStatusLabel, 1, 0, 1, 1);
   mProgressBar = new QProgressBar(this);
   mProgressBar->setValue(0);
@@ -143,6 +138,8 @@ Transfer::Transfer(QWidget *parent): QScrollArea(parent) {
   mSSH->connect(mSSH,SIGNAL(status(const QString &)),this,SLOT(status(const QString &)),Qt::QueuedConnection);
   mSSH->connect(mSSH,SIGNAL(done()),this,SLOT(SSHSessionDone()));
   connect(&mFutureWatcher, SIGNAL(finished()),this, SLOT(SSHSessionComplete()));
+  
+  enableButtons();
 }
 
 Transfer::~Transfer() {
@@ -151,7 +148,7 @@ Transfer::~Transfer() {
 
 void Transfer::showProgressBox(const QString &title, const QString &message) {
   disableButtons();
-  mRemoteProgressDialog = new QProgressDialog(title, QString(), 0, 100, this, Qt::Dialog | Qt::FramelessWindowHint | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+  mRemoteProgressDialog = new QProgressDialog(title, QString(), 0, 100, this, Qt::Dialog | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
   mRemoteProgressDialog->setWindowTitle(title);
   mRemoteProgressDialog->setLabelText(tr("%1...").arg(message) + "\n\n"+tr("Please wait, it can take a few seconds."));
   mRemoteProgressBar = new QProgressBar(mRemoteProgressDialog);
@@ -284,7 +281,6 @@ void Transfer::finishStartRemoteControl() {
 void Transfer::finish() {
   delete mRemoteProgressDialog;
   mRemoteProgressDialog = NULL;
-  mStatus = DISCONNECTED;
   enableButtons();
 }
 
@@ -312,8 +308,6 @@ void Transfer::SSHSessionComplete() {
     msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
     msgBox.exec();
     enableButtons();
-    mStatusLabel->setText(tr("Status: Disconnected"));
-    mStatus = DISCONNECTED;
   } else {
     saveSettings(); // connection was successful, so we want to save the network settings
     switch(mStatus) {
@@ -390,11 +384,15 @@ void Transfer::loadSettings() {
 
 void Transfer::enableButtons() {
   mSendControllerButton->setIcon(*mSendControllerIcon);
+  mSendControllerButton->setToolTip(tr("Send the controller curently used in simulation on the real robot and play it"));
   mRemoteControlButton->setIcon(*mRemoteControlIcon);
+  mRemoteControlButton->setToolTip(tr("Start remote control"));
   mUninstallButton->setEnabled(true);
   mSendControllerButton->setEnabled(true);
   mMakeDefaultControllerCheckBox->setEnabled(true);
   mRemoteControlButton->setEnabled(true);
+  mStatusLabel->setText(tr("Status: Disconnected"));
+  mStatus = DISCONNECTED;
 }
 
 void Transfer::disableButtons() {
