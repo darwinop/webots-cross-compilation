@@ -638,7 +638,7 @@ int SSH::startRemoteCompilation(const QString &IPAddress, const QString &usernam
         executeSSHCommand("mv /darwin/Linux/project/webots/controllers/" + controller + "/" + controller + " /darwin/Linux/project/webots/controllers/" + controller + "/controller");
         executeSSHCommand("echo -e \'#!/bin/bash\\nexport DISPLAY=:0\\n/darwin/Linux/project/webots/controllers/"+controller+"/controller\\n\' > /darwin/Linux/project/webots/controllers/"+controller+"/"+controller);
         executeSSHCommand("chmod a+x /darwin/Linux/project/webots/controllers/"+controller+"/"+controller);
-        executeSSHCommand("/darwin/Linux/project/webots/controllers/"+controller+"/"+controller,true,false); // wait until we terminate it
+        executeSSHCommand("echo "+password+" | sudo -S /darwin/Linux/project/webots/controllers/"+controller+"/"+controller,true,false); // wait until we terminate it
         executeSSHCommand("killall -q controller");
         executeSSHCommand("rm -r /darwin/Linux/project/webots/controllers/*");
       } else { // controller do not exist
@@ -668,7 +668,7 @@ int SSH::startRemoteControl(const QString &IPAddress, const QString &username, c
     closeSSHSession();
     return -1;
   }
-  executeSSHCommand("/darwin/Linux/project/webots/remote_control/remote_control "
+  executeSSHCommand("echo "+password+" | sudo -S /darwin/Linux/project/webots/remote_control/remote_control "
                     +QString::number(320/cameraWidth)+" "
                     +QString::number(240/cameraHeight),true,false); // wait until we terminate it
   closeSFTPChannel();

@@ -37,12 +37,12 @@ void wbw_update_gui() {
 }
 
 void wbw_read_sensors() {
-  if (gViewer)
+  if (gViewer && gViewer->isVisible())
     gViewer->readSensors();
 }
 
 void wbw_write_actuators() {
-  if (gViewer)
+  if (gViewer && gViewer->isVisible())
     gViewer->writeActuators();
 }
 
@@ -51,7 +51,3 @@ void wbw_show() {
     gViewer->showWindow();
 }
 
-unsigned long long wbw_get_id() {
-  if (gViewer) return gViewer->winId();
-  else return 0;
-}
