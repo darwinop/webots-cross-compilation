@@ -76,7 +76,6 @@ namespace Robot
 		FILE* m_ActionFile;
 		PAGE m_PlayPage;
 		PAGE m_NextPlayPage;
-		STEP m_CurrentStep;
 
 		int m_IndexPlayingPage;
 		bool m_FirstDrivingStart;

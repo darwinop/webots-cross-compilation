@@ -36,7 +36,8 @@ public:
   static void motorSetAcceleration(WbDeviceTag tag, double acceleration);
   static void motorSetAvailableTorque(WbDeviceTag tag, double torque);
   static void motorSetTorque(WbDeviceTag tag, double torque);
-  static void motorSetControlP(WbDeviceTag tag, double p); 
+  static void motorSetControlP(WbDeviceTag tag, double p);
+  static void motorSetControlPID(WbDeviceTag tag, double p, double i, double d); 
 
   // unimplemented required functions
   static void cameraSetFOV(WbDeviceTag tag, double fov) {}

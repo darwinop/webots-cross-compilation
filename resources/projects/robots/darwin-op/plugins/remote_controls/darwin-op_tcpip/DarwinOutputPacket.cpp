@@ -139,7 +139,15 @@ void DarwinOutputPacket::apply(int simulationTime) {
         appendINT(value);
         motor->resetAvailableTorqueRequested();
       }
-      // ControlP
+      // ControlPID
+      if (motor->isControlPIDRequested()) {
+        append(QByteArray(1, 'c'));
+        int value = (int)(motor->controlP() * 1000);
+        appendINT(value);
+        // I and D gains are not transmitted as the robot currently doesn't support it
+        motor->resetControlPIDRequested();
+      }
+      // ControlP (legacy)
       if (motor->isControlPRequested()) {
         append(QByteArray(1, 'c'));
         int value = (int)(motor->controlP() * 1000);
@@ -176,9 +184,9 @@ void DarwinOutputPacket::apply(int simulationTime) {
       mAnswerSize += 4;
     }
   }
-  // This is require to end the packet
+  // This is required to end the packet
   // even if the size is correct
-  append('\0');
+  append(QByteArray(1, '\0'));
   int s = size();
   char sc[2];
   sc[0] = (unsigned char)(s%256);
