@@ -233,6 +233,16 @@ void Wrapper::motorSetControlP(WbDeviceTag tag, double p) {
   if (motor) {
     motor->setMotorRequested();
     motor->setControlPRequested();
-    motor->setControlP(p);
+    motor->setControlPID(p, 0.0, 0.0);
+  }
+}
+
+void Wrapper::motorSetControlPID(WbDeviceTag tag, double p, double i, double d) {
+  Device *device = DeviceManager::instance()->findDeviceFromTag(tag);
+  MotorR *motor = dynamic_cast<MotorR *>(device);
+  if (motor) {
+    motor->setMotorRequested();
+    motor->setControlPIDRequested();
+    motor->setControlPID(p, i, d);
   }
 }

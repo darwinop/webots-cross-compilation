@@ -32,7 +32,7 @@ VisualTracking::VisualTracking(): Robot() {
   for (int i=0; i<NMOTORS; i++)
     mMotors[i] = getMotor(motorNames[i]);
   
-  mVisionManager = new DARwInOPVisionManager(mCamera->getWidth(), mCamera->getHeight(), 355, 15, 60, 15, 0.1, 30);
+  mVisionManager = new DARwInOPVisionManager(mCamera->getWidth(), mCamera->getHeight(), 355, 15, 60, 15, 0, 30);
 }
 
 VisualTracking::~VisualTracking() {
@@ -53,7 +53,7 @@ void VisualTracking::run() {
 
   cout << "---------------Visual Tracking---------------" << endl;
   cout << "This example illustrates the possibilities of Vision Manager." << endl;
-  cout << "Move the red ball by holding ctrl + shift keys and select it (left mouse click)." << endl;
+  cout << "Move the red ball by dragging the mouse while keeping both shift key and mouse button pressed." << endl;
 	
   // First step to update sensors values
   myStep();
