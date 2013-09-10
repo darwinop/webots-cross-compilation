@@ -38,8 +38,6 @@ namespace webots {
       void                             wait(int ms);
       
       Motor                           *mMotors[NMOTORS];
-      LED                             *mEyeLED;
-      LED                             *mHeadLED;
       Accelerometer                   *mAccelerometer;
       
       managers::DARwInOPMotionManager *mMotionManager;

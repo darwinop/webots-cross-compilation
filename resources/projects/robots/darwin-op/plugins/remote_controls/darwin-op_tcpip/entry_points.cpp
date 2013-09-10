@@ -22,7 +22,7 @@ bool wbr_init(WbrInterface *ri) {
   ri->wbr_motor_set_acceleration = Wrapper::motorSetAcceleration;
   ri->wbr_motor_set_available_torque = Wrapper::motorSetAvailableTorque;
   ri->wbr_motor_set_torque = Wrapper::motorSetTorque;
-  ri->wbr_motor_set_control_p = Wrapper::motorSetControlP;
+  ri->wbr_motor_set_control_pid = Wrapper::motorSetControlPID;
 
   return true;
 }

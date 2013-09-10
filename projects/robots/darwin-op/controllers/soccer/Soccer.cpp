@@ -50,7 +50,7 @@ Soccer::Soccer():
   
   mMotionManager = new DARwInOPMotionManager(this);
   mGaitManager = new DARwInOPGaitManager(this, "config.ini");
-  mVisionManager = new DARwInOPVisionManager(mCamera->getWidth(), mCamera->getHeight(), 28, 20, 50, 45, 0.01, 30);
+  mVisionManager = new DARwInOPVisionManager(mCamera->getWidth(), mCamera->getHeight(), 28, 20, 50, 45, 0, 30);
 }
 
 Soccer::~Soccer() {
