@@ -22,24 +22,33 @@ namespace webots {
 
                     Motor(const std::string &name, const Robot *robot); //Use Robot::getMotor() instead
       virtual      ~Motor();
-      virtual void  setAcceleration(double acceleration);
+
+      virtual void  setPosition(double position);
+      double        getTargetposition() const;
       virtual void  setVelocity(double vel);
+      virtual void  setAcceleration(double acceleration);
+      virtual void  setAvailableTorque(double availableTorque);
+      // virtual void setControlPID(double p, double i, double d); // TODO: to implement
+      virtual void  setControlP(double p); // TODO: to remove
+      double        getMinPosition() const;
+      double        getMaxPosition() const;
+
       virtual void  enablePosition(int ms);
       virtual void  disablePosition();
-      virtual void  setTorque(double torque);
-      virtual void  setAvailableTorque(double availableTorque);
-      virtual void  setControlP(double p);
+      int           getPositionSamplingPeriod() const;
+      double        getPosition() const;
+
+      // note: *Force* functions are not implemented because DARwIn-OP is controlled in torques
       virtual void  enableTorqueFeedback(int ms);
       virtual void  disableTorqueFeedback();
+      // int getTorqueFeedbackSamplingPeriod() const; // TODO: to implement
       double        getTorqueFeedback() const;
-      double        getPosition() const;
-      double        getTargetPosition();
-      double        getMinPosition();
-      double        getMaxPosition();
-      int           getPositionSamplingPeriod();
+
+      virtual void  setTorque(double torque);
+
       int           getType() const;
-      virtual void  setPosition(double position);
-      
+
+      // functions not implemented in the regular Webots API
       void          updateSpeed(int ms);
 
     private:
@@ -50,15 +59,16 @@ namespace webots {
       static std::map<const std::string, int> mNamesToLimDown;
       static std::map<const std::string, int> mNamesToInitPos;
 
-      int getGoalPosition();
-      int getTorqueEnable();
-      int getPGain();
-      int getMovingSpeed();
-      int getTorqueLimit();
-      double getSpeed() const;
-      void setPresentPosition(int position);
-      void setPresentSpeed(int speed);
-      void setPresentLoad(int load);
+      int           getGoalPosition() const;
+      int           getTorqueEnable() const;
+      int           getPGain() const;
+      int           getMovingSpeed() const;
+      int           getTorqueLimit() const;
+      double        getSpeed() const;
+
+      void          setPresentPosition(int position);
+      void          setPresentSpeed(int speed);
+      void          setPresentLoad(int load);
     
       // For acceleration module //
       double        mAcceleration;

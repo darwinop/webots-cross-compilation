@@ -17,18 +17,18 @@ namespace webots {
   class Device {
     public:
       virtual           ~Device() {}
-      const std::string &getName() const { return name; }
+      const std::string &getName() const { return mName; }
 
     protected:
                          Device(const std::string &n, const Robot *r) :
-                           name(n),
-                          robot(r) {}
+                           mName(n),
+                           mRobot(r) {}
 
-      const Robot       *getRobot() const { return robot; }
+      const Robot       *getRobot() const { return mRobot; }
 
     private:
-      std::string        name;
-      const Robot       *robot;
+      std::string        mName;
+      const Robot       *mRobot;
   };
 }
 

@@ -28,6 +28,6 @@ void Gyro::setValues(const int *integerValues) {
     mValues[i] = integerValues[i];
 }
 
-int Gyro::getSamplingPeriod() {
+int Gyro::getSamplingPeriod() const {
   return getRobot()->getBasicTimeStep();
 }

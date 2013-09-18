@@ -20,7 +20,7 @@ namespace webots {
                                               LED(const std::string &name, const Robot *robot); //Use Robot::getLED() instead
       virtual                                ~LED();
       virtual void                            set(int value);
-      virtual int                             get();
+      int                                     get() const;
 
     private:
       static void                             initStaticMap();

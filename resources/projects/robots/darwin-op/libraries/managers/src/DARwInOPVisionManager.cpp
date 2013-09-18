@@ -6,13 +6,13 @@ using namespace std;
 
 
 DARwInOPVisionManager::DARwInOPVisionManager(int width, int height, int hue, int hueTolerance, int minSaturation, int minValue, int minPercent, int maxPercent) {
-  mfinder = new ColorFinder(hue, hueTolerance, minSaturation, minValue, minPercent, maxPercent);
-  mbuffer = new FrameBuffer(width, height);
+  mFinder = new ColorFinder(hue, hueTolerance, minSaturation, minValue, minPercent, maxPercent);
+  mBuffer = new FrameBuffer(width, height);
 }
 
 DARwInOPVisionManager::~DARwInOPVisionManager() {
-  delete mfinder;
-  delete mbuffer;
+  delete mFinder;
+  delete mBuffer;
 }
 
 bool DARwInOPVisionManager::getBallCenter(double &x, double &y, const unsigned char *image)
@@ -20,12 +20,12 @@ bool DARwInOPVisionManager::getBallCenter(double &x, double &y, const unsigned c
   
   Point2D pos;
   
-  // Put the image in mbuffer
-  mbuffer->m_BGRAFrame->m_ImageData = (unsigned char *)image;
+  // Put the image in mBuffer
+  mBuffer->m_BGRAFrame->m_ImageData = (unsigned char *)image;
   // Convert the image from BGRA format to HSV format
-  ImgProcess::BGRAtoHSV(mbuffer);
+  ImgProcess::BGRAtoHSV(mBuffer);
   // Extract position of the ball from HSV verson of the image
-  pos = mfinder->GetPosition(mbuffer->m_HSVFrame);
+  pos = mFinder->GetPosition(mBuffer->m_HSVFrame);
   
   if (pos.X==-1 && pos.Y==-1) {
     x = 0.0;
@@ -40,12 +40,12 @@ bool DARwInOPVisionManager::getBallCenter(double &x, double &y, const unsigned c
 
 bool DARwInOPVisionManager::isDetected(int x, int y) {
   
-  if (x > mfinder->m_result->m_Width || y > mfinder->m_result->m_Height)
+  if (x > mFinder->m_result->m_Width || y > mFinder->m_result->m_Height)
     return false;
   
-  int i = y * mfinder->m_result->m_Width + x;
+  int i = y * mFinder->m_result->m_Width + x;
   
-  if (mfinder->m_result->m_ImageData[i] == 1)
+  if (mFinder->m_result->m_ImageData[i] == 1)
     return true;
   else
     return false;
