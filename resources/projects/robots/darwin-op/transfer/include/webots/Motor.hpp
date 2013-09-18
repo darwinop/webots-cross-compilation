@@ -22,25 +22,34 @@ namespace webots {
 
                     Motor(const std::string &name, const Robot *robot); //Use Robot::getMotor() instead
       virtual      ~Motor();
-      virtual void  setAcceleration(double acceleration);
-      virtual void  setVelocity(double vel);
-      virtual void  enablePosition(int ms);
-      virtual void  disablePosition();
-      virtual void  setTorque(double torque);
-      virtual void  setAvailableTorque(double availableTorque);
-      virtual void  setControlP(double p);
-      virtual void  enableTorqueFeedback(int ms);
-      virtual void  disableTorqueFeedback();
-      double        getTorqueFeedback() const;
-      double        getPosition() const;
-      double        getTargetPosition() const;
-      double        getMinPosition() const;
-      double        getMaxPosition() const;
-      int           getPositionSamplingPeriod() const;
-      int           getType() const;
-      virtual void  setPosition(double position);
-      
-      void          updateSpeed(int ms);
+
+      virtual void setPosition(double position);
+      double       getTargetposition() const;
+      virtual void setVelocity(double vel);
+      virtual void setAcceleration(double acceleration);
+      virtual void setAvailableTorque(double availableTorque);
+      // virtual void setControlPID(double p, double i, double d); // TODO: to implement
+      virtual void setControlP(double p); // TODO: to remove
+      double       getMinPosition() const;
+      double       getMaxPosition() const;
+
+      virtual void enablePosition(int ms);
+      virtual void disablePosition();
+      int          getPositionSamplingPeriod() const;
+      double       getPosition() const;
+
+      // note: *Force* functions are not implemented because DARwIn-OP is controlled in torques
+      virtual void enableTorqueFeedback(int ms);
+      virtual void disableTorqueFeedback();
+      // int getTorqueFeedbackSamplingPeriod() const; // TODO: to implement
+      double       getTorqueFeedback() const;
+
+      virtual void setTorque(double torque);
+
+      int          getType() const;
+
+      // functions not implemented in the regular Webots API
+      void         updateSpeed(int ms);
 
     private:
       static void   initStaticMap();
