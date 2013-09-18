@@ -21,38 +21,38 @@ class SingleValueSensor;
 class TripleValuesSensor;
 
 class DeviceManager {
-public:
-  static DeviceManager *instance();
-  static void cleanup();
+  public:
+    static DeviceManager        *instance();
+    static void                  cleanup();
 
-  const std::vector<Device *> &devices() const { return mDevices; }
-  Device *findDeviceFromTag(WbDeviceTag tag) const;
+    const std::vector<Device *> &devices() const { return mDevices; }
+    Device                      *findDeviceFromTag(WbDeviceTag tag) const;
 
-  CameraR *camera() const { return mCamera; }
-  Led *led(int at) const { return mLeds[at]; }
-  MotorR *motor(int at) const { return mMotors[at]; }
-  SingleValueSensor *motorForceFeedback(int at) const { return mMotorsForceFeedback[at]; }
-  TripleValuesSensor *accelerometer() const { return mAccelerometer; }
-  TripleValuesSensor *gyro() const { return mGyro; }
+    CameraR                     *camera() const { return mCamera; }
+    Led                         *led(int at) const { return mLeds[at]; }
+    MotorR                      *motor(int at) const { return mMotors[at]; }
+    SingleValueSensor           *motorForceFeedback(int at) const { return mMotorsForceFeedback[at]; }
+    TripleValuesSensor          *accelerometer() const { return mAccelerometer; }
+    TripleValuesSensor          *gyro() const { return mGyro; }
 
-  void apply(int simulationTime);
+    void                         apply(int simulationTime);
 
-private:
-  static DeviceManager *cInstance;
+  private:
+    static DeviceManager        *cInstance;
 
-  DeviceManager();
-  virtual ~DeviceManager();
+                                 DeviceManager();
+    virtual                     ~DeviceManager();
 
-  void clear();
+    void                         clear();
 
-  std::vector<Device *> mDevices;
+    std::vector<Device *>        mDevices;
 
-  CameraR *mCamera;
-  Led *mLeds[5];
-  MotorR *mMotors[20];
-  SingleValueSensor *mMotorsForceFeedback[20];
-  TripleValuesSensor *mAccelerometer;
-  TripleValuesSensor *mGyro;
+    CameraR                     *mCamera;
+    Led                         *mLeds[5];
+    MotorR                      *mMotors[20];
+    SingleValueSensor           *mMotorsForceFeedback[20];
+    TripleValuesSensor          *mAccelerometer;
+    TripleValuesSensor          *mGyro;
 };
 
 #endif

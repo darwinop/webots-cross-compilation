@@ -48,9 +48,9 @@ void DarwinInputPacket::decode(int simulationTime, const DarwinOutputPacket &out
   int currentPos = 5;
 
   // Accelerometer
-  if(outputPacket.isAccelerometerRequested()) {
+  if (outputPacket.isAccelerometerRequested()) {
     double values[3];
-    for(int i=0; i<3; i++) {
+    for (int i = 0; i < 3; i++) {
       values[i] = (double)readIntAt(currentPos);
       currentPos += 4;
     }
@@ -60,9 +60,9 @@ void DarwinInputPacket::decode(int simulationTime, const DarwinOutputPacket &out
   }
   
   // Gyro
-  if(outputPacket.isGyroRequested()) {
+  if (outputPacket.isGyroRequested()) {
     double values[3];
-    for(int i=0; i<3; i++) {
+    for (int i = 0; i < 3; i++) {
       values[i] = (double)readIntAt(currentPos);
       currentPos += 4;
     }
@@ -72,7 +72,7 @@ void DarwinInputPacket::decode(int simulationTime, const DarwinOutputPacket &out
   }
 
   // Camera
-  if(outputPacket.isCameraRequested()) {
+  if (outputPacket.isCameraRequested()) {
     
     int image_length = readIntAt(currentPos);
     currentPos += 4;
@@ -80,13 +80,13 @@ void DarwinInputPacket::decode(int simulationTime, const DarwinOutputPacket &out
     CameraR *camera = DeviceManager::instance()->camera();
 
     QImage image(mCameraWidth, mCameraHeight, QImage::Format_RGB32);
-    if(!(image.loadFromData(getBufferFromPos(currentPos), image_length, "JPEG")))
+    if (!(image.loadFromData(getBufferFromPos(currentPos), image_length, "JPEG")))
       printf("Problem while loading jpeg image\n");
       
     // Convert RGB buffer to BGRA buffer
     static unsigned char imageBGRA[320 * 240 * 4];
-    for(int i = 0; i < mCameraHeight; i++) {
-      for(int j = 0; j < mCameraWidth; j++) {
+    for (int i = 0; i < mCameraHeight; i++) {
+      for (int j = 0; j < mCameraWidth; j++) {
         imageBGRA[i * 4 * mCameraWidth + j * 4 + 0] = qBlue(image.pixel(j,i));
         imageBGRA[i * 4 * mCameraWidth + j * 4 + 1] = qGreen(image.pixel(j,i));
         imageBGRA[i * 4 * mCameraWidth + j * 4 + 2] = qRed(image.pixel(j,i));
@@ -99,8 +99,8 @@ void DarwinInputPacket::decode(int simulationTime, const DarwinOutputPacket &out
   }
   
   // Motor position feedback
-  for(int i=0; i<20; i++) {
-    if(outputPacket.isMotorPositionFeedback(i)) {
+  for (int i = 0; i < 20; i++) {
+    if (outputPacket.isMotorPositionFeedback(i)) {
       double value = (double)readIntAt(currentPos)  / 10000;
       currentPos += 4;
       MotorR *motor = DeviceManager::instance()->motor(i);
@@ -110,8 +110,8 @@ void DarwinInputPacket::decode(int simulationTime, const DarwinOutputPacket &out
   }
   
   // Motor torque feedback
-  for(int i=0; i<20; i++) {
-    if(outputPacket.isMotorForceFeedback(i)) {
+  for (int i = 0; i < 20; i++) {
+    if (outputPacket.isMotorForceFeedback(i)) {
       double value = (double)readIntAt(currentPos) / 10000;
       currentPos += 4;
       SingleValueSensor *motorForceFeedback = DeviceManager::instance()->motorForceFeedback(i);

@@ -15,34 +15,40 @@
 namespace webots {
   class Camera: public Device  {
     public:
-      enum { WB_CAMERA_COLOR = 99 };
-                   Camera(const std::string &name, const Robot *robot); //Use Robot::getCamera() instead
-      virtual     ~Camera();
+      enum {
+        WB_CAMERA_COLOR = 99
+      };
 
-      virtual void enable(int ms);
-      virtual void disable();
-      const unsigned char *getImage() const;
-      int getWidth() const;
-      int getHeight() const;
-      double getFov() const;
-      int    getType() const;
-      double getNear() const;
-      int    getSamplingPeriod();
-      static unsigned char imageGetRed(const unsigned char *image, int width, int x,int y);
-      static unsigned char imageGetGreen(const unsigned char *image, int width, int x,int y);
-      static unsigned char imageGetBlue(const unsigned char *image, int width, int x,int y);
-      static unsigned char imageGetGrey(const unsigned char *image, int width, int x,int y);
-      static bool checkResolution(int width, int height);
+                              Camera(const std::string &name, const Robot *robot); //Use Robot::getCamera() instead
+      virtual                ~Camera();
+
+      virtual void            enable(int ms);
+      virtual void            disable();
+
+      const unsigned char    *getImage() const;
+      int                     getWidth() const;
+      int                     getHeight() const;
+      double                  getFov() const;
+      int                     getType() const;
+      double                  getNear() const;
+      int                     getSamplingPeriod();
+
+      static unsigned char    imageGetRed(const unsigned char *image, int width, int x,int y);
+      static unsigned char    imageGetGreen(const unsigned char *image, int width, int x,int y);
+      static unsigned char    imageGetBlue(const unsigned char *image, int width, int x,int y);
+      static unsigned char    imageGetGrey(const unsigned char *image, int width, int x,int y);
+      static bool             checkResolution(int width, int height);
     
     protected:
       static void            *CameraTimerProc(void *param);// thread function
     
     private:
-      static unsigned char   *mImage;
-      pthread_t               mCameraThread;// thread structure
-      bool                    mIsActive;
       static const int        NBRESOLUTION = 6;
       static const int        mResolution[NBRESOLUTION][2];
+      static unsigned char   *mImage;
+
+      pthread_t               mCameraThread;// thread structure
+      bool                    mIsActive;
   };
 }
 

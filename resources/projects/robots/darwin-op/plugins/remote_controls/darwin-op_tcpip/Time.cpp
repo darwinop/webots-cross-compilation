@@ -38,7 +38,7 @@ void Time::wait(int duration) {
   // bigger than 1 second (1'000'000 nanoseconds)
   int seconds = duration / 1000;
   int milliSeconds = duration - 1000 * seconds;
-  for (int i=0; i<seconds; i++)
+  for (int i = 0; i < seconds; i++)
     usleep(1000000);
   usleep(1000 * milliSeconds);
 #endif

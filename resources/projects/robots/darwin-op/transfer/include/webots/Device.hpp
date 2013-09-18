@@ -16,16 +16,19 @@ namespace webots {
   class Robot;
   class Device {
     public:
-      virtual ~Device() {}
+      virtual           ~Device() {}
       const std::string &getName() const { return name; }
 
     protected:
-      Device(const std::string &n, const Robot *r) : name(n), robot(r) {}
-      const Robot *getRobot() const { return robot; }
+                         Device(const std::string &n, const Robot *r) :
+                           name(n),
+                          robot(r) {}
+
+      const Robot       *getRobot() const { return robot; }
 
     private:
-      std::string name;
-      const Robot *robot;
+      std::string        name;
+      const Robot       *robot;
   };
 }
 

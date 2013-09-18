@@ -12,7 +12,9 @@
 
 using namespace webotsQtUtils;
 
-Transfer::Transfer(QWidget *parent): QScrollArea(parent) {
+Transfer::Transfer(QWidget *parent):
+  QScrollArea(parent)
+{
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setMinimumHeight(520);
   mContainerGridLayout = new QGridLayout();
@@ -163,10 +165,12 @@ void Transfer::showProgressBox(const QString &title, const QString &message) {
 void Transfer::print(const QString &c,bool err) {
   static QString str_out;
   static QString str_err;
+
   if (err)
     str_err += c;
   else
     str_out += c;
+
   do {
     int n = str_out.indexOf("\n");
     if (n==-1) break;;
@@ -176,6 +180,7 @@ void Transfer::print(const QString &c,bool err) {
     mConsoleShowTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     str_out = str_out.mid(n+1);
   } while(!str_out.isEmpty());
+
   do {
     int n = str_err.indexOf("\n");
     if (n==-1) break;;
@@ -196,6 +201,7 @@ void Transfer::status(const QString &message) {
 void Transfer::sendController() {
   QString controller;
   controller = QString(wb_robot_get_controller_name());
+
   if (mStatus == DISCONNECTED) { // send controller
     mRemoteControlButton->setEnabled(false);
     mUninstallButton->setEnabled(false);
@@ -242,7 +248,7 @@ void Transfer::uninstall() {
   msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
   msgBox.setDetailedText(tr("All the Webots API and controllers will be uninstalled, the original demo program will be restored"));
   int warning = msgBox.exec();
-  if(warning == QMessageBox::Yes) {
+  if (warning == QMessageBox::Yes) {
     showProgressBox(tr("Uninstall"),tr("Uninstalling the Webots API"));
     mFuture = QtConcurrent::run(mSSH,&SSH::uninstall,mIPAddressLineEdit->text(),mUsernameLineEdit->text(),mPasswordLineEdit->text());
     mFutureWatcher.setFuture(mFuture);
@@ -286,15 +292,21 @@ void Transfer::finish() {
 
 void Transfer::SSHSessionDone() {
   saveSettings(); // connection was successful, so we want to save the network settings
-  switch(mStatus) {
-  case START_REMOTE_COMPILATION: finishStartRemoteCompilation(); break;
-  case START_REMOTE_CONTROL:     finishStartRemoteControl();     break;
-  default: assert(false); break;
+  switch (mStatus) {
+    case START_REMOTE_COMPILATION:
+      finishStartRemoteCompilation();
+      break;
+    case START_REMOTE_CONTROL:
+      finishStartRemoteControl();
+      break;
+    default:
+      assert(false);
+      break;
   }
 }
 
 void Transfer::SSHSessionComplete() {
-  if (mFutureWatcher.result()<0) {
+  if (mFutureWatcher.result() < 0) {
     delete mRemoteProgressDialog;
     mRemoteProgressDialog = NULL;
     mStatusLabel->setText(mSSH->error());
@@ -310,7 +322,7 @@ void Transfer::SSHSessionComplete() {
     enableButtons();
   } else {
     saveSettings(); // connection was successful, so we want to save the network settings
-    switch(mStatus) {
+    switch (mStatus) {
     case STOP_REMOTE_CONTROL:
     case STOP_REMOTE_COMPILATION:
     case UNINSTALL:
@@ -318,21 +330,26 @@ void Transfer::SSHSessionComplete() {
     case RUN_REMOTE_CONTROL: // this one should not happen
       finish();
       break;
-    case START_REMOTE_COMPILATION: {// the robot was not in a stable position
-      finish();
-      if (!mSSH->error().isEmpty()) break; // we don't want to display the following message box in case of a compilation error
-      QMessageBox msgBox;
-      msgBox.setWindowTitle(tr("Unstable position"));
-      msgBox.setText(tr("The DARwIn-OP robot is not in ready position."));
-      msgBox.setInformativeText(tr("Please set the robot in ready position (refer to DARwIn-OP documentation) and retry."));
-      msgBox.setStandardButtons(QMessageBox::Ok);
-      msgBox.setDefaultButton(QMessageBox::Ok);
-      msgBox.setIcon(QMessageBox::Warning);
-      msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
-      msgBox.exec();
+    case START_REMOTE_COMPILATION: // the robot was not in a stable position
+      {
+        finish();
+        if (!mSSH->error().isEmpty())
+          // we don't want to display the following message box in case of a compilation error
+          break;
+        QMessageBox msgBox;
+        msgBox.setWindowTitle(tr("Unstable position"));
+        msgBox.setText(tr("The DARwIn-OP robot is not in ready position."));
+        msgBox.setInformativeText(tr("Please set the robot in ready position (refer to DARwIn-OP documentation) and retry."));
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
+        msgBox.exec();
       }
       break;
-    default: fprintf(stderr,"Unknown status: %d\n",mStatus);       break;
+    default:
+      fprintf(stderr,"Unknown status: %d\n",mStatus);
+      break;
     }
   }
 }
@@ -345,19 +362,19 @@ void Transfer::timerCallback() {
   int static i = 5;
   int static direction = 1;
 
-  if(mRemoteProgressDialog != NULL) {
-    if(!mRemoteProgressDialog->isVisible()) {
+  if (mRemoteProgressDialog != NULL) {
+    if (!mRemoteProgressDialog->isVisible()) {
       direction = 5;
       i = 1;
     }
     mRemoteProgressDialog->setValue(i);
     i = i + direction;
 
-    if(i > 95) {
+    if (i > 95) {
       direction = -1;
       mRemoteProgressBar->setInvertedAppearance(true);
     }
-    else if(i < 5) {
+    else if (i < 5) {
       direction = 1;
       mRemoteProgressBar->setInvertedAppearance(false);
     }
@@ -415,16 +432,16 @@ void Transfer::robotInstableSlot() {
   msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
   msgBox.setDefaultButton(QMessageBox::Retry);
   int warning = msgBox.exec();
-  if(warning == QMessageBox::Abort)
+  if (warning == QMessageBox::Abort)
     emit setStabilityResponseSignal(false);
-  else if(warning == QMessageBox::Ignore)
+  else if (warning == QMessageBox::Ignore)
     emit setStabilityResponseSignal(true);
   else
     emit isRobotStableSignal();
 }
 
 void Transfer::installControllerWarningSlot() {
-  if(!mMakeDefaultControllerCheckBox->isChecked()) {
+  if (!mMakeDefaultControllerCheckBox->isChecked()) {
 #ifdef WIN32
     mMakeDefaultControllerCheckBox->setChecked(true);
 #endif

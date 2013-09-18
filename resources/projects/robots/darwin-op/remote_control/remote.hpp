@@ -19,38 +19,41 @@ namespace webots {
   
   class Remote : public Robot {
     public:
-                                       Remote();
-      virtual                         ~Remote();
-      void                             remoteStep();
-      const double *                   getRemoteAccelerometer() const;
-      const double *                   getRemoteGyro() const;
-      const unsigned char *            getRemoteImage() const;
-      void                             setRemoteLED(int index, int value); 
-      void                             setRemoteMotorPosition(int index, int value);
-      void                             setRemoteMotorVelocity(int index, int value);
-      void                             setRemoteMotorAcceleration(int index, int value);
-      void                             setRemoteMotorAvailableTorque(int index, int value);
-      void                             setRemoteMotorTorque(int index, int value);
-      void                             setRemoteMotorControlP(int index, int value);
-      double                           getRemoteMotorPosition(int index);
-      double                           getRemoteMotorTorque(int index);
-      double                           getRemoteTime() const;
+                           Remote();
+      virtual             ~Remote();
+
+      void                 remoteStep();
+
+      const double        *getRemoteAccelerometer() const;
+      const double        *getRemoteGyro() const;
+      const unsigned char *getRemoteImage() const;
+      double               getRemoteMotorPosition(int index);
+      double               getRemoteMotorTorque(int index);
+      double               getRemoteTime() const;
+
+      void                 setRemoteLED(int index, int value);
+      void                 setRemoteMotorPosition(int index, int value);
+      void                 setRemoteMotorVelocity(int index, int value);
+      void                 setRemoteMotorAcceleration(int index, int value);
+      void                 setRemoteMotorAvailableTorque(int index, int value);
+      void                 setRemoteMotorTorque(int index, int value);
+      void                 setRemoteMotorControlP(int index, int value);
 
     private:
-      int                              mTimeStep;
+      void                 wait(int ms);
+      void                 myStep();
 
-      void                             wait(int ms);
-      void                             myStep();
-      
-      Motor                           *mMotors[NMOTORS];
-      LED                             *mEyeLed;
-      LED                             *mHeadLed;
-      LED                             *mBackLedRed;
-      LED                             *mBackLedGreen;
-      LED                             *mBackLedBlue;
-      Camera                          *mCamera;
-      Accelerometer                   *mAccelerometer;
-      Gyro                            *mGyro;
+      int                  mTimeStep;
+
+      Motor               *mMotors[NMOTORS];
+      LED                 *mEyeLed;
+      LED                 *mHeadLed;
+      LED                 *mBackLedRed;
+      LED                 *mBackLedGreen;
+      LED                 *mBackLedBlue;
+      Camera              *mCamera;
+      Accelerometer       *mAccelerometer;
+      Gyro                *mGyro;
   };
 };
 
