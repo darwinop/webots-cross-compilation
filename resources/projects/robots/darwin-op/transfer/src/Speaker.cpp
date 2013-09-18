@@ -10,7 +10,7 @@ using namespace Robot;
 Speaker::Speaker(const std::string &name, const Robot *robot) :
   Device(name, robot)
 {
-  speak_pid = -1;
+  mSpeakPID = -1;
 }
 
 Speaker::~Speaker() {
@@ -34,12 +34,12 @@ void Speaker::speak(const char *text, const char *voice, int speed) {
   char speedBuffer[20];
   sprintf(speedBuffer, "%d", speed);
 
-  if (speak_pid != -1)
-    kill(speak_pid, SIGKILL);
+  if (mSpeakPID != -1)
+    kill(mSpeakPID, SIGKILL);
 
-  speak_pid = fork();
+  mSpeakPID = fork();
 
-  switch (speak_pid) {
+  switch (mSpeakPID) {
     case -1:
       fprintf(stderr, "Fork failed!! \n");
       break;
@@ -60,12 +60,12 @@ void Speaker::speakFile(const char *filename, const char *voice, int speed) {
   char speedBuffer[20];
   sprintf(speedBuffer, "%d", speed);
 
-  if (speak_pid != -1)
-    kill(speak_pid, SIGKILL);
+  if (mSpeakPID != -1)
+    kill(mSpeakPID, SIGKILL);
 
-  speak_pid = fork();
+  mSpeakPID = fork();
 
-  switch(speak_pid) {
+  switch(mSpeakPID) {
     case -1:
       fprintf(stderr, "Fork failed!! \n");
       break;

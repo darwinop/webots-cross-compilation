@@ -26,16 +26,16 @@ namespace managers {
 
       bool         getBallCenter(double &x, double &y, const unsigned char *image);
       bool         isDetected(int x, int y);
-      void         setHue(int hue)                     { mfinder->m_hue = hue; }
-      void         setHueTolerance(int hueTolerance)   { mfinder->m_hue_tolerance = hueTolerance; }
-      void         setMinSaturation(int minSaturation) { mfinder->m_min_saturation = minSaturation; }
-      void         setMinValue(int minValue)           { mfinder->m_min_value = minValue; }
-      void         setMinPercent(int minPercent)       { mfinder->m_min_percent = minPercent; }
-      void         setmaxPercent(int maxPercent)       { mfinder->m_max_percent = maxPercent; }
+      void         setHue(int hue)                     { mFinder->m_hue = hue; }
+      void         setHueTolerance(int hueTolerance)   { mFinder->m_hue_tolerance = hueTolerance; }
+      void         setMinSaturation(int minSaturation) { mFinder->m_min_saturation = minSaturation; }
+      void         setMinValue(int minValue)           { mFinder->m_min_value = minValue; }
+      void         setMinPercent(int minPercent)       { mFinder->m_min_percent = minPercent; }
+      void         setmaxPercent(int maxPercent)       { mFinder->m_max_percent = maxPercent; }
 
     private:
-      ColorFinder *mfinder;
-      FrameBuffer *mbuffer;
+      ColorFinder *mFinder;
+      FrameBuffer *mBuffer;
 
   };
 }
