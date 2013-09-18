@@ -33,10 +33,10 @@ namespace webots {
       virtual void  disableTorqueFeedback();
       double        getTorqueFeedback() const;
       double        getPosition() const;
-      double        getTargetPosition();
-      double        getMinPosition();
-      double        getMaxPosition();
-      int           getPositionSamplingPeriod();
+      double        getTargetPosition() const;
+      double        getMinPosition() const;
+      double        getMaxPosition() const;
+      int           getPositionSamplingPeriod() const;
       int           getType() const;
       virtual void  setPosition(double position);
       

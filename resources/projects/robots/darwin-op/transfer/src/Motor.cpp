@@ -321,19 +321,19 @@ void Motor::setPresentLoad(int load) {
   mPresentLoad = load;
 }
 
-int Motor::getPositionSamplingPeriod() {
+int Motor::getPositionSamplingPeriod() const {
   return getRobot()->getBasicTimeStep();
 }
 
-double Motor::getTargetPosition() {
+double Motor::getTargetPosition() const {
   return mGoalPosition;
 }
 
-double Motor::getMinPosition() {
+double Motor::getMinPosition() const {
   return (MX28::Value2Angle(mNamesToLimDown[getName()]) * (M_PI/180.0));
 }
 
-double Motor::getMaxPosition() {
+double Motor::getMaxPosition() const {
   return (MX28::Value2Angle(mNamesToLimUp[getName()]) * (M_PI/180.0));
 }
 
