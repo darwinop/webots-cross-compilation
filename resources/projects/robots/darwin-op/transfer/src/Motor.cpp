@@ -289,23 +289,23 @@ double Motor::getSpeed() const {
   return speed;
 }
 
-int Motor::getGoalPosition() {
+int Motor::getGoalPosition() const {
   return mGoalPosition;
 }
 
-int Motor::getTorqueEnable() {
+int Motor::getTorqueEnable() const {
   return mTorqueEnable;
 }
 
-int Motor::getPGain() {
+int Motor::getPGain() const {
   return mPGain;
 }
 
-int Motor::getMovingSpeed() {
+int Motor::getMovingSpeed() const {
   return mMovingSpeed;
 }
 
-int Motor::getTorqueLimit() {
+int Motor::getTorqueLimit() const {
   return mTorqueLimit;
 }
 

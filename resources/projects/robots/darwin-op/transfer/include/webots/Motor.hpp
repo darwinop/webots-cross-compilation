@@ -59,11 +59,11 @@ namespace webots {
       static std::map<const std::string, int> mNamesToLimDown;
       static std::map<const std::string, int> mNamesToInitPos;
 
-      int getGoalPosition();
-      int getTorqueEnable();
-      int getPGain();
-      int getMovingSpeed();
-      int getTorqueLimit();
+      int getGoalPosition() const;
+      int getTorqueEnable() const;
+      int getPGain() const;
+      int getMovingSpeed() const;
+      int getTorqueLimit() const;
       double getSpeed() const;
       void setPresentPosition(int position);
       void setPresentSpeed(int speed);
