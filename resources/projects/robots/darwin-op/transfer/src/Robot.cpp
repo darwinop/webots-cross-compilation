@@ -24,14 +24,14 @@ webots::Robot::Robot() {
   // Load TimeStep from the file "config.ini"
   minIni ini("config.ini");
   LoadINISettings(&ini, "Robot Config");
-  if(mTimeStep < 16)
+  if (mTimeStep < 16)
     printf("The time step selected of %dms is very small and will probably not be respected.\n A time step of at least 16ms is recommended.\n", mTimeStep);
     
   mCM730->MakeBulkReadPacketWb(); // Create the BulkReadPacket to read the actuators states in Robot::step
   
   // Unactive all Joints in the Motion Manager //
   std::map<const std::string, int>::iterator motor_it;
-  for(motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++ ) {
+  for (motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++ ) {
     ::Robot::MotionStatus::m_CurrentJoints.SetEnable((*motor_it).second, 0);
     ::Robot::MotionStatus::m_CurrentJoints.SetValue((*motor_it).second, ((Motor *) mDevices[(*motor_it).first])->getGoalPosition());
   }
@@ -42,10 +42,10 @@ webots::Robot::Robot() {
   int value=0, changed_motors=0, n=0;
   int param[20*msgLength];
   
-  for(motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++ ) {
+  for (motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++ ) {
     Motor *motor = static_cast <Motor *> (mDevices[(*motor_it).first]);
     int motorId = (*motor_it).second;
-    if(motor->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(motorId))) {
+    if (motor->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(motorId))) {
       param[n++] = motorId;  // id
       value = motor->getGoalPosition(); // Start position
       param[n++] = ::Robot::CM730::GetLowByte(value);
@@ -73,17 +73,17 @@ int webots::Robot::step(int ms) {
   std::map<const std::string, int>::iterator motor_it;
   
   // -------- Update speed of each motors, according to acceleration limit if set --------  //
-  for(motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++  ) {
+  for (motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++  ) {
     Motor *motor = static_cast <Motor *> (mDevices[(*motor_it).first]);
     motor->updateSpeed(stepDuration);
   }
   
   // -------- Bulk Read to read the actuators states (position, speed and load) and body sensors -------- //
-  if(!(::Robot::MotionManager::GetInstance()->GetEnable())) // If MotionManager is enable, no need to execute the BulkRead, the MotionManager has allready done it.
+  if (!(::Robot::MotionManager::GetInstance()->GetEnable())) // If MotionManager is enable, no need to execute the BulkRead, the MotionManager has allready done it.
     mCM730->BulkRead();
 
   // Motors
-  for(motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++) {
+  for (motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++) {
     Motor *motor = static_cast <Motor *> (mDevices[(*motor_it).first]);
     int motorId = (*motor_it).second;
     motor->setPresentPosition( mCM730->m_BulkReadData[motorId].ReadWord(::Robot::MX28::P_PRESENT_POSITION_L));
@@ -126,10 +126,10 @@ int webots::Robot::step(int ms) {
   int changed_motors=0;
   int value;
   
-  for(motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++ ) {
+  for (motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++ ) {
     Motor *motor = static_cast <Motor *> (mDevices[(*motor_it).first]);
     int motorId = (*motor_it).second;
-    if(motor->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(motorId))) {
+    if (motor->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(motorId))) {
       param[n++] = motorId;
       param[n++] = motor->getPGain();
       param[n++] = 0; // Empty
@@ -148,11 +148,11 @@ int webots::Robot::step(int ms) {
   mCM730->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_motors , param);
 
   // -------- Keyboard Reset ----------- //
-  if(mKeyboardEnable == true)
+  if (mKeyboardEnable == true)
     mKeyboard->resetKeyPressed();
 
   // -------- Timing management -------- //
-  if(stepDuration < ms) { // Step to short -> wait remaining time
+  if (stepDuration < ms) { // Step to short -> wait remaining time
     usleep((ms - stepDuration) * 1000);
     mPreviousStepTime = actualTime;
     return 0;
@@ -289,27 +289,27 @@ void webots::Robot::initDevices() {
 
 void webots::Robot::initDarwinOP() {
   char exepath[1024] = {0};
-  if(readlink("/proc/self/exe", exepath, sizeof(exepath)) != -1)  {
-      if(chdir(dirname(exepath)))
+  if (readlink("/proc/self/exe", exepath, sizeof(exepath)) != -1)  {
+      if (chdir(dirname(exepath)))
           fprintf(stderr, "chdir error!! \n");
   }
   
   mLinuxCM730 = new ::Robot::LinuxCM730("/dev/ttyUSB0");
   mCM730 = new ::Robot::CM730(mLinuxCM730);
   
-  if(mCM730->Connect() == false) {
+  if (mCM730->Connect() == false) {
     printf("Fail to connect CM-730!\n");
     exit(EXIT_FAILURE);
   }
   
   // Read firmware version
   int firm_ver = 0;
-  if(mCM730->ReadByte(::Robot::JointData::ID_HEAD_PAN, ::Robot::MX28::P_VERSION, &firm_ver, 0)  != ::Robot::CM730::SUCCESS) {
+  if (mCM730->ReadByte(::Robot::JointData::ID_HEAD_PAN, ::Robot::MX28::P_VERSION, &firm_ver, 0)  != ::Robot::CM730::SUCCESS) {
     fprintf(stderr, "Can't read firmware version from Dynamixel ID %d!\n", ::Robot::JointData::ID_HEAD_PAN);
     exit(EXIT_FAILURE);
   }
   
-  if(firm_ver < 27) {
+  if (firm_ver < 27) {
     fprintf(stderr, "Firmware version of Dynamixel is too old, please update them.\nMore information available in the User guide.\n");
     exit(EXIT_FAILURE);
   }
@@ -321,25 +321,25 @@ void webots::Robot::initDarwinOP() {
   mCM730->WriteWord(::Robot::CM730::ID_CM, ::Robot::CM730::P_LED_EYE_L, 63, 0);
 }
 
-void webots::Robot::LoadINISettings(minIni* ini, const std::string &section) {
+void webots::Robot::LoadINISettings(minIni *ini, const std::string &section) {
   double value = INVALID_VALUE;
 
-  if((value = ini->getd(section, "time_step", INVALID_VALUE)) != INVALID_VALUE)
+  if ((value = ini->getd(section, "time_step", INVALID_VALUE)) != INVALID_VALUE)
     mTimeStep = value;
   else
     printf("Can't read time step from 'config.ini'\n");
 
-  if((value = ini->getd(section, "camera_width", INVALID_VALUE)) != INVALID_VALUE)
+  if ((value = ini->getd(section, "camera_width", INVALID_VALUE)) != INVALID_VALUE)
     ::Robot::Camera::WIDTH = value;
   else
     printf("Can't read camera width from 'config.ini'\n");
 
-  if((value = ini->getd(section, "camera_height", INVALID_VALUE)) != INVALID_VALUE)
+  if ((value = ini->getd(section, "camera_height", INVALID_VALUE)) != INVALID_VALUE)
     ::Robot::Camera::HEIGHT = value;
   else
     printf("Can't read camera height from 'config.ini'\n");
 
-  if(!(::webots::Camera::checkResolution(::Robot::Camera::WIDTH, ::Robot::Camera::HEIGHT))) {
+  if (!(::webots::Camera::checkResolution(::Robot::Camera::WIDTH, ::Robot::Camera::HEIGHT))) {
     printf("The resolution of %dx%d selected is not supported by the camera.\nPlease use one of the resolution recommended.\n", ::Robot::Camera::WIDTH, ::Robot::Camera::HEIGHT);
     ::Robot::Camera::WIDTH = 320;
     ::Robot::Camera::HEIGHT = 240;
@@ -348,14 +348,14 @@ void webots::Robot::LoadINISettings(minIni* ini, const std::string &section) {
 }
 
 void webots::Robot::keyboardEnable(int ms) {
-  if(mKeyboardEnable == false) {
+  if (mKeyboardEnable == false) {
     // Starting keyboard listenning in a thread 
     int error = 0;
   
     mKeyboard->createWindow();
 
     // create and start the thread
-    if((error = pthread_create(&this->mKeyboardThread, NULL, this->KeyboardTimerProc, this))!= 0) {
+    if ((error = pthread_create(&this->mKeyboardThread, NULL, this->KeyboardTimerProc, this))!= 0) {
       printf("Keyboard thread error = %d\n",error);
       exit(-1);
     }
@@ -370,10 +370,10 @@ void *::webots::Robot::KeyboardTimerProc(void *param) {
 }
 
 void webots::Robot::keyboardDisable() {
-  if(mKeyboardEnable == true) {
+  if (mKeyboardEnable == true) {
     int error=0;
     // End the thread
-    if((error = pthread_cancel(this->mKeyboardThread))!= 0) {
+    if ((error = pthread_cancel(this->mKeyboardThread))!= 0) {
       printf("Keyboard thread error = %d\n",error);
       exit(-1);
     }
@@ -385,7 +385,7 @@ void webots::Robot::keyboardDisable() {
 }
 
 int webots::Robot::keyboardGetKey() {
-  if(mKeyboardEnable == true) {
+  if (mKeyboardEnable == true) {
     return mKeyboard->getKeyPressed();
   }
   else

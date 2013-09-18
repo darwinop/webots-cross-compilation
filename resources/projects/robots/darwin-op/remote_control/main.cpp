@@ -22,8 +22,8 @@ typedef struct sockaddr SOCKADDR;
 
 using namespace webots;
 
-void writeINT2Buffer(char * buffer, int value);
-int readINTFromBuffer(char * buffer);
+void writeINT2Buffer(char *buffer, int value);
+int readINTFromBuffer(char *buffer);
 
 int main(int argc, char *argv[]) {
 
@@ -70,12 +70,12 @@ int main(int argc, char *argv[]) {
     sock_err = bind(sock, (SOCKADDR*) &sin, recsize);
     
     // If socket works
-    if(sock_err != SOCKET_ERROR) {
+    if (sock_err != SOCKET_ERROR) {
       // Starting port Listening (server mode)
       sock_err = listen(sock, 1); // only one connexion 
 
       // If socket works
-      if(sock_err != SOCKET_ERROR) {
+      if (sock_err != SOCKET_ERROR) {
         // Wait until a client connect
         printf("Waiting for client connection on port %d...\n", PORT);
         csock = accept(sock, (SOCKADDR*)&csin, &crecsize);
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
     else
       perror("bind");
     
-    Remote * remote = new Remote();
+    Remote *remote = new Remote();
     remote->remoteStep();
     const double *acc;
     const double *gyro;
@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
       // Accelerometer
       if (receiveBuffer[receivePos] == 'A') {
         acc = remote->getRemoteAccelerometer();
-        for(c = 0; c<3; c++) 
+        for (c = 0; c < 3; c++)
           writeINT2Buffer(sendBuffer + 4 * c + sendPos, (int)acc[c]);
         sendPos += 12;
         receivePos++;
@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
       // Gyro
       if (receiveBuffer[receivePos] == 'G') {
         gyro = remote->getRemoteGyro();
-        for(c = 0; c<3; c++)
+        for (c = 0; c < 3; c++)
           writeINT2Buffer(sendBuffer + 4 * c + sendPos, (int)gyro[c]);
         sendPos += 12;
         receivePos++;
@@ -154,7 +154,7 @@ int main(int argc, char *argv[]) {
         
         // Compress image to jpeg
         int buffer_length = 0;
-        if (cameraHeightZoomFactor * cameraWidthZoomFactor < 2) // -> resolution 320x240 -> put quality at 65%
+        if (cameraHeightZoomFactor *cameraWidthZoomFactor < 2) // -> resolution 320x240 -> put quality at 65%
           buffer_length = jpeg_utils::compress_rgb_to_jpeg(&rgbImage, jpeg_buffer, rgbImage.m_ImageSize, 65);
         else // image smaller, put quality at 80%
           buffer_length = jpeg_utils::compress_rgb_to_jpeg(&rgbImage, jpeg_buffer, rgbImage.m_ImageSize, 80);
@@ -271,14 +271,14 @@ int main(int argc, char *argv[]) {
   return EXIT_SUCCESS;
 }
 
-void writeINT2Buffer(char * buffer, int value) {
+void writeINT2Buffer(char *buffer, int value) {
   buffer[0] = value >> 24;
   buffer[1] = (value >> 16) & 0xFF;
   buffer[2] = (value >> 8) & 0xFF;
   buffer[3] = value & 0xFF;
 }
 
-int readINTFromBuffer(char * buffer) {
+int readINTFromBuffer(char *buffer) {
   unsigned char c1 = static_cast <unsigned char> (buffer[3]);
   unsigned char c2 = static_cast <unsigned char> (buffer[2]);
   unsigned char c3 = static_cast <unsigned char> (buffer[1]);

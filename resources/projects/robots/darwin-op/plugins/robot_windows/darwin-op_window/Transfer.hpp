@@ -20,114 +20,119 @@ struct Parameters;
 
 class Transfer : public QScrollArea
 {
-
   Q_OBJECT
 
-public:
-  Transfer(QWidget *parent = 0);
-  virtual ~Transfer();
-  enum Status { DISCONNECTED,
-                START_REMOTE_CONTROL,
-                RUN_REMOTE_CONTROL,
-                STOP_REMOTE_CONTROL,
-                UNINSTALL,
-                START_REMOTE_COMPILATION,
-                RUN_REMOTE_COMPILATION,
-                STOP_REMOTE_COMPILATION };
-  void saveSettings();
-  void robotInstableSlot();
-  void enableButtons();
-  void disableButtons();
-public slots:
-  void installControllerWarningSlot();
-  void restoreSettings();
-  void uninstall();
-  void sendController();
-  void remoteControl();
-  void timerCallback();
-  void SSHSessionComplete();
-  void SSHSessionDone();
-  void print(const QString &,bool err);
-  void status(const QString &);
+  public:
+    enum Status {
+      DISCONNECTED,
+      START_REMOTE_CONTROL,
+      RUN_REMOTE_CONTROL,
+      STOP_REMOTE_CONTROL,
+      UNINSTALL,
+      START_REMOTE_COMPILATION,
+      RUN_REMOTE_COMPILATION,
+      STOP_REMOTE_COMPILATION
+    };
 
-signals:
-  void setStabilityResponseSignal(int stability);
-  void isRobotStableSignal();
-  void stopRemoteSignal();
-  void stopControllerSignal();
-  void testSignal();
+                        Transfer(QWidget *parent = 0);
+    virtual            ~Transfer();
 
-private:
-  void showProgressBox(const QString &title,const QString &message);
-  void finishStartRemoteCompilation();
-  void finishStartRemoteControl();
-  void finish();
-  QFutureWatcher<int> mFutureWatcher;
-  QFuture<int> mFuture;
-  SSH         *mSSH;
-  Status       mStatus;
+    void                saveSettings();
+    void                robotInstableSlot();
+    void                enableButtons();
+    void                disableButtons();
 
-  //***  SSH  ***//
-  bool         mConnectionState;
+  public slots:
+    void                installControllerWarningSlot();
+    void                restoreSettings();
+    void                uninstall();
+    void                sendController();
+    void                remoteControl();
+    void                timerCallback();
+    void                SSHSessionComplete();
+    void                SSHSessionDone();
+    void                print(const QString &,bool err);
+    void                status(const QString &);
 
-  QWidget     *mContainerWidget;
-  QGridLayout *mContainerGridLayout;
+  signals:
+    void                setStabilityResponseSignal(int stability);
+    void                isRobotStableSignal();
+    void                stopRemoteSignal();
+    void                stopControllerSignal();
+    void                testSignal();
 
-  //***  SETTINGS  ***//
-  QGridLayout *mSettingsGridLayout;
-  QGroupBox   *mSettingsGroupBox;
+  private:
+    void                showProgressBox(const QString &title,const QString &message);
+    void                finishStartRemoteCompilation();
+    void                finishStartRemoteControl();
+    void                finish();
+    void                loadSettings();
 
-  // IP adresse
-  QLineEdit   *mIPAddressLineEdit;
-  QLabel      *mIPLabel;
+    QFutureWatcher<int> mFutureWatcher;
+    QFuture<int>        mFuture;
 
-  // Username
-  QLineEdit   *mUsernameLineEdit;
-  QLabel      *mUsernameLabel;
+    Status              mStatus;
 
-  // Password
-  QLineEdit   *mPasswordLineEdit;
-  QLabel      *mPasswordLabel;
+    //***  SSH  ***//
+    SSH                *mSSH;
+    bool                mConnectionState;
 
-  // Restore
-  QPushButton *mDefaultSettingsButton;
-  QSettings   *mSettings;
+    QWidget            *mContainerWidget;
+    QGridLayout        *mContainerGridLayout;
 
-  //***  Upload controller  ***//
-  QGridLayout *mActionGridLayout;
-  QGroupBox   *mActionGroupBox;
+    //***  SETTINGS  ***//
+    QGridLayout        *mSettingsGridLayout;
+    QGroupBox          *mSettingsGroupBox;
 
-  // Controller
-  QIcon       *mSendControllerIcon;
-  QIcon       *mStopControllerIcon;
-  QPushButton *mSendControllerButton;
-  QCheckBox   *mMakeDefaultControllerCheckBox;
+    // IP adresse
+    QLineEdit          *mIPAddressLineEdit;
+    QLabel             *mIPLabel;
 
-  // remote control
-  QIcon       *mRemoteControlIcon;
-  QPushButton *mRemoteControlButton;
-  bool         mRemoteEnable;
+    // Username
+    QLineEdit          *mUsernameLineEdit;
+    QLabel             *mUsernameLabel;
 
-  // Remote control wait during starting
-  QProgressDialog *mRemoteProgressDialog;
-  QProgressBar    *mRemoteProgressBar;
-  QTimer          *mTimer;
+    // Password
+    QLineEdit          *mPasswordLineEdit;
+    QLabel             *mPasswordLabel;
 
-  // Wrapper
-  QPushButton *mUninstallButton;
+    // Restore
+    QPushButton        *mDefaultSettingsButton;
+    QSettings          *mSettings;
 
-  //***  OUTPUT  ***//
-  QGridLayout *mOutputGridLayout;
-  QGroupBox   *mOutputGroupBox;
+    //***  Upload controller  ***//
+    QGridLayout        *mActionGridLayout;
+    QGroupBox          *mActionGroupBox;
 
-  // Status label and progress bar
-  QLabel      *mStatusLabel;
-  QProgressBar *mProgressBar;
+    // Controller
+    QIcon              *mSendControllerIcon;
+    QIcon              *mStopControllerIcon;
+    QPushButton        *mSendControllerButton;
+    QCheckBox          *mMakeDefaultControllerCheckBox;
 
-  // Console Show
-  QTextEdit   *mConsoleShowTextEdit;
+    // remote control
+    QIcon              *mRemoteControlIcon;
+    QPushButton        *mRemoteControlButton;
+    bool                mRemoteEnable;
 
-  void         loadSettings();
+    // Remote control wait during starting
+    QProgressDialog    *mRemoteProgressDialog;
+    QProgressBar       *mRemoteProgressBar;
+    QTimer             *mTimer;
+
+    // Wrapper
+    QPushButton        *mUninstallButton;
+
+    //***  OUTPUT  ***//
+    QGridLayout        *mOutputGridLayout;
+    QGroupBox          *mOutputGroupBox;
+
+    // Status label and progress bar
+    QLabel             *mStatusLabel;
+    QProgressBar       *mProgressBar;
+
+    // Console Show
+    QTextEdit          *mConsoleShowTextEdit;
 };
 
 #endif

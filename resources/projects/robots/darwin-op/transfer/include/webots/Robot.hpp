@@ -82,18 +82,19 @@ namespace webots {
     private:
       void                 initDevices();
       void                 initDarwinOP();
-      void                 LoadINISettings(minIni* ini, const std::string &section);
+      void                 LoadINISettings(minIni *ini, const std::string &section);
       Device              *getDevice(const std::string &name) const;
+
+      std::map<const std::string, Device *> mDevices;
+
       Keyboard            *mKeyboard;
       bool                 mKeyboardEnable;
       pthread_t            mKeyboardThread; // thread structure
-
       int                  mTimeStep;
       ::Robot::LinuxCM730 *mLinuxCM730;
       ::Robot::CM730      *mCM730;
       struct timeval       mStart;
       double               mPreviousStepTime;
-      std::map<const std::string, Device *> mDevices;
   };
 }
 

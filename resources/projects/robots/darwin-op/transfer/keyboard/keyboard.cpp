@@ -39,15 +39,15 @@ Keyboard::Keyboard() {
 }
 
 void Keyboard::initialiseKeyPressed() {
-  for(int c = 0; c < NKEYS; c++)
+  for (int c = 0; c < NKEYS; c++)
     mKeyPressed[c] = 0;
 }
 
 void Keyboard::resetKeyPressed() {
-  for(int c = 0; c < NKEYS; c++) {
-    if(mKeyPressed[c] == PRESSED)
+  for (int c = 0; c < NKEYS; c++) {
+    if (mKeyPressed[c] == PRESSED)
       mKeyPressed[c] = 1;
-    else if(mKeyPressed[c] == VALIDATED_STILL_PRESSED)
+    else if (mKeyPressed[c] == VALIDATED_STILL_PRESSED)
       mKeyPressed[c] = 1;
     else
       mKeyPressed[c] = 0;
@@ -62,7 +62,7 @@ void Keyboard::createWindow() {
   gc = XCreateGC(display, window, 0, NULL); // this variable will contain the handle to the returned graphics context.
   
   // Set window max and min size
-  XSizeHints * normal_hints = XAllocSizeHints();
+  XSizeHints *normal_hints = XAllocSizeHints();
   normal_hints->min_width = 400;
   normal_hints->max_width = 1000;
   normal_hints->min_height = 100;
@@ -79,7 +79,7 @@ void Keyboard::createWindow() {
   unsigned int bitmap_width, bitmap_height; // these variables will contain the dimensions of the loaded bitmap.
   int hotspot_x, hotspot_y; // these variables will contain the location of the hot-spot of the loaded bitmap.
   int rc = XReadBitmapFile(display, window, "/home/david/X11-3/keyboard/keyboard.xbm", &bitmap_width, &bitmap_height, &bitmap, &hotspot_x, &hotspot_y);
-  if(rc == BitmapSuccess)
+  if (rc == BitmapSuccess)
     XCopyPlane(display, bitmap, window, gc, 0, 0, bitmap_width, bitmap_height, 0, 0, 1);
   
   // Set text in the window
@@ -104,7 +104,7 @@ void Keyboard::closeWindow() {
 void Keyboard::startListenKeyboard() {
   while (1)  {
     XNextEvent(display, &Report);
-    switch(Report.type) {
+    switch (Report.type) {
       
       case Expose : { 
         XGetGeometry(display, window, &root_return, &x_return, &y_return, &width, &height, &border_width_return, &depth_return);
@@ -114,13 +114,15 @@ void Keyboard::startListenKeyboard() {
         XDrawString(display, window, gc, 10 + (width - 400) / 2, height/2 + 30, text3, 62);
         XFlush(display);
         XSync(display, False);
-        } break;
+        }
+        break;
       
       case KeyPress : 
-        if(XLookupKeysym(&Report.xkey, 0) < 123)
+        if (XLookupKeysym(&Report.xkey, 0) < 123)
           setKeyPressed(XLookupKeysym(&Report.xkey, 0));
-        else {
-          switch(XLookupKeysym(&Report.xkey, 0)) {
+        else
+        {
+          switch (XLookupKeysym(&Report.xkey, 0)) {
             case XK_Home : setKeyPressed(1);
               break;
             case XK_Left : setKeyPressed(2);
@@ -142,10 +144,10 @@ void Keyboard::startListenKeyboard() {
         break;
         
       case KeyRelease :
-        if(XLookupKeysym(&Report.xkey, 0) < 123)
+        if (XLookupKeysym(&Report.xkey, 0) < 123)
           setKeyReleased(XLookupKeysym(&Report.xkey, 0));
         else {
-          switch(XLookupKeysym(&Report.xkey, 0)) {
+          switch (XLookupKeysym(&Report.xkey, 0)) {
             case XK_Home : setKeyReleased(1);
               break;
             case XK_Left : setKeyReleased(2);
@@ -170,37 +172,37 @@ void Keyboard::startListenKeyboard() {
 }
 
 void Keyboard::setKeyPressed(int key) {
-  if(mKeyPressed[key] == VALIDATED)
+  if (mKeyPressed[key] == VALIDATED)
     mKeyPressed[key] = VALIDATED_STILL_PRESSED;
-  else if(mKeyPressed[key] == VALIDATED_STILL_PRESSED)
+  else if (mKeyPressed[key] == VALIDATED_STILL_PRESSED)
     mKeyPressed[key] = VALIDATED_STILL_PRESSED;
   else
     mKeyPressed[key] = PRESSED;
 } 
 
 void Keyboard::setKeyReleased(int key) {
-  if(mKeyPressed[key] == PRESSED)
+  if (mKeyPressed[key] == PRESSED)
     mKeyPressed[key] = PRESSED_AND_RELEASE;
-  else if(mKeyPressed[key] == VALIDATED_STILL_PRESSED)
+  else if (mKeyPressed[key] == VALIDATED_STILL_PRESSED)
     mKeyPressed[key] = VALIDATED;
 }
 
 int Keyboard::getKeyPressed() {
-  for(int c = 0; c < NKEYS; c++) {
-    if(mKeyPressed[c] == PRESSED) {
+  for (int c = 0; c < NKEYS; c++) {
+    if (mKeyPressed[c] == PRESSED) {
       mKeyPressed[c] = VALIDATED_STILL_PRESSED;
-      if(c > 0 && c < 10) // 1->10 for special caracters
+      if (c > 0 && c < 10) // 1->10 for special caracters
         return SpecialKey[c];
-      else if(c > 96 && c < 123)  // Always return ascii caracter of UpperCase
+      else if (c > 96 && c < 123)  // Always return ascii caracter of UpperCase
         return (c - 32);
       else
         return c;
     }
-    else if(mKeyPressed[c] == PRESSED_AND_RELEASE) {
+    else if (mKeyPressed[c] == PRESSED_AND_RELEASE) {
       mKeyPressed[c] = VALIDATED;
-      if(c > 0 && c < 10) // 1->10 for special caracters
+      if (c > 0 && c < 10) // 1->10 for special caracters
         return SpecialKey[c];
-      else if(c > 96 && c < 123)  // Always return ascii caracter of UpperCase
+      else if (c > 96 && c < 123)  // Always return ascii caracter of UpperCase
         return (c - 32);
       else
         return c;

@@ -17,8 +17,10 @@ namespace webots {
     public:
                     Accelerometer(const std::string &name, const Robot *robot); //Use Robot::getAccelerometer() instead
       virtual      ~Accelerometer();
+
       virtual void  enable(int ms);
       virtual void  disable();
+
       const double *getValues() const;
       int           getSamplingPeriod();
 
@@ -26,7 +28,7 @@ namespace webots {
       double        mValues[3];
       void          setValues(const int *integerValues);
     
-    friend int Robot::step(int ms);
+      friend int Robot::step(int ms);
   };
 }
 

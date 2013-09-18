@@ -6,7 +6,7 @@ using namespace webots;
 Accelerometer::Accelerometer(const std::string &name, const Robot *robot) :
   Device(name, robot)
 {
-  for (int i=0; i<3; i++)
+  for (int i = 0; i < 3; i++)
     mValues[i] = 512;  // 512 = central value -> no acceleration
 }
 
@@ -24,7 +24,7 @@ const double *Accelerometer::getValues() const {
 }
 
 void Accelerometer::setValues(const int *integerValues) {
-  for (int i=0; i<3; i++)
+  for (int i = 0; i < 3; i++)
     mValues[i] = integerValues[i];
 }
 

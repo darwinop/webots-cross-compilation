@@ -12,31 +12,30 @@
 #include "Device.hpp"
 
 class Sensor : public Device {
-public:
-  // Device Manager is responsible to create/destroy devices
-  Sensor(WbDeviceTag tag, int index) :
-    Device(tag, index),
-    mRate(0),
-    mLastRefreshTime(0),
-    mSensorRequested(false)
-  {}
-  virtual ~Sensor() {}
+  public:
+    // Device Manager is responsible to create/destroy devices
+             Sensor(WbDeviceTag tag, int index) :
+               Device(tag, index),
+               mRate(0),
+               mLastRefreshTime(0),
+               mSensorRequested(false) {}
+    virtual ~Sensor() {}
 
-  int lastRefreshTime() const { return mLastRefreshTime; }
-  int rate() const { return mRate; }
-  bool isEnabled() const { return mRate > 0; }
+    int      lastRefreshTime() const { return mLastRefreshTime; }
+    int      rate() const { return mRate; }
+    bool     isEnabled() const { return mRate > 0; }
 
-  void setRate(int rate) { mRate = rate; }
-  void setLastRefreshTime(int lastRefreshTime) { mLastRefreshTime = lastRefreshTime; }
+    void     setRate(int rate) { mRate = rate; }
+    void     setLastRefreshTime(int lastRefreshTime) { mLastRefreshTime = lastRefreshTime; }
 
-  bool isSensorRequested() const { return mSensorRequested; }
-  void resetSensorRequested() { mSensorRequested = false; }
-  void setSensorRequested() { mSensorRequested = true; }
+    bool     isSensorRequested() const { return mSensorRequested; }
+    void     resetSensorRequested() { mSensorRequested = false; }
+    void     setSensorRequested() { mSensorRequested = true; }
 
-private:
-  int mRate; // ms
-  int mLastRefreshTime; // ms
-  bool mSensorRequested;
+  private:
+    int      mRate; // ms
+    int      mLastRefreshTime; // ms
+    bool     mSensorRequested;
 };
 
 #endif

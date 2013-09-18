@@ -17,22 +17,21 @@ class QTcpSocket;
 class QString;
 
 class Communication {
-public:
-  Communication();
-  virtual ~Communication();
+  public:
+                Communication();
+    virtual    ~Communication();
 
-  bool initialize(QString IP, int port);
-  void cleanup();
+    bool        initialize(QString IP, int port);
+    void        cleanup();
 
-  bool isInitialized() const { return mInitialized; }
+    bool        isInitialized() const { return mInitialized; }
 
-  bool sendPacket(const Packet *packet);
-  bool receivePacket(Packet *packet);
+    bool        sendPacket(const Packet *packet);
+    bool        receivePacket(Packet *packet);
 
-
-private:
-  bool mInitialized;
-  QTcpSocket *mSocket; // socket server
+  private:
+    bool        mInitialized;
+    QTcpSocket *mSocket; // socket server
 
 };
 

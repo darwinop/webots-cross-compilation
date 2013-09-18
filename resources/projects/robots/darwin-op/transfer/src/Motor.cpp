@@ -18,7 +18,7 @@ std::map<const std::string, int> Motor::mNamesToLimDown;
 std::map<const std::string, int> Motor::mNamesToInitPos;
 
 template <typename T> int sgn(T val) {
-  if(val >= 0)
+  if (val >= 0)
     return 1;
   else
     return -1;
@@ -137,18 +137,18 @@ void Motor::initStaticMap() {
 
 void Motor::setAcceleration(double acceleration){
   mAcceleration = acceleration;
-  if(acceleration == -1)               // No Aceleration limitation -> restore previous Velocity limit
+  if (acceleration == -1)               // No Aceleration limitation -> restore previous Velocity limit
     setVelocity(mMaxVelocity);
 }
 
 void Motor::setVelocity(double vel){
   int value = fabs((vel*30/M_PI)/0.114);  // Need to be verified
-  if(value > 1023)
+  if (value > 1023)
     value = 1023;
-  else if(value == 0) // Because 0 means max Velocity for the dynamixel
+  else if (value == 0) // Because 0 means max Velocity for the dynamixel
     value = 1;
   mMovingSpeed = value;
-  if(mAcceleration == -1)
+  if (mAcceleration == -1)
     mMaxVelocity = vel;
 }
 
@@ -160,16 +160,16 @@ void Motor::disablePosition(){  //EMPTY
 
 void Motor::setTorque(double torque){
   CM730 *cm730 = getRobot()->getCM730();
-  if(torque == 0)
+  if (torque == 0)
     cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);
   else{
 
     this->setAvailableTorque(fabs(torque));
     int firm_ver = 0;
-    if(cm730->ReadByte(JointData::ID_HEAD_PAN, MX28::P_VERSION, &firm_ver, 0) != CM730::SUCCESS)
+    if (cm730->ReadByte(JointData::ID_HEAD_PAN, MX28::P_VERSION, &firm_ver, 0) != CM730::SUCCESS)
       printf("Can't read firmware version from Dynamixel ID %d!\n", JointData::ID_HEAD_PAN);
-    else if(27 <= firm_ver){
-      if(torque > 0)
+    else if (27 <= firm_ver){
+      if (torque > 0)
         mGoalPosition = mNamesToLimDown[getName()];
       else
         mGoalPosition = mNamesToLimUp[getName()];
@@ -181,7 +181,7 @@ void Motor::setTorque(double torque){
 
 void Motor::setAvailableTorque(double availableTorque){
   CM730 *cm730 = getRobot()->getCM730();
-  if(availableTorque > 2.5) {
+  if (availableTorque > 2.5) {
     mTorqueEnable = 1;
     mTorqueLimit = 1023;
   }
@@ -202,10 +202,10 @@ void Motor::setAvailableTorque(double availableTorque){
 
 void Motor::setControlP(double p){
 
-  if(p < 3)
+  if (p < 3)
     printf("WARNING : A small value of P can cause differences between simulation and reality.\n");
 
-  if(p >= 0)
+  if (p >= 0)
   {
     int value = p * 8; // Seems to be good, but has to be verified
     mPGain = value;
@@ -221,7 +221,7 @@ void Motor::disableTorqueFeedback(){  //EMPTY
 double Motor::getTorqueFeedback() const{
 
   double torque = 0;
-  if(mPresentLoad < 1024)
+  if (mPresentLoad < 1024)
     torque = -2.5 * mPresentLoad / 1023.0;
   else
     torque = 2.5 * (mPresentLoad - 1023) / 1023.0;
@@ -240,13 +240,13 @@ void Motor::setPosition(double position) {
 
   int value = MX28::Angle2Value(position*180.0/M_PI);
 
-  if(value >= 0 && value <= MX28::MAX_VALUE) {
+  if (value >= 0 && value <= MX28::MAX_VALUE) {
 
     //       Self-Collision Avoidance      //
     // Work only with a resolution of 4096 //
-    if(value > mNamesToLimUp[getName()])
+    if (value > mNamesToLimUp[getName()])
       value = mNamesToLimUp[getName()];
-    else if(value < mNamesToLimDown[getName()])
+    else if (value < mNamesToLimDown[getName()])
       value = mNamesToLimDown[getName()];
       
     mGoalPosition = value;
@@ -255,18 +255,18 @@ void Motor::setPosition(double position) {
 
 void Motor::updateSpeed(int ms) {
   
-  if(mAcceleration != -1) {
+  if (mAcceleration != -1) {
     double speed = getSpeed();
     int     sens = sgn(speed);
     
     // Direction of rotation changed //
     //     -> reset of velocity      //
-    if(sgn(mActualVelocity) != sens) {
+    if (sgn(mActualVelocity) != sens) {
       mActualVelocity = 0;
       setVelocity(0);
     }
     
-    if(speed == 0)
+    if (speed == 0)
       mActualVelocity = 0;
     
     mActualVelocity = sens * (fabs(mActualVelocity) + ms * mAcceleration / 1000);
@@ -280,7 +280,7 @@ double Motor::getSpeed() const {
   int value = 0;
   double speed = 0;
 
-  if(mPresentSpeed > 1023)
+  if (mPresentSpeed > 1023)
     value = - (mPresentSpeed -1023);
   else
     value = mPresentSpeed;

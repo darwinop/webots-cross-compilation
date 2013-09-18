@@ -17,21 +17,23 @@
 namespace webots {
   class LED: public Device  {
     public:
-                   LED(const std::string &name, const Robot *robot); //Use Robot::getLED() instead
-      virtual     ~LED();
-      virtual void set(int value);
-      virtual int  get();
+                                              LED(const std::string &name, const Robot *robot); //Use Robot::getLED() instead
+      virtual                                ~LED();
+      virtual void                            set(int value);
+      virtual int                             get();
 
     private:
-      static void   initStaticMap();
+      static void                             initStaticMap();
+      static void                             setBackPanel(int state);
+      static int                              mBackPanel;
+
       static std::map<const std::string, int> mNamesToIDs;
-      void setColor(int color);
-      static void setBackPanel(int state);
-      
-      int mColor;
-      static int mBackPanel;
-      
-    friend int Robot::step(int ms);
+
+      void                                    setColor(int color);
+    
+      int                                     mColor;
+    
+      friend int Robot::step(int ms);
   };
 }
 

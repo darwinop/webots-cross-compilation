@@ -49,7 +49,7 @@ DARwInOPGaitManager::DARwInOPGaitManager(webots::Robot *robot, const std::string
   mBasicTimeStep = mRobot->getBasicTimeStep();
 
 #ifndef CROSSCOMPILATION
-  for (int i=0; i<DGM_NSERVOS; i++)
+  for (int i = 0; i < DGM_NSERVOS; i++)
     mMotors[i] = mRobot->getMotor(sotorNames[i]);
 #endif
   
@@ -78,7 +78,7 @@ void DARwInOPGaitManager::step(int step) {
   MotionManager::GetInstance()->SetEnable(true);
 #endif
   
-  if(mIsWalking) {
+  if (mIsWalking) {
     mWalking->X_MOVE_AMPLITUDE = mXAmplitude;
     mWalking->A_MOVE_AMPLITUDE = mAAmplitude;
     mWalking->Y_MOVE_AMPLITUDE = mYAmplitude;
@@ -89,14 +89,14 @@ void DARwInOPGaitManager::step(int step) {
 #ifndef CROSSCOMPILATION
   int numberOfStepToProcess = step / 8;
 
-  if(mBalanceEnable && (mRobot->getGyro("Gyro")->getSamplingPeriod() <= 0)) {
+  if (mBalanceEnable && (mRobot->getGyro("Gyro")->getSamplingPeriod() <= 0)) {
     cerr << "The Gyro is not enable. DARwInOPGaitManager need the Gyro tu run the balance algorithm. The GYro  will be automatically enable."<< endl;
     mRobot->getGyro("Gyro")->enable(mBasicTimeStep);
     myStep();
   }
 
-  for (int i=0; i<numberOfStepToProcess; i++) {
-    if(mBalanceEnable) {
+  for (int i = 0; i < numberOfStepToProcess; i++) {
+    if (mBalanceEnable) {
       const double *gyro = mRobot->getGyro("Gyro")->getValues();
       MotionStatus::RL_GYRO = gyro[0] - 512;  // 512 = central value, skip calibration step of the MotionManager,
       MotionStatus::FB_GYRO = gyro[1] - 512;  // because the influence of the calibration is imperceptible.
@@ -104,7 +104,7 @@ void DARwInOPGaitManager::step(int step) {
     mWalking->Process();
   }
 
-  for (int i=0; i<(DGM_NSERVOS-2); i++)
+  for (int i = 0; i < (DGM_NSERVOS - 2); i++)
     mMotors[i]->setPosition(valueToPosition(mWalking->m_Joint.GetValue(i+1)));
 #endif
 }
@@ -116,7 +116,7 @@ void DARwInOPGaitManager::stop() {
     this->step(8);
 #ifdef CROSSCOMPILATION
   // Reset Goal Position of all motors (except Head) after walking //
-  for(int i=0; i<(DGM_NSERVOS-2); i++)
+  for (int i = 0; i < (DGM_NSERVOS - 2); i++)
     mRobot->getMotor(sotorNames[i])->setPosition(MX28::Value2Angle(mWalking->m_Joint.GetValue(i+1))*(M_PI/180));
   
   // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
