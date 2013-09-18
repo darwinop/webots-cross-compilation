@@ -72,7 +72,7 @@ namespace webots {
       Speaker             *getSpeaker(const std::string &name) const;
       virtual void         keyboardEnable(int ms);
       virtual void         keyboardDisable();
-      virtual int          keyboardGetKey();
+      int                  keyboardGetKey() const;
       
       ::Robot::CM730      *getCM730() const { return mCM730; }
 
