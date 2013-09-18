@@ -28,6 +28,6 @@ void Accelerometer::setValues(const int *integerValues) {
     mValues[i] = integerValues[i];
 }
 
-int Accelerometer::getSamplingPeriod() {
+int Accelerometer::getSamplingPeriod() const {
   return getRobot()->getBasicTimeStep();
 }

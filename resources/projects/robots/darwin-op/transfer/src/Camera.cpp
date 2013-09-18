@@ -100,7 +100,7 @@ bool ::webots::Camera::checkResolution(int width, int height) {
   return false;
 }
 
-int ::webots::Camera::getSamplingPeriod() {
+int ::webots::Camera::getSamplingPeriod() const {
   if (getRobot()->getBasicTimeStep() < 30)
     return 30;
   else
