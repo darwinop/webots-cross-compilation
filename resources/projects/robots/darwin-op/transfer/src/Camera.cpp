@@ -26,7 +26,7 @@ void ::webots::Camera::enable(int ms) {
   int error = 0;
 
   // create and start the thread
-  if((error = pthread_create(&this->mCameraThread, NULL, this->CameraTimerProc, this))!= 0) {
+  if ((error = pthread_create(&this->mCameraThread, NULL, this->CameraTimerProc, this))!= 0) {
     printf("Camera thread error = %d\n",error);
     exit(-1);
   }
@@ -35,14 +35,14 @@ void ::webots::Camera::enable(int ms) {
 }
 
 void ::webots::Camera::disable() {
-  if(mIsActive){
+  if (mIsActive){
     int error=0;
     // End the thread
-    if((error = pthread_cancel(this->mCameraThread))!= 0)
+    if ((error = pthread_cancel(this->mCameraThread))!= 0)
       exit(-1);
     mIsActive = false;
   }
-  if(mImage) {
+  if (mImage) {
     free(mImage);
     mImage = NULL;
   }
@@ -93,15 +93,15 @@ unsigned char ::webots::Camera::imageGetGrey(const unsigned char *image, int wid
 }
 
 bool ::webots::Camera::checkResolution(int width, int height) {
-  for(int i=0; i < NBRESOLUTION; i++) {
-    if( (mResolution[i][0] == width) && (mResolution[i][1] == height) )
+  for (int i = 0; i < NBRESOLUTION; i++) {
+    if ( (mResolution[i][0] == width) && (mResolution[i][1] == height) )
       return true;
   }
   return false;
 }
 
 int ::webots::Camera::getSamplingPeriod() {
-  if(getRobot()->getBasicTimeStep() < 30)
+  if (getRobot()->getBasicTimeStep() < 30)
     return 30;
   else
     return getRobot()->getBasicTimeStep();

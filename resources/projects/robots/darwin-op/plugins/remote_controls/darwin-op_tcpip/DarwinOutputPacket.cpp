@@ -24,7 +24,7 @@ DarwinOutputPacket::DarwinOutputPacket() :
   mGyroRequested(false),
   mCameraRequested(false)
 { 
-  for(int c=0; c<20; c++) {
+  for (int c = 0; c < 20; c++) {
     mMotorPositionFeedback[c] = false;
     mMotorTorqueFeedback[c] = false;
   }
@@ -42,7 +42,7 @@ void DarwinOutputPacket::clear() {
   mGyroRequested = false;
   mCameraRequested = false;
   
-  for(int c=0; c<20; c++) {
+  for (int c = 0; c < 20; c++) {
     mMotorPositionFeedback[c] = false;
     mMotorTorqueFeedback[c] = false;
   }
@@ -92,7 +92,7 @@ void DarwinOutputPacket::apply(int simulationTime) {
   // ---
 
   // send the led commands if required
-  for (int i=0; i<5; i++) {
+  for (int i = 0; i < 5; i++) {
     Led *led = DeviceManager::instance()->led(i);
     if (led->isLedRequested()) {
       append(QByteArray(1, 'L'));
@@ -105,7 +105,7 @@ void DarwinOutputPacket::apply(int simulationTime) {
   }
   
   // Motors management
-  for (int i=0; i<20; i++) {
+  for (int i = 0; i < 20; i++) {
     MotorR *motor = DeviceManager::instance()->motor(i);
     if (motor->isMotorRequested()) {
       append(QByteArray(1, 'S'));
@@ -165,7 +165,7 @@ void DarwinOutputPacket::apply(int simulationTime) {
     }
   }
 
-  for (int i=0; i<20; i++) {
+  for (int i = 0; i < 20; i++) {
     MotorR *motor = DeviceManager::instance()->motor(i);
     if (motor->isSensorRequested()) {
       mMotorPositionFeedback[i] = true;
@@ -175,7 +175,7 @@ void DarwinOutputPacket::apply(int simulationTime) {
     }
   }
   
-  for (int i=0; i<20; i++) {
+  for (int i = 0; i < 20; i++) {
     SingleValueSensor *motorForceFeedback = DeviceManager::instance()->motorForceFeedback(i);
     if (motorForceFeedback->isSensorRequested()) {
       mMotorTorqueFeedback[i] = true;

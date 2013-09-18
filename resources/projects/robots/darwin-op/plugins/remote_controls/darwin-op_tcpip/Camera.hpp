@@ -14,18 +14,18 @@
 #include <string>
 
 class CameraR : public Sensor {
-public:
+  public:
 
-  // Device Manager is responsible to create/destroy devices
-  CameraR(WbDeviceTag tag);
-  virtual ~CameraR() {}
+    // Device Manager is responsible to create/destroy devices
+             CameraR(WbDeviceTag tag);
+    virtual ~CameraR() {}
 
-  int width() const { return mWidth; }
-  int height() const { return mHeight; }
+    int      width() const { return mWidth; }
+    int      height() const { return mHeight; }
 
-private:
-  int mWidth;
-  int mHeight;
+  private:
+    int      mWidth;
+    int      mHeight;
 };
 
 #endif

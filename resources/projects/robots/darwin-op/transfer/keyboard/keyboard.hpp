@@ -31,25 +31,23 @@
 #define WB_ROBOT_KEYBOARD_END           312
 
 class Keyboard {
-public:
-  Keyboard();
-  virtual ~Keyboard() {}
-  
-  void createWindow();
-  void closeWindow();
-  void startListenKeyboard();
-  void initialiseKeyPressed();
-  void resetKeyPressed();
-  
-  int getKeyPressed();
+  public:
+             Keyboard();
+    virtual ~Keyboard() {}
+    
+    void     createWindow();
+    void     closeWindow();
+    void     startListenKeyboard();
+    void     initialiseKeyPressed();
+    void     resetKeyPressed();
+    
+    int      getKeyPressed();
 
-private:
+  private:
+    void     setKeyPressed(int key);
+    void     setKeyReleased(int key);
 
-  void setKeyPressed(int key);
-  void setKeyReleased(int key);
-
-  int      mKeyPressed[NKEYS];
-
+    int      mKeyPressed[NKEYS];
 };
 
 #endif

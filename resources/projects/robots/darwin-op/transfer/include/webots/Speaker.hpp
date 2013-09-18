@@ -19,12 +19,13 @@ namespace webots {
     public:
                     Speaker(const std::string &name, const Robot *robot); //Use Robot::getSpeaker() instead
       virtual      ~Speaker();
+
       virtual void  enable(int ms);
       virtual void  disable();
-      virtual void  playFile(const char* filename);
-      virtual void  playFileWait(const char* filename);
-      virtual void  speak(const char * text, const char * voice = "en", int speed = 175);
-      virtual void  speakFile(const char * filename, const char * voice = "en", int speed = 175);
+      virtual void  playFile(const char *filename);
+      virtual void  playFileWait(const char *filename);
+      virtual void  speak(const char *text, const char *voice = "en", int speed = 175);
+      virtual void  speakFile(const char *filename, const char *voice = "en", int speed = 175);
 
     private:
       pid_t speak_pid;

@@ -17,16 +17,18 @@ namespace webots {
     public:
                     Gyro(const std::string &name, const Robot *robot); //Use Robot::getGyro() instead
       virtual      ~Gyro();
+
       virtual void  enable(int ms);
       virtual void  disable();
       const double *getValues() const;
       int           getSamplingPeriod();
 
     private:
-      double        mValues[3];
       void          setValues(const int *integerValues);
+
+      double        mValues[3];
     
-    friend int Robot::step(int ms);
+      friend int Robot::step(int ms);
   };
 }
 

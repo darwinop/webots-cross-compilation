@@ -14,7 +14,7 @@ DARwInOPMotionTimerManager::DARwInOPMotionTimerManager() {
 }
 
 void DARwInOPMotionTimerManager::MotionTimerInit() {
-  if(!mStarted) {
+  if (!mStarted) {
     LinuxMotionTimer *motion_timer = new LinuxMotionTimer(MotionManager::GetInstance());
     motion_timer->Start();
     mStarted = true;

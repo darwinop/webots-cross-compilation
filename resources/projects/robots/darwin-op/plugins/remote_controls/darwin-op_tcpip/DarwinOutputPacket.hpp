@@ -14,30 +14,30 @@
 class Device;
 
 class DarwinOutputPacket : public Packet {
-public:
-  DarwinOutputPacket();
-  virtual ~DarwinOutputPacket();
+  public:
+                 DarwinOutputPacket();
+    virtual     ~DarwinOutputPacket();
 
-  virtual void clear();
+    virtual void clear();
 
-  int answerSize() const { return mAnswerSize; }
+    int          answerSize() const { return mAnswerSize; }
 
-  void apply(int simulationTime);
+    void         apply(int simulationTime);
 
-  bool isAccelerometerRequested() const { return mAccelerometerRequested; }
-  bool isGyroRequested() const { return mGyroRequested; }
-  bool isCameraRequested() const { return mCameraRequested; }
-  bool isMotorPositionFeedback(int at) const { return mMotorPositionFeedback[at]; }
-  bool isMotorForceFeedback(int at) const { return mMotorTorqueFeedback[at]; }
+    bool         isAccelerometerRequested() const { return mAccelerometerRequested; }
+    bool         isGyroRequested() const { return mGyroRequested; }
+    bool         isCameraRequested() const { return mCameraRequested; }
+    bool         isMotorPositionFeedback(int at) const { return mMotorPositionFeedback[at]; }
+    bool         isMotorForceFeedback(int at) const { return mMotorTorqueFeedback[at]; }
 
-private:
-  int mAnswerSize;
+  private:
+    int          mAnswerSize;
 
-  bool mAccelerometerRequested;
-  bool mGyroRequested;
-  bool mCameraRequested;
-  bool mMotorPositionFeedback[20];
-  bool mMotorTorqueFeedback[20];
+    bool         mAccelerometerRequested;
+    bool         mGyroRequested;
+    bool         mCameraRequested;
+    bool         mMotorPositionFeedback[20];
+    bool         mMotorTorqueFeedback[20];
 };
 
 #endif

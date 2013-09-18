@@ -73,7 +73,7 @@ int Wrapper::robotStep(int step) {
   outputPacket.apply(beginStepTime);
 
   // 3 trials before giving up
-  for(int i=0; i<3; i++) {
+  for (int i = 0; i < 3; i++) {
 
     // send the output packet
     cSuccess = cCommunication->sendPacket(&outputPacket);
@@ -92,9 +92,11 @@ int Wrapper::robotStep(int step) {
     }
     inputPacket.decode(beginStepTime, outputPacket);
 
-    if (cSuccess) break;
+    if (cSuccess)
+      break;
   }
-  if (!cSuccess) return 0;
+  if (!cSuccess)
+    return 0;
 
   // Time management -> in order to be always as close as possible to 1.0x
   int newTime = cTime->currentSimulationTime();
@@ -102,12 +104,12 @@ int Wrapper::robotStep(int step) {
   int static oldTime = 0;
   double static timeStep = step;
   
-  if(newTime < oldTime)
+  if (newTime < oldTime)
     oldTime = newTime;
 
   // calculate difference between this time step and the previous one
   int difference = (newTime-oldTime);
-  if(difference > 10*step) // if time difference is to big (simulation has been stopped for example)
+  if (difference > 10*step) // if time difference is to big (simulation has been stopped for example)
     difference = 10*step;  // set the difference to 10 * TimeStep
     
   // Recalculate time actual time step
@@ -117,7 +119,7 @@ int Wrapper::robotStep(int step) {
   timeStep = timeStep * 9 + difference;
   timeStep = timeStep/10;
 
-  if((int)timeStep < step) { // the packet is sent at time
+  if ((int)timeStep < step) { // the packet is sent at time
     Time::wait((step - timeStep) + 0.5);
     oldTime = cTime->currentSimulationTime();
     return 0;

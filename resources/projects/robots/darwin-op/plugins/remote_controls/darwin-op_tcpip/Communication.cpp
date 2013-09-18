@@ -81,7 +81,7 @@ bool Communication::sendPacket(const Packet *packet) {
 bool Communication::receivePacket(Packet *packet) {
 
   packet->clear();
-  if(mSocket->waitForReadyRead(-1) == -1) {
+  if (mSocket->waitForReadyRead(-1) == -1) {
     cerr << "RECEIVING PACKET NOT READABLE" << endl;
     return false;
   }
@@ -95,7 +95,7 @@ bool Communication::receivePacket(Packet *packet) {
   }
   QByteArray startPacket;
   startPacket = mSocket->readAll();
-  if(startPacket[0] != 'W')  // if packet do not start by 'W' -> skip this packet
+  if (startPacket[0] != 'W')  // if packet do not start by 'W' -> skip this packet
     return receivePacket(packet);
   packet->append(startPacket);  // Read beginning of the packet
   int packet_size = packet->readIntAt(1); // extract packet size from the beginning of the packet

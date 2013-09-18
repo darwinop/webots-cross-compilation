@@ -10,17 +10,17 @@
 #define TIME_HPP
 
 class Time {
-public:
-  Time();
-  virtual ~Time();
+  public:
+                 Time();
+    virtual     ~Time();
 
-  int currentSimulationTime(); // returns milliseconds
+    int          currentSimulationTime(); // returns milliseconds
 
-  static void wait(int duration); // duration in milliseconds
+    static void  wait(int duration); // duration in milliseconds
 
-private:
-  unsigned int currentTime();
-  unsigned int mInitTime;
+  private:
+    unsigned int currentTime();
+    unsigned int mInitTime;
 };
 
 #endif

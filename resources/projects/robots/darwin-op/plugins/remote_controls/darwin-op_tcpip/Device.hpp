@@ -13,21 +13,20 @@
 #include <webots/nodes.h>
 
 class Device {
-public:
-  // Device Manager is responsible to create/destroy devices
-  Device(WbDeviceTag tag, int index);
-  virtual ~Device() {}
+  public:
+    // Device Manager is responsible to create/destroy devices
+                Device(WbDeviceTag tag, int index);
+    virtual    ~Device() {}
 
-  WbDeviceTag tag() const { return mTag; }
+    WbDeviceTag tag() const { return mTag; }
 
-  int index() const { return mIndex; }
+    int         index() const { return mIndex; }
 
-private:
-  WbDeviceTag mTag;
-  WbNodeType mType;
-  const char *mName;
-
-  int mIndex;
+  private:
+    WbDeviceTag mTag;
+    WbNodeType  mType;
+    const char *mName;
+    int         mIndex;
 };
 
 #endif

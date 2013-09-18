@@ -16,7 +16,10 @@
 namespace webots {
   class Motor: public Device  {
     public:
-      enum { ROTATIONAL = 0 };
+      enum {
+        ROTATIONAL = 0
+      };
+
                     Motor(const std::string &name, const Robot *robot); //Use Robot::getMotor() instead
       virtual      ~Motor();
       virtual void  setAcceleration(double acceleration);
@@ -37,10 +40,26 @@ namespace webots {
       int           getType() const;
       virtual void  setPosition(double position);
       
-              void  updateSpeed(int ms);
+      void          updateSpeed(int ms);
 
     private:
       static void   initStaticMap();
+
+      static std::map<const std::string, int> mNamesToIDs;
+      static std::map<const std::string, int> mNamesToLimUp;
+      static std::map<const std::string, int> mNamesToLimDown;
+      static std::map<const std::string, int> mNamesToInitPos;
+
+      int getGoalPosition();
+      int getTorqueEnable();
+      int getPGain();
+      int getMovingSpeed();
+      int getTorqueLimit();
+      double getSpeed() const;
+      void setPresentPosition(int position);
+      void setPresentSpeed(int speed);
+      void setPresentLoad(int load);
+    
       // For acceleration module //
       double        mAcceleration;
       double        mActualVelocity;
@@ -56,23 +75,8 @@ namespace webots {
       int           mPresentSpeed;
       int           mPresentLoad;
 
-      int getGoalPosition();
-      int getTorqueEnable();
-      int getPGain();
-      int getMovingSpeed();
-      int getTorqueLimit();
-      void setPresentPosition(int position);
-      void setPresentSpeed(int speed);
-      void setPresentLoad(int load);
-      
       friend int Robot::step(int ms);
       friend     Robot::Robot();
-
-      static std::map<const std::string, int> mNamesToIDs;
-      static std::map<const std::string, int> mNamesToLimUp;
-      static std::map<const std::string, int> mNamesToLimDown;
-      static std::map<const std::string, int> mNamesToInitPos;
-      double getSpeed() const;
   };
 }
 

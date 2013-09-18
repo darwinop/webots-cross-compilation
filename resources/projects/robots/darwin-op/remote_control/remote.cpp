@@ -55,20 +55,20 @@ void Remote::remoteStep() {
   myStep();
 }
 
-const double * Remote::getRemoteAccelerometer() const {
+const double *Remote::getRemoteAccelerometer() const {
   return mAccelerometer->getValues();
 }
 
-const double * Remote::getRemoteGyro() const {
+const double *Remote::getRemoteGyro() const {
   return mGyro->getValues();
 }
 
-const unsigned char * Remote::getRemoteImage() const {
+const unsigned char *Remote::getRemoteImage() const {
   return mCamera->getImage();
 }
 
 void Remote::setRemoteLED(int index, int value) {
-  switch(index) {
+  switch (index) {
     case 0: mEyeLed->set(value);
       break;
     case 1: mHeadLed->set(value);

@@ -49,14 +49,14 @@ DARwInOPMotionManager::DARwInOPMotionManager(webots::Robot *robot) :
 
   int firm_ver = 0;
   CM730 *cm730 = mRobot->getCM730();
-  if(cm730->ReadByte(JointData::ID_HEAD_PAN, MX28::P_VERSION, &firm_ver, 0)  != CM730::SUCCESS) {
+  if (cm730->ReadByte(JointData::ID_HEAD_PAN, MX28::P_VERSION, &firm_ver, 0)  != CM730::SUCCESS) {
     fprintf(stderr, "Can't read firmware version from Dynamixel ID %d!\n", JointData::ID_HEAD_PAN);
     mCorrectlyInitialized = false;
     mAction = NULL;
     return;
   }
 
-  if(0 < firm_ver && firm_ver < 27)
+  if (0 < firm_ver && firm_ver < 27)
     filename = DARwInOPDirectoryManager::getDataDirectory() + "motion_1024.bin";
   else if (27 <= firm_ver)
     filename = DARwInOPDirectoryManager::getDataDirectory() + "motion_4096.bin";
@@ -67,7 +67,7 @@ DARwInOPMotionManager::DARwInOPMotionManager(webots::Robot *robot) :
     return;
   }
 #else
-  for (int i=0; i<DMM_NSERVOS; i++) {
+  for (int i = 0; i<DMM_NSERVOS; i++) {
     mCurrentPositions[i] = 0.0;
     mMotors[i] = mRobot->getMotor(sotorNames[i]);
   }
@@ -76,7 +76,7 @@ DARwInOPMotionManager::DARwInOPMotionManager(webots::Robot *robot) :
   
   mAction = Action::GetInstance();
   
-  if( mAction->LoadFile(const_cast<char *> (filename.c_str())) == false ) {
+  if ( mAction->LoadFile(const_cast<char *> (filename.c_str())) == false ) {
     cerr << "DARwInOPMotionManager: Cannot load the motion from " << filename << endl;
     mCorrectlyInitialized = false;
     mAction = NULL;
@@ -105,12 +105,12 @@ void DARwInOPMotionManager::playPage(int id, bool sync) {
   MotionManager::GetInstance()->SetEnable(true);
   usleep(8000);
   Action::GetInstance()->Start(id);
-  if(sync) {
+  if (sync) {
     while(Action::GetInstance()->IsRunning())
       usleep(mBasicTimeStep*1000);
     
     // Reset Goal Position of all motors after a motion //
-    for(i=0; i<DMM_NSERVOS; i++)
+    for (i = 0; i < DMM_NSERVOS; i++)
       mRobot->getMotor(sotorNames[i])->setPosition(MX28::Value2Angle(mAction->m_Joint.GetValue(i+1))*(M_PI/180));
     
     // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
@@ -120,24 +120,24 @@ void DARwInOPMotionManager::playPage(int id, bool sync) {
   }
   else {
     int error = 0;
-    if((error = pthread_create(&this->mMotionThread, NULL, this->MotionThread, this))!= 0) {
+    if ((error = pthread_create(&this->mMotionThread, NULL, this->MotionThread, this))!= 0) {
       printf("Motion thread error = %d\n",error);
     }
   }
 #else
-  if(sync) {
+  if (sync) {
     Action::PAGE page;
     if (mAction->LoadPage(id, &page)) {
       // cout << "Play motion " << setw(2) << id << ": " << page.header.name << endl;
-      for(int i=0; i<page.header.repeat; i++) {
-        for(int j=0; j<page.header.stepnum; j++) {
-           for(int k=0; k<DMM_NSERVOS; k++)
+      for (int i = 0; i < page.header.repeat; i++) {
+        for (int j = 0; j < page.header.stepnum; j++) {
+           for (int k = 0; k < DMM_NSERVOS; k++)
              mTargetPositions[k] = valueToPosition(page.step[j].position[k+1]);
            achieveTarget(8*page.step[j].time);
            wait(8*page.step[j].pause);
         }
       }
-      if(page.header.next != 0)
+      if (page.header.next != 0)
         playPage(page.header.next);
     }
     else
@@ -146,7 +146,7 @@ void DARwInOPMotionManager::playPage(int id, bool sync) {
   else {
     InitMotionAsync();
     mPage = new Action::PAGE;
-    if(!(mAction->LoadPage(id, (Action::PAGE*)mPage)))
+    if (!(mAction->LoadPage(id, (Action::PAGE*)mPage)))
       cerr << "Cannot load the page" << endl;
   }
 #endif
@@ -170,19 +170,19 @@ void DARwInOPMotionManager::achieveTarget(int msToAchieveTarget) {
   int stepNumberToAchieveTarget = msToAchieveTarget / mBasicTimeStep;
   bool stepNeeded = false;
   
-  for (int i=0; i<DMM_NSERVOS; i++) {
-    if(mMotors[i]->getPositionSamplingPeriod() <= 0) {
+  for (int i = 0; i < DMM_NSERVOS; i++) {
+    if (mMotors[i]->getPositionSamplingPeriod() <= 0) {
       cerr << "The position feedback of sotor "<<  sotorNames[i] << " is not enabled. DARwInOPMotionManager need to read the position of all motors. The position will be automatically enable."<< endl;
       mMotors[i]->enablePosition(mBasicTimeStep);
       stepNeeded = true;
     }
-    if(stepNeeded)
+    if (stepNeeded)
       myStep();
     mCurrentPositions[i] = mMotors[i]->getPosition();
   }
   
   while (stepNumberToAchieveTarget > 0) {
-    for (int i=0; i<DMM_NSERVOS; i++) {
+    for (int i = 0; i < DMM_NSERVOS; i++) {
       double dX = mTargetPositions[i] - mCurrentPositions[i];
       double newPosition = mCurrentPositions[i] + dX / stepNumberToAchieveTarget;
       mCurrentPositions[i] = newPosition;
@@ -201,13 +201,13 @@ double DARwInOPMotionManager::valueToPosition(unsigned short value) {
 
 void DARwInOPMotionManager::InitMotionAsync() {
   bool stepNeeded = false;
-  for (int i=0; i<DMM_NSERVOS; i++) {
-    if(mMotors[i]->getPositionSamplingPeriod() <= 0) {
+  for (int i = 0; i < DMM_NSERVOS; i++) {
+    if (mMotors[i]->getPositionSamplingPeriod() <= 0) {
       cerr << "The position feedback of sotor "<<  sotorNames[i] << " is not enabled. DARwInOPMotionManager need to read the position of all motors. The position will be automatically enable."<< endl;
       mMotors[i]->enablePosition(mBasicTimeStep);
       stepNeeded = true;
     }
-    if(stepNeeded)
+    if (stepNeeded)
       myStep();
      mCurrentPositions[i] = mMotors[i]->getPosition();
   }
@@ -219,8 +219,8 @@ void DARwInOPMotionManager::InitMotionAsync() {
 }
 
 void DARwInOPMotionManager::step(int ms) {
-  if(mStepNumberToAchieveTarget > 0) {
-    for (int i=0; i<DMM_NSERVOS; i++) {
+  if (mStepNumberToAchieveTarget > 0) {
+    for (int i = 0; i < DMM_NSERVOS; i++) {
       double dX = mTargetPositions[i] - mCurrentPositions[i];
       double newPosition = mCurrentPositions[i] + dX / mStepNumberToAchieveTarget;
       mCurrentPositions[i] = newPosition;
@@ -228,26 +228,26 @@ void DARwInOPMotionManager::step(int ms) {
     }
     mStepNumberToAchieveTarget--;
   }
-  else if(mWait > 0) {
+  else if (mWait > 0) {
     mWait--;
   }
   else {
-    if(mStepnum < ((Action::PAGE*)mPage)->header.stepnum) {
-      for(int k=0; k<DMM_NSERVOS; k++)
+    if (mStepnum < ((Action::PAGE*)mPage)->header.stepnum) {
+      for (int k = 0; k < DMM_NSERVOS; k++)
         mTargetPositions[k] = valueToPosition(((Action::PAGE*)mPage)->step[mStepnum].position[k+1]);
       mStepNumberToAchieveTarget = (8*((Action::PAGE*)mPage)->step[mStepnum].time) / mBasicTimeStep;
-      if(mStepNumberToAchieveTarget == 0)
+      if (mStepNumberToAchieveTarget == 0)
         mStepNumberToAchieveTarget = 1;
       mWait = (8*((Action::PAGE*)mPage)->step[mStepnum].pause) / mBasicTimeStep + 0.5;
       mStepnum++;
       step(ms);
     }
-    else if(mRepeat < (((Action::PAGE*)mPage)->header.repeat)) {
+    else if (mRepeat < (((Action::PAGE*)mPage)->header.repeat)) {
       mRepeat++;
       mStepnum = 0;
       step(ms);
     }
-    else if(((Action::PAGE*)mPage)->header.next != 0)
+    else if (((Action::PAGE*)mPage)->header.next != 0)
       playPage(((Action::PAGE*)mPage)->header.next, true);
     else
       mMotionPlaying = false;
@@ -256,13 +256,13 @@ void DARwInOPMotionManager::step(int ms) {
 #else
 
 void *DARwInOPMotionManager::MotionThread(void *param) {
-  DARwInOPMotionManager * instance = ((DARwInOPMotionManager*)param);
+  DARwInOPMotionManager *instance = ((DARwInOPMotionManager*) param);
   instance->mMotionPlaying = true;
   while(Action::GetInstance()->IsRunning())
     usleep(instance->mBasicTimeStep*1000);
   
   // Reset Goal Position of all motors after a motion //
-  for(int i=0; i<DMM_NSERVOS; i++)
+  for (int i = 0; i < DMM_NSERVOS; i++)
     instance->mRobot->getMotor(sotorNames[i])->setPosition(MX28::Value2Angle(instance->mAction->m_Joint.GetValue(i+1))*(M_PI/180));
     
   // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //

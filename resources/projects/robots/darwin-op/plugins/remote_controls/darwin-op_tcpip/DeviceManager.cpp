@@ -52,11 +52,11 @@ DeviceManager::DeviceManager() {
   mLeds[2] = new Led(wb_robot_get_device("BackLedRed"), 2);
   mLeds[3] = new Led(wb_robot_get_device("BackLedGreen"), 3);
   mLeds[4] = new Led(wb_robot_get_device("BackLedBlue"), 4);
-  for (int i=0; i<5; i++) {
+  for (int i = 0; i < 5; i++) {
     mDevices.push_back(mLeds[i]);
   }
   
-  for (int i=0; i<20; i++) {
+  for (int i = 0; i < 20; i++) {
     mMotors[i] = new MotorR(wb_robot_get_device(motorNames[i]), i);
     mDevices.push_back(mMotors[i]);   
     
@@ -90,10 +90,10 @@ void DeviceManager::clear() {
   mAccelerometer = NULL;
   mGyro = NULL;
 
-  for (int i=0; i<5; i++)
+  for (int i = 0; i < 5; i++)
     mLeds[i] = NULL;
     
-  for (int i=0; i<20; i++) {
+  for (int i = 0; i < 20; i++) {
     mMotors[i] = NULL;
     mMotorsForceFeedback[i] = NULL;
   }
@@ -104,7 +104,7 @@ void DeviceManager::apply(int simulationTime) {
   vector<Device *>::const_iterator it;
 
   // check if some sensors need to be requested
-  for (it=mDevices.begin() ; it < mDevices.end(); it++) {
+  for (it = mDevices.begin() ; it < mDevices.end(); it++) {
     Device *d = *it;
     Sensor *s = dynamic_cast<Sensor *>(d);
 

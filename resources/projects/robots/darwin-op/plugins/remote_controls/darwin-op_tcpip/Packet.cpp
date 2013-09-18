@@ -29,7 +29,7 @@ void Packet::appendINT(int value) {
 }
 
 int Packet::readIntAt(int pos) {
-  if(mData->size() > (pos+3)) {
+  if (mData->size() > (pos+3)) {
     unsigned char c1 = static_cast <unsigned char> (mData->at(pos + 3));
     unsigned char c2 = static_cast <unsigned char> (mData->at(pos + 2));
     unsigned char c3 = static_cast <unsigned char> (mData->at(pos + 1));

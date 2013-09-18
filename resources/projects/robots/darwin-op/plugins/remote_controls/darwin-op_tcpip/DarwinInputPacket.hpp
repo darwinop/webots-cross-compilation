@@ -14,16 +14,15 @@
 class DarwinOutputPacket;
 
 class DarwinInputPacket : public Packet {
-public:
-  DarwinInputPacket(int maxSize);
-  virtual ~DarwinInputPacket();
+  public:
+             DarwinInputPacket(int maxSize);
+    virtual ~DarwinInputPacket();
 
-  void decode(int simulationTime, const DarwinOutputPacket &outputPacket);
-  
-private:
-
-  int mCameraWidth;
-  int mCameraHeight;
+    void     decode(int simulationTime, const DarwinOutputPacket &outputPacket);
+    
+  private:
+    int      mCameraWidth;
+    int      mCameraHeight;
 };
 
 #endif
