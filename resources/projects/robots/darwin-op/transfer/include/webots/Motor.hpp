@@ -52,22 +52,23 @@ namespace webots {
       void         updateSpeed(int ms);
 
     private:
-      static void   initStaticMap();
+      static void  initStaticMap();
 
       static std::map<const std::string, int> mNamesToIDs;
       static std::map<const std::string, int> mNamesToLimUp;
       static std::map<const std::string, int> mNamesToLimDown;
       static std::map<const std::string, int> mNamesToInitPos;
 
-      int getGoalPosition() const;
-      int getTorqueEnable() const;
-      int getPGain() const;
-      int getMovingSpeed() const;
-      int getTorqueLimit() const;
-      double getSpeed() const;
-      void setPresentPosition(int position);
-      void setPresentSpeed(int speed);
-      void setPresentLoad(int load);
+      int           getGoalPosition() const;
+      int           getTorqueEnable() const;
+      int           getPGain() const;
+      int           getMovingSpeed() const;
+      int           getTorqueLimit() const;
+      double        getSpeed() const;
+
+      void          setPresentPosition(int position);
+      void          setPresentSpeed(int speed);
+      void          setPresentLoad(int load);
     
       // For acceleration module //
       double        mAcceleration;
