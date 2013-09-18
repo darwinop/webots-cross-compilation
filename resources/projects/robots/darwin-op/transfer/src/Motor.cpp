@@ -135,13 +135,13 @@ void Motor::initStaticMap() {
   }
 }
 
-void Motor::setAcceleration(double acceleration){
+void Motor::setAcceleration(double acceleration) {
   mAcceleration = acceleration;
   if (acceleration == -1)               // No Aceleration limitation -> restore previous Velocity limit
     setVelocity(mMaxVelocity);
 }
 
-void Motor::setVelocity(double vel){
+void Motor::setVelocity(double vel) {
   int value = fabs((vel*30/M_PI)/0.114);  // Need to be verified
   if (value > 1023)
     value = 1023;
@@ -152,13 +152,13 @@ void Motor::setVelocity(double vel){
     mMaxVelocity = vel;
 }
 
-void Motor::enablePosition(int ms){  //EMPTY
+void Motor::enablePosition(int ms) {  //EMPTY
 }
 
-void Motor::disablePosition(){  //EMPTY
+void Motor::disablePosition() {  //EMPTY
 }
 
-void Motor::setTorque(double torque){
+void Motor::setTorque(double torque) {
   CM730 *cm730 = getRobot()->getCM730();
   if (torque == 0)
     cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);
@@ -168,7 +168,7 @@ void Motor::setTorque(double torque){
     int firm_ver = 0;
     if (cm730->ReadByte(JointData::ID_HEAD_PAN, MX28::P_VERSION, &firm_ver, 0) != CM730::SUCCESS)
       printf("Can't read firmware version from Dynamixel ID %d!\n", JointData::ID_HEAD_PAN);
-    else if (27 <= firm_ver){
+    else if (27 <= firm_ver) {
       if (torque > 0)
         mGoalPosition = mNamesToLimDown[getName()];
       else
@@ -179,7 +179,7 @@ void Motor::setTorque(double torque){
   }
 }
 
-void Motor::setAvailableTorque(double availableTorque){
+void Motor::setAvailableTorque(double availableTorque) {
   CM730 *cm730 = getRobot()->getCM730();
   if (availableTorque > 2.5) {
     mTorqueEnable = 1;
@@ -200,7 +200,7 @@ void Motor::setAvailableTorque(double availableTorque){
     mTorqueLimit = 1;
 }
 
-void Motor::setControlP(double p){
+void Motor::setControlP(double p) {
 
   if (p < 3)
     printf("WARNING : A small value of P can cause differences between simulation and reality.\n");
@@ -212,10 +212,10 @@ void Motor::setControlP(double p){
   }
 }
 
-void Motor::enableTorqueFeedback(int ms){  //EMPTY
+void Motor::enableTorqueFeedback(int ms) {  //EMPTY
 }
 
-void Motor::disableTorqueFeedback(){  //EMPTY
+void Motor::disableTorqueFeedback() {  //EMPTY
 }
 
 double Motor::getTorqueFeedback() const{
@@ -289,23 +289,23 @@ double Motor::getSpeed() const {
   return speed;
 }
 
-int Motor::getGoalPosition() {
+int Motor::getGoalPosition() const {
   return mGoalPosition;
 }
 
-int Motor::getTorqueEnable() {
+int Motor::getTorqueEnable() const {
   return mTorqueEnable;
 }
 
-int Motor::getPGain() {
+int Motor::getPGain() const {
   return mPGain;
 }
 
-int Motor::getMovingSpeed() {
+int Motor::getMovingSpeed() const {
   return mMovingSpeed;
 }
 
-int Motor::getTorqueLimit() {
+int Motor::getTorqueLimit() const {
   return mTorqueLimit;
 }
 
@@ -321,19 +321,19 @@ void Motor::setPresentLoad(int load) {
   mPresentLoad = load;
 }
 
-int Motor::getPositionSamplingPeriod() {
+int Motor::getPositionSamplingPeriod() const {
   return getRobot()->getBasicTimeStep();
 }
 
-double Motor::getTargetPosition() {
+double Motor::getTargetPosition() const {
   return mGoalPosition;
 }
 
-double Motor::getMinPosition() {
+double Motor::getMinPosition() const {
   return (MX28::Value2Angle(mNamesToLimDown[getName()]) * (M_PI/180.0));
 }
 
-double Motor::getMaxPosition() {
+double Motor::getMaxPosition() const {
   return (MX28::Value2Angle(mNamesToLimUp[getName()]) * (M_PI/180.0));
 }
 

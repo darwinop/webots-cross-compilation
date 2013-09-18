@@ -22,7 +22,7 @@ namespace webots {
       virtual void  disable();
 
       const double *getValues() const;
-      int           getSamplingPeriod();
+      int           getSamplingPeriod() const;
 
     private:
       double        mValues[3];

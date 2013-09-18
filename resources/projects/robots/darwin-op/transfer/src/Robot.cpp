@@ -384,7 +384,7 @@ void webots::Robot::keyboardDisable() {
   mKeyboardEnable = false;
 }
 
-int webots::Robot::keyboardGetKey() {
+int webots::Robot::keyboardGetKey() const {
   if (mKeyboardEnable == true) {
     return mKeyboard->getKeyPressed();
   }
