@@ -201,7 +201,7 @@ void Motor::setAvailableTorque(double availableTorque) {
     mTorqueLimit = 1;
 }
 
-void Motor::setControlP(double p) {
+void Motor::setControlP(double p) { //TODO: why not PID?
 
   if (p < 3)
     printf("WARNING : A small value of P can cause differences between simulation and reality.\n");
