@@ -37,10 +37,7 @@ class Transfer : public QScrollArea
                         Transfer(QWidget *parent = 0);
     virtual            ~Transfer();
 
-    void                saveSettings();
-    void                robotInstableSlot();
-    void                enableButtons();
-    void                disableButtons();
+    // void                robotInstableSlot(); // TODO: this function is never call: when has it been unused?
 
   public slots:
     void                installControllerWarningSlot();
@@ -62,6 +59,10 @@ class Transfer : public QScrollArea
     void                testSignal();
 
   private:
+    void                saveSettings();
+    void                enableButtons();
+    void                disableButtons();
+
     void                showProgressBox(const QString &title,const QString &message);
     void                finishStartRemoteCompilation();
     void                finishStartRemoteControl();

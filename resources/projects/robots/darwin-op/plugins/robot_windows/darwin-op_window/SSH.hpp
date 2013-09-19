@@ -4,6 +4,9 @@
  * Description:  Class implementing the SSH protocol
  * Author:       david.mansolino@epfl.ch
  * Modifications:
+ * TODO:         comment (fabien): the SSH class should not have any DARwIn-OP dependency
+ *               -> SSH stuff is not reusable
+ *               -> the code is difficult to understand because mixed
  */
 
 

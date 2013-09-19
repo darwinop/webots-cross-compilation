@@ -419,6 +419,7 @@ void Transfer::disableButtons() {
   mRemoteControlButton->setEnabled(false);
 }
 
+/*
 void Transfer::robotInstableSlot() {
   QString imagePath;
   imagePath = StandardPaths::getWebotsHomePath() + QString("resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/start_position.png");
@@ -439,6 +440,7 @@ void Transfer::robotInstableSlot() {
   else
     emit isRobotStableSignal();
 }
+*/
 
 void Transfer::installControllerWarningSlot() {
   if (!mMakeDefaultControllerCheckBox->isChecked()) {
