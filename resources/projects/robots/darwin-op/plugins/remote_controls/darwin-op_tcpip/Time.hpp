@@ -1,7 +1,7 @@
 /*
  * File:         Time.hpp
  * Date:         June 2012
- * Description:  Helper function to return simulation real time
+ * Description:  Helper function to return real time
  * Author:       fabien.rohrer@cyberbotics.com
  * Modifications:
  */
