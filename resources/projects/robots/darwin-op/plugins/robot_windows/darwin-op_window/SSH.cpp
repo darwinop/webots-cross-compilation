@@ -680,15 +680,18 @@ int SSH::startRemoteControl(const QString &IPAddress, const QString &username, c
     closeSSHSession();
     return -1;
   }
+  emit print("Start remote control server...\n", false);
   executeSSHCommand("echo "+password+" | sudo -S /darwin/Linux/project/webots/remote_control/remote_control "
                     +QString::number(320/cameraWidth)+" "
                     +QString::number(240/cameraHeight), true, false); // wait until we terminate it
+  emit print("Remote control server ended\n", false);
   closeSFTPChannel();
   closeSSHSession();
   return 1;
 }
 
 int SSH::uninstall(const QString &IPAddress, const QString &username, const QString &password) {
+  emit print("Uninstall...\n", false);
   if (openSSHSession(IPAddress, username, password) == -1)
     return -1;
   executeSSHCommand("ls /darwin/Linux/project/webots/backup/rc.local_original >/dev/null 2>&1 && echo 1 || echo 0", false);
@@ -696,5 +699,6 @@ int SSH::uninstall(const QString &IPAddress, const QString &username, const QStr
     executeSSHCommand("echo " + password + " | sudo -S cp /darwin/Linux/project/webots/backup/rc.local_original /etc/rc.local");
   executeSSHCommand("rm -rf /darwin/Linux/project/webots");
   closeSSHSession();
+  emit print("Uninstallation successfully completed\n", false);
   return 1;
 }
