@@ -24,7 +24,7 @@ namespace webots {
       virtual      ~Motor();
 
       virtual void  setPosition(double position);
-      double        getTargetposition() const;
+      double        getTargetPosition() const;
       virtual void  setVelocity(double vel);
       virtual void  setAcceleration(double acceleration);
       virtual void  setAvailableTorque(double availableTorque);
