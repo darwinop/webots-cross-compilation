@@ -142,12 +142,12 @@ void DarwinOutputPacket::apply(int simulationTime) {
       // ControlPID
       if (motor->isControlPIDRequested()) {
         append(QByteArray(1, 'c'));
-        int value = (int)(motor->controlP() * 1000);
+        int value = (int)(motor->controlP() * 1000);  // TODO: why not PID?
         appendINT(value);
         // I and D gains are not transmitted as the robot currently doesn't support it
         motor->resetControlPIDRequested();
       }
-      // ControlP (legacy)
+      // ControlP (legacy) // TODO: certainly to remove
       if (motor->isControlPRequested()) {
         append(QByteArray(1, 'c'));
         int value = (int)(motor->controlP() * 1000);
