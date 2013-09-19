@@ -39,9 +39,12 @@ namespace webots {
       double        getPosition() const;
 
       // note: *Force* functions are not implemented because DARwIn-OP is controlled in torques
+
+      // torque feedback API is useless on the real robot:
+      // indeed, the torque feedback is available at each step no matter the sampling period
       virtual void  enableTorqueFeedback(int ms);
       virtual void  disableTorqueFeedback();
-      // int getTorqueFeedbackSamplingPeriod() const; // TODO: to implement
+      int           getTorqueFeedbackSamplingPeriod() const;
       double        getTorqueFeedback() const;
 
       virtual void  setTorque(double torque);
@@ -74,12 +77,15 @@ namespace webots {
       double        mAcceleration;
       double        mActualVelocity;
       double        mMaxVelocity;
+
       // For SynchWrite //
       int           mGoalPosition;
       int           mTorqueEnable;
       int           mPGain;
       int           mMovingSpeed;
       int           mTorqueLimit;
+      int           mTorqueFeedback;
+
       // For Bulk Read //
       int           mPresentPosition;
       int           mPresentSpeed;

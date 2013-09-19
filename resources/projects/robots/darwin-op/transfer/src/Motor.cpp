@@ -39,6 +39,7 @@ Motor::Motor(const std::string &name, const Robot *robot) :
   mPresentPosition = mNamesToInitPos[getName()];
   mPresentSpeed = 0;
   mPresentLoad = 0;
+  mTorqueFeedback = 0;
 }
 
 Motor::~Motor() {
@@ -212,10 +213,16 @@ void Motor::setControlP(double p) {
   }
 }
 
-void Motor::enableTorqueFeedback(int ms) {  //EMPTY
+void Motor::enableTorqueFeedback(int ms) {
+  mTorqueFeedback = ms;
 }
 
-void Motor::disableTorqueFeedback() {  //EMPTY
+void Motor::disableTorqueFeedback() {
+  mTorqueFeedback = 0;
+}
+
+int Motor::getTorqueFeedbackSamplingPeriod() const {
+  return mTorqueFeedback;
 }
 
 double Motor::getTorqueFeedback() const{
