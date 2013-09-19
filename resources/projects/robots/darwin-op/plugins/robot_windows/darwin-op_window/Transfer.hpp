@@ -48,8 +48,8 @@ class Transfer : public QScrollArea
     void                timerCallback();
     void                SSHSessionComplete();
     void                SSHSessionDone();
-    void                print(const QString &,bool err);
-    void                status(const QString &);
+    void                print(const QString &message, bool error);
+    void                status(const QString &message);
 
   signals:
     void                setStabilityResponseSignal(int stability);
