@@ -133,7 +133,7 @@ int SSH::openSSHChannel() {
     return -1;
   }
   if (ssh_channel_request_shell(mSSHChannel) != SSH_OK) {
-    fprintf(stderr,"ssh_channel_request_shell() failed\n");
+    fprintf(stderr, "ssh_channel_request_shell() failed\n");
     closeSSHChannel();
     return -1;
   }
@@ -151,34 +151,38 @@ void SSH::closeSSHChannel() {
 
 void SSH::readChannel(bool display, int err) {
   char c[32];
-  int i,n;
+  int i, n;
   int max = sizeof(c)-1;
   for (;;) {
-    n = ssh_channel_poll_timeout(mSSHChannel,500,err);
-    if (n==0 || n==SSH_EOF || ssh_channel_is_eof(mSSHChannel) || mTerminate) break;
+    n = ssh_channel_poll_timeout(mSSHChannel, 500, err);
+    if (n == 0 || n == SSH_EOF || ssh_channel_is_eof(mSSHChannel) || mTerminate)
+      break;
     for (;;) {
-      i = ssh_channel_read(mSSHChannel, c, n>max?max:n, err);
-      if (i==0 || mTerminate) break; // nothing to read
-      c[i]='\0';
+      i = ssh_channel_read(mSSHChannel, c, n > max ? max : n, err);
+      if (i == 0 || mTerminate) // nothing to read
+        break;
+      c[i] = '\0';
       QString s = QString::fromUtf8(c);
-      if (display) emit print(s,err==1);
+      if (display)
+        emit print(s, err == 1);
       if (err)
         mStderr+=s;
       else
         mStdout+=s;
     }
-    if (mTerminate) break;
+    if (mTerminate)
+      break;
   }
 }
 
-int SSH::executeSSHCommand(const QString &command,bool display,bool wait) {
+int SSH::executeSSHCommand(const QString &command, bool display, bool wait) {
   assert(mSSHSession);
   openSSHChannel();
   assert(mSSHChannel);
   QString cmd(command);
   ssh_channel_write(mSSHChannel, cmd.toUtf8(), cmd.size());
   if (ssh_channel_send_eof(mSSHChannel) != SSH_OK) {
-    fprintf(stderr,"ssh_channel_send_eof() failed\n");
+    fprintf(stderr, "ssh_channel_send_eof() failed\n");
     return -1;
   }
   mStdout = "";
@@ -233,7 +237,7 @@ int SSH::sendFile(const QString &source, const QString &target) {
   file = fopen(source.toUtf8(), "rb"); 
   
   // Obtain file size:
-  fseek(file , 0 , SEEK_END);
+  fseek(file, 0, SEEK_END);
   int length = ftell(file);
   rewind(file);
   
@@ -241,7 +245,7 @@ int SSH::sendFile(const QString &source, const QString &target) {
   char *buffer = (char*)malloc(length);
   
   // Copy the file into the buffer
-  int size = fread(buffer,1,length,file);
+  int size = fread(buffer, 1, length, file);
 
   // Open remote file
   mSFTPFile = sftp_open(mSFTPChannel, target.toUtf8(), access_type, S_IRWXU);
@@ -408,7 +412,8 @@ int SSH::updateFramework() {
 }
 
 int SSH::updateFrameworkIfNeeded() {
-  if (isFrameworkUpToDate()) return 1;
+  if (isFrameworkUpToDate())
+    return 1;
   return updateFramework();
 }
 
@@ -434,8 +439,8 @@ int SSH::updateWrapper(const QString &password) {
   // Remove directory webots but save controller installed
   
   emit status("Installing Webots API: Checking /darwin/Linux/project/webots/default");  
-  executeSSHCommand("ls /darwin/Linux/project/webots/default >/dev/null 2>&1 && echo 1 || echo 0",false);
-  if (mStdout[0]=='1')
+  executeSSHCommand("ls /darwin/Linux/project/webots/default >/dev/null 2>&1 && echo 1 || echo 0", false);
+  if (mStdout[0] == '1')
     executeSSHCommand("mv /darwin/Linux/project/webots/default /home/darwin/default");
   emit status("Installing Webots API: Deleting previous installation if any");
   executeSSHCommand("rm -rf /darwin/Linux/project/webots");
@@ -443,7 +448,7 @@ int SSH::updateWrapper(const QString &password) {
   // Create new directory webots
   emit status("Installing Webots API: Recreating webots directory");
   if (sftp_mkdir(mSFTPChannel, "/darwin/Linux/project/webots", S_IRWXU) != 0) {
-    fprintf(stderr,"Problem while creating directory webots: %s\n",
+    fprintf(stderr, "Problem while creating directory webots: %s\n",
             ssh_get_error(mSSHSession));
     // Delete local archive
     QFile deleteArchive(installArchive);
@@ -469,8 +474,8 @@ int SSH::updateWrapper(const QString &password) {
     return -1;
   }
 
-  executeSSHCommand("ls /home/darwin/default >/dev/null 2>&1 && echo 1 || echo 0",false);
-  if (mStdout[0]=='1') // Reinstall previous controller installed
+  executeSSHCommand("ls /home/darwin/default >/dev/null 2>&1 && echo 1 || echo 0", false);
+  if (mStdout[0] == '1') // Reinstall previous controller installed
     executeSSHCommand("mv /home/darwin/default /darwin/Linux/project/webots/default");
 
     // Send archive file
@@ -571,7 +576,8 @@ int SSH::updateWrapperIfNeeded(const QString &password) {
 }
 
 int SSH::startRemoteCompilation(const QString &IPAddress, const QString &username, const QString &password,bool makeDefaultController) {
-  if (openSSHSession(IPAddress,username,password)==-1) return -1;
+  if (openSSHSession(IPAddress, username, password) == -1)
+    return -1;
   openSFTPChannel();
   updateFrameworkIfNeeded();
   updateWrapperIfNeeded(password);
@@ -625,10 +631,10 @@ int SSH::startRemoteCompilation(const QString &IPAddress, const QString &usernam
     // Remove compilation files
     executeSSHCommand("rm -r /darwin/Linux/project/webots/controllers/*");
   } else {
-    emit print("Checking ready position...",0);
+    emit print("Checking ready position...", 0);
     executeSSHCommand("/darwin/Linux/project/webots/check_start_position/check_start_position");
     if (!mStdout.startsWith("OK")) {
-      emit print("Robot not in ready position!\n",1);
+      emit print("Robot not in ready position!\n", 1);
       emit status("Status : Robot not in ready position");
       // Remove compilation files
       QString removeController = "rm -r /darwin/Linux/project/webots/controllers/" + controller;
@@ -637,13 +643,13 @@ int SSH::startRemoteCompilation(const QString &IPAddress, const QString &usernam
       // Verify that controller exist -> no compilation error
       QString controllerExist = "ls /darwin/Linux/project/webots/controllers >/dev/null 2>&1 && echo 1 || echo 0" +
               controller + "/" + controller + " | grep -c " + controller;
-      executeSSHCommand(controllerExist,false);
-      if (mStdout[0]=='1') { // controller exist
+      executeSSHCommand(controllerExist, false);
+      if (mStdout[0] == '1') { // controller exist
         // Start controller
         executeSSHCommand("mv /darwin/Linux/project/webots/controllers/" + controller + "/" + controller + " /darwin/Linux/project/webots/controllers/" + controller + "/controller");
         executeSSHCommand("echo -e \'#!/bin/bash\\nexport DISPLAY=:0\\n/darwin/Linux/project/webots/controllers/"+controller+"/controller\\n\' > /darwin/Linux/project/webots/controllers/"+controller+"/"+controller);
         executeSSHCommand("chmod a+x /darwin/Linux/project/webots/controllers/"+controller+"/"+controller);
-        executeSSHCommand("echo "+password+" | sudo -S /darwin/Linux/project/webots/controllers/"+controller+"/"+controller,true,false); // wait until we terminate it
+        executeSSHCommand("echo "+password+" | sudo -S /darwin/Linux/project/webots/controllers/"+controller+"/"+controller, true, false); // wait until we terminate it
         executeSSHCommand("killall -q controller");
         executeSSHCommand("rm -r /darwin/Linux/project/webots/controllers/*");
       } else { // controller do not exist
@@ -657,7 +663,7 @@ int SSH::startRemoteCompilation(const QString &IPAddress, const QString &usernam
 }
 
 int SSH::startRemoteControl(const QString &IPAddress, const QString &username, const QString &password) {
-  if (openSSHSession(IPAddress,username,password) == -1)
+  if (openSSHSession(IPAddress, username, password) == -1)
     return -1;
   openSFTPChannel();
   executeSSHCommand("echo "+password+" | sudo -S killall -q remote_control default controller");
@@ -669,25 +675,25 @@ int SSH::startRemoteControl(const QString &IPAddress, const QString &username, c
   if ((cameraWidth !=320 && cameraWidth !=160 && cameraWidth !=80 && cameraWidth !=40) ||
       (cameraHeight!=240 && cameraHeight!=120 && cameraHeight!=60 && cameraHeight!=30)) {
     QString errorString=QObject::tr("Unsupported camera resolution. Aborting...\nOnly the following resolutions are available:\n\tWidth:  320/160/80/40\n\tHeight: 240/120/60/30");
-    emit print(errorString,true);
+    emit print(errorString, true);
     closeSFTPChannel();
     closeSSHSession();
     return -1;
   }
   executeSSHCommand("echo "+password+" | sudo -S /darwin/Linux/project/webots/remote_control/remote_control "
                     +QString::number(320/cameraWidth)+" "
-                    +QString::number(240/cameraHeight),true,false); // wait until we terminate it
+                    +QString::number(240/cameraHeight), true, false); // wait until we terminate it
   closeSFTPChannel();
   closeSSHSession();
   return 1;
 }
 
 int SSH::uninstall(const QString &IPAddress, const QString &username, const QString &password) {
-  if (openSSHSession(IPAddress,username,password)==-1)
+  if (openSSHSession(IPAddress, username, password) == -1)
     return -1;
-  executeSSHCommand("ls /darwin/Linux/project/webots/backup/rc.local_original >/dev/null 2>&1 && echo 1 || echo 0",false);
+  executeSSHCommand("ls /darwin/Linux/project/webots/backup/rc.local_original >/dev/null 2>&1 && echo 1 || echo 0", false);
   if (mStdout[0] == '1') // Restore rc.local
-    executeSSHCommand("echo "+password+" | sudo -S cp /darwin/Linux/project/webots/backup/rc.local_original /etc/rc.local");
+    executeSSHCommand("echo " + password + " | sudo -S cp /darwin/Linux/project/webots/backup/rc.local_original /etc/rc.local");
   executeSSHCommand("rm -rf /darwin/Linux/project/webots");
   closeSSHSession();
   return 1;
