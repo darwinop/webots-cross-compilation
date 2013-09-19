@@ -4,6 +4,7 @@
 
 #include <QtNetwork/QtNetwork>
 #include <QtCore/QtCore>
+#include <QtCore/QDebug>
 
 #include <iostream>
 #include <sstream>
@@ -31,22 +32,14 @@ Communication::~Communication() {
 bool Communication::initialize(QString IP, int port) {
   mSocket->abort(); // Close previous connection (if any)
   mSocket->connectToHost(IP, port);
+  mSocket->waitForConnected(1000);
 
-  // fixed timing issue:
-  //   without this delay there are some situations where the connection
-  //   can be not accepted at time in the server running on the DARwIn-OP
-  //   Note: this is mainly visible on Mac environment
-#ifdef Q_OS_WIN
-    Sleep(50);
-#else
-    usleep(50000);
-#endif
+  mInitialized = mSocket->state() == QAbstractSocket::ConnectedState;
 
-  mInitialized = true;
-  if (mSocket->isOpen())
-    return true;
-  else
-    return false;
+  if (!mInitialized)
+    mSocket->abort();
+
+  return mInitialized;
 }
 
 void Communication::cleanup() {
