@@ -37,15 +37,28 @@ void Wrapper::init() {
 
 void Wrapper::cleanup() {
   delete cCommunication;
+  delete cTime;
 
   DeviceManager::cleanup();
 }
 
 bool Wrapper::start(void *arg) {
-  if (!arg) return false;
-  cCommunication->initialize(QString((const char*)arg), PORT);
-  cTime = new Time();
-  cSuccess = cCommunication->isInitialized();
+  if (!arg)
+    return false;
+
+  delete cTime;
+
+  Time trialTime;
+
+  cSuccess = false;
+  while (!cSuccess && trialTime.currentSimulationTime() < 10000) // try to connect for 10 seconds
+    cSuccess = cCommunication->initialize(QString((const char *) arg), PORT);
+
+  if (cSuccess)
+    cTime = new Time();
+  else
+    cTime = NULL;
+
   return cSuccess;
 }
 
