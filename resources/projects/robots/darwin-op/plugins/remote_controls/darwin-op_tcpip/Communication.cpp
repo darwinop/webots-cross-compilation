@@ -4,7 +4,6 @@
 
 #include <QtNetwork/QtNetwork>
 #include <QtCore/QtCore>
-#include <QtCore/QDebug>
 
 #include <iostream>
 #include <sstream>
