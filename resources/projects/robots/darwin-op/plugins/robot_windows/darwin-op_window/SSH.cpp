@@ -631,7 +631,7 @@ int SSH::startRemoteCompilation(const QString &IPAddress, const QString &usernam
     // Remove compilation files
     executeSSHCommand("rm -r /darwin/Linux/project/webots/controllers/*");
   } else {
-    emit print("Checking ready position...", 0);
+    emit print("Checking ready position...\n", 0);
     executeSSHCommand("/darwin/Linux/project/webots/check_start_position/check_start_position");
     if (!mStdout.startsWith("OK")) {
       emit print("Robot not in ready position!\n", 1);
@@ -652,9 +652,9 @@ int SSH::startRemoteCompilation(const QString &IPAddress, const QString &usernam
         executeSSHCommand("echo "+password+" | sudo -S /darwin/Linux/project/webots/controllers/"+controller+"/"+controller, true, false); // wait until we terminate it
         executeSSHCommand("killall -q controller");
         executeSSHCommand("rm -r /darwin/Linux/project/webots/controllers/*");
-      } else { // controller do not exist
-        executeSSHCommand("rm -r /darwin/Linux/project/webots/controllers/*"); // Remove controllers files
       }
+      else  // controller do not exist
+        executeSSHCommand("rm -r /darwin/Linux/project/webots/controllers/*"); // Remove controllers files
     }
   }
   closeSFTPChannel();
@@ -666,7 +666,7 @@ int SSH::startRemoteControl(const QString &IPAddress, const QString &username, c
   if (openSSHSession(IPAddress, username, password) == -1)
     return -1;
   openSFTPChannel();
-  executeSSHCommand("echo "+password+" | sudo -S killall -q remote_control default controller");
+  executeSSHCommand("echo " + password + " | sudo -S killall -q remote_control default controller");
   updateFrameworkIfNeeded();
   updateWrapperIfNeeded(password);
   WbDeviceTag camera = wb_robot_get_device("Camera");
@@ -681,9 +681,9 @@ int SSH::startRemoteControl(const QString &IPAddress, const QString &username, c
     return -1;
   }
   emit print("Start remote control server...\n", false);
-  executeSSHCommand("echo "+password+" | sudo -S /darwin/Linux/project/webots/remote_control/remote_control "
-                    +QString::number(320/cameraWidth)+" "
-                    +QString::number(240/cameraHeight), true, false); // wait until we terminate it
+  executeSSHCommand("echo " + password + " | sudo -S /darwin/Linux/project/webots/remote_control/remote_control "
+                    + QString::number(320 / cameraWidth) + " "
+                    + QString::number(240 / cameraHeight), true, false); // wait until we terminate it
   emit print("Remote control server ended\n", false);
   closeSFTPChannel();
   closeSSHSession();

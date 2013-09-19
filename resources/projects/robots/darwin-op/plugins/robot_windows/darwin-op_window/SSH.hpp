@@ -33,8 +33,8 @@ class SSH : public QObject {
     const QString error();
 
   signals:
-    void          print(const QString &,bool err);
-    void          status(const QString &);
+    void          print(const QString &message, bool error);
+    void          status(const QString &message);
     void          done();
 
   protected:
@@ -52,7 +52,7 @@ class SSH : public QObject {
     int           readRemoteFile(const QString &fileName, char *buffer, int buffer_size);
     int           verifyKnownHost();
     int           sendFile(const QString &source, const QString &target);
-    int           executeSSHCommand(const QString &command,bool display=true,bool wait=true);
+    int           executeSSHCommand(const QString &command, bool display=true, bool wait=true);
     void          readChannel(bool display, int err);
     int           updateFrameworkIfNeeded();
     bool          isFrameworkUpToDate();

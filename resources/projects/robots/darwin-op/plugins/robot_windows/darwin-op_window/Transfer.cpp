@@ -162,33 +162,35 @@ void Transfer::showProgressBox(const QString &title, const QString &message) {
   mTimer->start(10);
 }
 
-void Transfer::print(const QString &c,bool err) {
+void Transfer::print(const QString &message, bool error) {
   static QString str_out;
   static QString str_err;
 
-  if (err)
-    str_err += c;
+  if (error)
+    str_err += message;
   else
-    str_out += c;
+    str_out += message;
 
   do {
     int n = str_out.indexOf("\n");
-    if (n==-1) break;;
+    if (n==-1)
+      break;
     QString pr = str_out.left(n);
-    mConsoleShowTextEdit->setTextColor(QColor( 0, 0, 0));
+    mConsoleShowTextEdit->setTextColor(QColor(0, 0, 0));
     mConsoleShowTextEdit->append(pr);
     mConsoleShowTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
-    str_out = str_out.mid(n+1);
+    str_out = str_out.mid(n + 1);
   } while(!str_out.isEmpty());
 
   do {
     int n = str_err.indexOf("\n");
-    if (n==-1) break;;
+    if (n==-1)
+      break;
     QString pr = str_err.left(n);
-    mConsoleShowTextEdit->setTextColor(QColor( 255, 0, 0));
+    mConsoleShowTextEdit->setTextColor(QColor(255, 0, 0));
     mConsoleShowTextEdit->append(pr);
     mConsoleShowTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
-    str_err = str_err.mid(n+1);
+    str_err = str_err.mid(n + 1);
   } while(!str_err.isEmpty());
 }
 
