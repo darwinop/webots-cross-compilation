@@ -36,7 +36,7 @@ class MotorR : public SingleValueSensor {
     void     setAcceleration(double acceleration) { mAcceleration = acceleration; }
     void     setAvailableTorque(double torque) { mMotorAvailableTorque = torque; }
     void     setControlPID(double p, double i, double d) { mControlP = p; mControlI = i; mControlD = d; }
-    void     setControlP(double p) { mControlP = p; } // legacy
+    void     setControlP(double p) { mControlP = p; } // legacy //TODO: to remove
     void     setTorque(double torque) { mTorque = torque; }
     
     double   position() { return mPosition; }
@@ -68,7 +68,7 @@ class MotorR : public SingleValueSensor {
     void     resetControlPIDRequested() { mControlPIDRequested = false; }
     void     setControlPIDRequested() { mControlPIDRequested = true; }
     
-    // P-control legacy code
+    // P-control legacy code //TODO: to remove
     bool     isControlPRequested() const { return mControlPRequested; }
     void     resetControlPRequested() { mControlPRequested = false; }
     void     setControlPRequested() { mControlPRequested = true; }

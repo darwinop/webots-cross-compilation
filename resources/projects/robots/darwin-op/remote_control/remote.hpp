@@ -37,7 +37,7 @@ namespace webots {
       void                 setRemoteMotorAcceleration(int index, int value);
       void                 setRemoteMotorAvailableTorque(int index, int value);
       void                 setRemoteMotorTorque(int index, int value);
-      void                 setRemoteMotorControlP(int index, int value);
+      void                 setRemoteMotorControlP(int index, int value); //TODO: why not PID?
 
     private:
       void                 wait(int ms);
