@@ -59,6 +59,8 @@ namespace webots {
       
                            Robot();
       virtual             ~Robot();
+      static Robot        *getInstance() { return cInstance; }
+
       virtual int          step(int ms);
       std::string          getName() const;
       double               getTime() const;
@@ -84,6 +86,8 @@ namespace webots {
       void                 initDarwinOP();
       void                 LoadINISettings(minIni *ini, const std::string &section);
       Device              *getDevice(const std::string &name) const;
+
+      static Robot        *cInstance;
 
       std::map<const std::string, Device *> mDevices;
 
