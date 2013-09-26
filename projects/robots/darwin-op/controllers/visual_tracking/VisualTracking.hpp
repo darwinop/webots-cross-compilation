@@ -18,26 +18,25 @@ namespace webots {
   class Motor;
   class LED;
   class Camera;
+};
 
-  
-  class VisualTracking : public Robot {
-    public:
-                                       VisualTracking();
-      virtual                         ~VisualTracking();
-      void                             run();
-      
-    private:
-      int                              mTimeStep;
-      
-      void                             myStep();
-      
-      Motor                           *mMotors[NMOTORS];
-      LED                             *mEyeLED;
-      LED                             *mHeadLED;
-      Camera                          *mCamera;
-      
-      managers::DARwInOPVisionManager *mVisionManager;
-  };
+class VisualTracking : public webots::Robot {
+  public:
+                                     VisualTracking();
+    virtual                         ~VisualTracking();
+    void                             run();
+    
+  private:
+    int                              mTimeStep;
+    
+    void                             myStep();
+    
+    webots::Motor                   *mMotors[NMOTORS];
+    webots::LED                     *mEyeLED;
+    webots::LED                     *mHeadLED;
+    webots::Camera                  *mCamera;
+    
+    managers::DARwInOPVisionManager *mVisionManager;
 };
 
 #endif

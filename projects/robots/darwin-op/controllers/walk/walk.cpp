@@ -7,7 +7,7 @@ Instead interface with the robot via remote desktop
 (i.e. VNC). Open a terminal window, compile controller
 and run.
 */
-#include "walk.hpp"
+#include "Walk.hpp"
 #include <webots/LED.hpp>
 #include <webots/Accelerometer.hpp>
 #include <webots/Gyro.hpp>
@@ -32,7 +32,7 @@ static const char *motorNames[NMOTORS] = {
   "FootR"     /*ID17*/, "FootL"     /*ID18*/, "Neck"      /*ID19*/, "Head"      /*ID20*/
 };
 
-walk::walk():
+Walk::Walk():
     Robot()
 {
   mTimeStep = getBasicTimeStep();
@@ -56,16 +56,16 @@ walk::walk():
   
 }
 
-walk::~walk() {
+Walk::~Walk() {
 }
 
-void walk::myStep() {
+void Walk::myStep() {
   int ret = step(mTimeStep);
   if (ret == -1)
     exit(EXIT_SUCCESS);
 }
 
-void walk::wait(int ms) {
+void Walk::wait(int ms) {
   double startTime = getTime();
   double s = (double) ms / 1000.0;
   while (s + startTime >= getTime())
@@ -75,7 +75,7 @@ void walk::wait(int ms) {
 
 
 // function containing the main feedback loop
-void walk::run() {
+void Walk::run() {
 
   cout << "-------Walk example of DARwIn-OP-------" << endl;
   cout << "This example illustrates Gait Manager" << endl;
@@ -136,7 +136,7 @@ void walk::run() {
   }
 }
 
-void walk::checkIfFallen() {
+void Walk::checkIfFallen() {
   static int fup = 0;
   static int fdown = 0;
   static const double acc_tolerance = 80.0;
