@@ -1,0 +1,47 @@
+#VRML_SIM V7.2.5 utf8
+WorldInfo {
+  info [
+    "Robotis DARwIn-OP robot."
+    "Author: Fabien Rohrer <fabien.rohrer@cyberbotics.com>"
+    "Date: September 2013"
+  ]
+  title "Robotis DARwIn-OP"
+  basicTimeStep 16
+}
+Viewpoint {
+  orientation -0.0946968 0.983424 0.154629 2.06176
+  position 0.949163 0.543302 -0.552018
+  follow "DARwIn-OP"
+}
+Background {
+  skyColor [
+    1 1 1
+  ]
+}
+DirectionalLight {
+  ambientIntensity 1.6
+  direction -0.5 -2 -0.5
+  intensity 0.7
+  castShadows TRUE
+}
+DirectionalLight {
+  ambientIntensity 1.6
+  direction 0.5 -0.5 0.5
+  intensity 0.7
+}
+DARwInOP {
+  translation 0 0.24 0
+  rotation 0.0593024 0.996441 -0.0599025 1.58336
+  controller "motion_player"
+  selfCollision TRUE
+  cameraPixelSize 0
+  cameraWidth 320
+  cameraHeight 240
+}
+Floor {
+  size 11 14
+  scale 3 3
+  texture [
+    "textures/carpet.jpg"
+  ]
+}
