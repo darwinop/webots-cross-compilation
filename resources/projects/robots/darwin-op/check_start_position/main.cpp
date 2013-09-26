@@ -2,9 +2,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <math.h>
+#include <iostream>
 #include "LinuxDARwIn.h"
 
 using namespace Robot;
+using namespace std;
 
 int main()
 {
@@ -13,7 +15,7 @@ int main()
   LinuxCM730 linux_cm730("/dev/ttyUSB0");
   CM730 cm730(&linux_cm730);
   if (cm730.Connect() == false) {
-    printf("Fail to connect CM-730!\n");
+    cerr << "Fail to connect CM-730!" << endl;
     return 0;
   }
   /////////////////////////////////////////////////////////////////////
@@ -24,7 +26,7 @@ int main()
   int position[20] = { 1500, 2517, 1834, 2283, 2380, 1710, 2043, 2033, 2057, 2043, 1277, 2797, 3513, 571, 2843, 1240, 2077, 2037, 2050, 2173};  // Start position of each servos
 
   if (cm730.ReadByte(JointData::ID_R_SHOULDER_PITCH, MX28::P_VERSION, &value, 0)  != CM730::SUCCESS)
-    printf("MX28 firmware version : %d\n", value);
+    cout << "MX28 firmware version : " << value << endl;
 
   // Check legs servos positions
   for (int c=6; c<18; c++) {
@@ -44,6 +46,6 @@ int main()
   if (fabs(value - 640) > thresholdAcc)
     return 0;
 
-  printf("OK\n");
+  cout << "Ok" << endl;
   return 0;
 }

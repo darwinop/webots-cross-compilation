@@ -1,15 +1,20 @@
 #include "SSH.hpp"
 #include "ZIP.hpp"
 
+#include <iostream>
 #include <stdlib.h>
-#include <stdio.h> 
+#include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <cassert>
+
 #include <webots/robot.h>
 #include <webots/camera.h>
+
+using namespace std;
+
 
 SSH::SSH(QObject *parent) : QObject(parent) {
   mSSHSession = NULL;
@@ -17,7 +22,7 @@ SSH::SSH(QObject *parent) : QObject(parent) {
   mSFTPChannel = NULL;
   mSFTPFile = NULL;
   mTerminate = false;
-  mError="";
+  mError = "";
 }
 
 SSH::~SSH() {
@@ -77,10 +82,10 @@ int SSH::verifyKnownHost() {
       break; // ok 
     case SSH_SERVER_FOUND_OTHER:
     case SSH_SERVER_KNOWN_CHANGED:
-      fprintf(stderr, "DARwIn-OP SSH-RSA key has changed.\n");
-      fprintf(stderr, "For security reasons, the connection will be stopped\n");
+      cerr << "DARwIn-OP SSH-RSA key has changed." << endl;
+      cerr << "For security reasons, the connection will be stopped" << endl;
 
-      fprintf(stderr, "Please remove the old SSH-RSA key from the known_hosts file ("
+      cerr << "Please remove the old SSH-RSA key from the known_hosts file ("
 #ifdef WIN32
         "C:\\Users\\<username>\\.ssh\\known_hosts"
 #elif defined(MACOS)
@@ -88,8 +93,7 @@ int SSH::verifyKnownHost() {
 #else // Linux
         "/home/<username>/.ssh/known_hosts"
 #endif
-        ")."
-      );
+        ")." << endl;
 
       ssh_clean_pubkey_hash(&hash);
       return -1;
@@ -133,7 +137,7 @@ int SSH::openSSHChannel() {
     return -1;
   }
   if (ssh_channel_request_shell(mSSHChannel) != SSH_OK) {
-    fprintf(stderr, "ssh_channel_request_shell() failed\n");
+    cerr << "ssh_channel_request_shell() failed" << endl;
     closeSSHChannel();
     return -1;
   }
@@ -153,11 +157,11 @@ void SSH::readChannel(bool display, int err) {
   char c[32];
   int i, n;
   int max = sizeof(c)-1;
-  for (;;) {
+  while (true) {
     n = ssh_channel_poll_timeout(mSSHChannel, 500, err);
     if (n == 0 || n == SSH_EOF || ssh_channel_is_eof(mSSHChannel) || mTerminate)
       break;
-    for (;;) {
+    while (true) {
       i = ssh_channel_read(mSSHChannel, c, n > max ? max : n, err);
       if (i == 0 || mTerminate) // nothing to read
         break;
@@ -182,7 +186,7 @@ int SSH::executeSSHCommand(const QString &command, bool display, bool wait) {
   QString cmd(command);
   ssh_channel_write(mSSHChannel, cmd.toUtf8(), cmd.size());
   if (ssh_channel_send_eof(mSSHChannel) != SSH_OK) {
-    fprintf(stderr, "ssh_channel_send_eof() failed\n");
+    cerr << "ssh_channel_send_eof() failed" << endl;
     return -1;
   }
   mStdout = "";
@@ -357,16 +361,16 @@ bool SSH::isFrameworkUpToDate() {
 
 int SSH::updateFramework() {
   emit status("Updating framework");
-  QString darwinDir, installArchive, webotsHome;
-  webotsHome = QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME"));
-  darwinDir = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/darwin/darwin");
-  installArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_update.zip");
+
+  const QString webotsHome = QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME");
+  const QString darwinDir = webotsHome + "/resources/projects/robots/darwin-op/libraries/darwin/darwin";
+  const QString installArchive = QDir::tempPath() + "/webots_darwin_" + QString::number((int) QCoreApplication::applicationPid()) + "_update.zip";
 
   // Create archive
-  ZIP::CompressFolder(installArchive, darwinDir + QString("/Data"), true, "Data");
-  ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/Linux"), true, "Linux");
-  ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/Framework"), true, "Framework");
-  ZIP::AddFileToArchive(installArchive, darwinDir + QString("/version.txt"), "version.txt");
+  ZIP::CompressFolder(installArchive, darwinDir + "/Data", true, "Data");
+  ZIP::AddFolderToArchive(installArchive, darwinDir + "/Linux", true, "Linux");
+  ZIP::AddFolderToArchive(installArchive, darwinDir + "/Framework", true, "Framework");
+  ZIP::AddFileToArchive(installArchive, darwinDir + "/version.txt", "version.txt");
 
   // Send archive file
   if (sendFile(installArchive, "/darwin/update.zip") < 0) {
@@ -419,22 +423,22 @@ int SSH::updateFrameworkIfNeeded() {
 
 int SSH::updateWrapper(const QString &password) {
   emit status("Installing Webots API");
-  QString managerDir, darwinDir, installArchive, webotsHome, controllerDir;
-  webotsHome = QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME"));
-  managerDir = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/managers");
-  darwinDir = webotsHome + QString("/resources/projects/robots/darwin-op");
-  controllerDir = webotsHome + QString("/projects/robots/darwin-op/controllers");
-  installArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_install.zip");
+
+  const QString webotsHome = QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME");
+  const QString managerDir = webotsHome + "/resources/projects/robots/darwin-op/libraries/managers";
+  const QString darwinDir = webotsHome + "/resources/projects/robots/darwin-op";
+  const QString controllerDir = webotsHome + "/projects/robots/darwin-op/controllers";
+  const QString installArchive = QDir::tempPath() + "/webots_darwin_" + QString::number((int)QCoreApplication::applicationPid()) + "_install.zip";
 
   // Create archive
   emit status("Installing Webots API: Zipping files");
-  ZIP::CompressFolder(installArchive, managerDir + QString("/include"), true, "include");
-  ZIP::AddFolderToArchive(installArchive, managerDir + QString("/src"), true, "src");
-  ZIP::AddFolderToArchive(installArchive, managerDir + QString("/lib"), true, "lib");
-  ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/transfer"), true, "transfer");
-  ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/config"), true, "config");
-  ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/check_start_position"), true, "check_start_position");
-  ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/remote_control"), true, "remote_control");
+  ZIP::CompressFolder(installArchive, managerDir + "/include", true, "include");
+  ZIP::AddFolderToArchive(installArchive, managerDir + "/src", true, "src");
+  ZIP::AddFolderToArchive(installArchive, managerDir + "/lib", true, "lib");
+  ZIP::AddFolderToArchive(installArchive, darwinDir + "/transfer", true, "transfer");
+  ZIP::AddFolderToArchive(installArchive, darwinDir + "/config", true, "config");
+  ZIP::AddFolderToArchive(installArchive, darwinDir + "/check_start_position", true, "check_start_position");
+  ZIP::AddFolderToArchive(installArchive, darwinDir + "/remote_control", true, "remote_control");
   ZIP::AddFileToArchive(installArchive, controllerDir + "/Makefile.include", "Makefile.include");
 
   // Clean directory /darwin/Linux/project/webots
@@ -450,8 +454,7 @@ int SSH::updateWrapper(const QString &password) {
   // Create new directory webots
   emit status("Installing Webots API: Recreating webots directory");
   if (sftp_mkdir(mSFTPChannel, "/darwin/Linux/project/webots", S_IRWXU) != 0) {
-    fprintf(stderr, "Problem while creating directory webots: %s\n",
-            ssh_get_error(mSSHSession));
+    cerr << "Problem while creating directory webots: " << ssh_get_error(mSSHSession) << endl;
     // Delete local archive
     QFile deleteArchive(installArchive);
     if (deleteArchive.exists())
@@ -634,10 +637,10 @@ int SSH::startRemoteCompilation(const QString &IPAddress, const QString &usernam
     // Remove compilation files
     executeSSHCommand("rm -r /darwin/Linux/project/webots/controllers/*");
   } else {
-    emit print("Checking ready position...\n", 0);
+    emit print("Checking ready position...\n", false);
     executeSSHCommand("/darwin/Linux/project/webots/check_start_position/check_start_position");
     if (!mStdout.startsWith("OK")) {
-      emit print("Robot not in ready position!\n", 1);
+      emit print("Robot not in ready position!\n", true);
       emit status("Status : Robot not in ready position");
       // Remove compilation files
       QString removeController = "rm -r /darwin/Linux/project/webots/controllers/" + controller;
