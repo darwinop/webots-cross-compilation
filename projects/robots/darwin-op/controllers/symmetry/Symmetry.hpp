@@ -14,23 +14,23 @@
 namespace webots {
   class Motor;
   class LED;
-  
-  class Symmetry : public Robot {
-    public:
-                                       Symmetry();
-      virtual                         ~Symmetry();
-      void                             run();
-      
-    private:
-      int                              mTimeStep;
-      
-      void                             myStep();
-      void                             wait(int ms);
-      
-      Motor                           *mMotors[NMOTORS];
-      LED                             *mEyeLED;
-      LED                             *mHeadLED;
-  };
+};
+
+class Symmetry : public webots::Robot {
+  public:
+                  Symmetry();
+    virtual      ~Symmetry();
+    void          run();
+    
+  private:
+    int           mTimeStep;
+    
+    void          myStep();
+    void          wait(int ms);
+    
+    webots::Motor *mMotors[NMOTORS];
+    webots::LED   *mEyeLED;
+    webots::LED   *mHeadLED;
 };
 
 #endif
