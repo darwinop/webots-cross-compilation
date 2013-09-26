@@ -59,7 +59,6 @@ namespace webots {
       
                            Robot();
       virtual             ~Robot();
-      static Robot        *getInstance() { return cInstance; }
 
       virtual int          step(int ms);
       std::string          getName() const;
@@ -75,8 +74,10 @@ namespace webots {
       virtual void         keyboardEnable(int ms);
       virtual void         keyboardDisable();
       int                  keyboardGetKey() const;
-      
+
+      // not member(s) of the Webots API function: please don't use
       ::Robot::CM730      *getCM730() const { return mCM730; }
+      static Robot        *getInstance() { return cInstance; }
 
     protected:
       static void         *KeyboardTimerProc(void *param);// thread function

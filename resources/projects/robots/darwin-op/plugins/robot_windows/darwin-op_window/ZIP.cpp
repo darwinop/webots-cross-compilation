@@ -4,8 +4,12 @@
 
 #include <zip.h>
 
+#include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+
+using namespace std;
+
 
 ZIP::ZIP() {
 }
@@ -29,8 +33,8 @@ bool ZIP::AddFolder(struct zip *archive, QString folder, QString name, bool recu
   // Add all files in this directory
   fileList = QDir(folder).entryList(QDir::Files);
   for (int i = 0; i < fileList.size(); i++) {
-    if (!(AddFile(archive, (folder + QString("/") + fileList.at(i)), (name + QString("/") + fileList.at(i))))) {
-      printf("Error while adding file %s to archive\n", (char *)fileList.at(i).toStdString().c_str());
+    if (!(AddFile(archive, (folder + "/" + fileList.at(i)), (name + "/" + fileList.at(i))))) {
+      cerr << "Error while adding file " << fileList.at(i).toStdString() << " to archive" << endl;
       return false;
     }
   }
@@ -40,8 +44,8 @@ bool ZIP::AddFolder(struct zip *archive, QString folder, QString name, bool recu
     directoryList = QDir(folder).entryList(QDir::AllDirs);
     for (int i = 2; i < directoryList.size(); i++) {
       if ((directoryList.at(i) != ".") && (directoryList.at(i) != "..")) {
-        if (!(AddFolder(archive, (folder + QString("/") + directoryList.at(i)), (name + QString("/") + directoryList.at(i))))) {
-          printf("Error while directory %s to archive\n", (char *)directoryList.at(i).toStdString().c_str());
+        if (!(AddFolder(archive, (folder + "/" + directoryList.at(i)), (name + "/" + directoryList.at(i))))) {
+          cerr << "Error while directory " << directoryList.at(i).toStdString() << " to archive" << endl;
           return false;
         }
       }
@@ -56,14 +60,14 @@ bool ZIP::CompressFolder(QString archiveName, QString folder, bool recursive, co
   struct zip * archive = zip_open((const char *)archiveName.toStdString().c_str(), ZIP_CREATE, &archiveError);
 
   if (archiveError != 0) {
-    printf("Error while creating archive\n");
+    cerr << "Error while creating archive" << endl;
     return false;
   }
   else {
     if (!(AddFolder(archive, folder, firstFolder, recursive)))
       return false;
     if (zip_close(archive) == -1) {
-      printf("Error while closing archive\n");
+      cerr << "Error while closing archive" << endl;
       return false;
     }
     return true;
@@ -75,14 +79,14 @@ bool ZIP::AddFolderToArchive(QString archiveName, QString folder, bool recursive
   struct zip * archive = zip_open((const char *)archiveName.toStdString().c_str(), ZIP_CREATE, &archiveError);
 
   if (archiveError != 0) {
-    printf("Error while openning archive\n");
+    cerr << "Error while opening archive" << endl;
     return false;
   }
   else {
     if (!(AddFolder(archive, folder, firstFolder, recursive)))
       return false;
     if (zip_close(archive) == -1) {
-      printf("Error while closing archive\n");
+      cerr << "Error while closing archive" << endl;
       return false;
     }
     return true;
@@ -94,14 +98,14 @@ bool ZIP::AddFileToArchive(QString archiveName, QString file, const char * nameI
   struct zip * archive = zip_open((const char *)archiveName.toStdString().c_str(), ZIP_CREATE, &archiveError);
 
   if (archiveError != 0) {
-    printf("Error while openning archive\n");
+    cerr << "Error while openning archive" << endl;
     return false;
   }
   else {
     if (!(AddFile(archive, file, QString(nameInArchive))))
       return false;
     if (zip_close(archive) == -1) {
-      printf("Error while closing archive\n");
+      cerr << "Error while closing archive" << endl;
       return false;
     }
     return true;

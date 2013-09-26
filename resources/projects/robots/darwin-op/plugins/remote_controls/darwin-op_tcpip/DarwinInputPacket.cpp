@@ -9,11 +9,9 @@
 #include "TripleValuesSensor.hpp"
 #include "SingleValueSensor.hpp"
 
+#include <core/StandardPaths.hpp>
+
 #include <webots/remote_control.h>
-
-#include <iostream>
-
-#include <cstdlib>
 
 #include <QtCore/QtCore>
 #if QT_VERSION >= 0x050000
@@ -22,7 +20,8 @@
 #include <QtGui/QtGui>
 #endif
 
-#include <core/StandardPaths.hpp>
+#include <iostream>
+#include <cstdlib>
 
 using namespace std;
 
@@ -39,10 +38,7 @@ DarwinInputPacket::~DarwinInputPacket() {
 }
 
 void DarwinInputPacket::decode(int simulationTime, const DarwinOutputPacket &outputPacket) {
-  // ---
-  // Sensors
-  // ---
-  
+
   // the order of the sensors should match with DarwinOutputPacket::apply()
  
   int currentPos = 5;
@@ -81,7 +77,7 @@ void DarwinInputPacket::decode(int simulationTime, const DarwinOutputPacket &out
 
     QImage image(mCameraWidth, mCameraHeight, QImage::Format_RGB32);
     if (!(image.loadFromData(getBufferFromPos(currentPos), image_length, "JPEG")))
-      printf("Problem while loading jpeg image\n");
+      cout << "Problem while loading jpeg image" << endl;
       
     // Convert RGB buffer to BGRA buffer
     static unsigned char imageBGRA[320 * 240 * 4];

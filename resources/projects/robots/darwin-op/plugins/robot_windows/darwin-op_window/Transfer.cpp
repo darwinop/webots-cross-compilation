@@ -9,8 +9,10 @@
 #include <QtConcurrent/QtConcurrent>
 
 #include <cassert>
+#include <iostream>
 
 using namespace webotsQtUtils;
+using namespace std;
 
 Transfer::Transfer(QWidget *parent):
   QScrollArea(parent)
@@ -64,9 +66,9 @@ Transfer::Transfer(QWidget *parent):
   mActionGroupBox = new QGroupBox(tr("Upload controller"), this);
 
   // Send Controller
-  QString iconPath = StandardPaths::getWebotsHomePath() + QString("resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/send.png");
+  QString iconPath = StandardPaths::getWebotsHomePath() + "resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/send.png";
   mSendControllerIcon = new QIcon(QPixmap((char*)iconPath.toStdString().c_str()));
-  iconPath = StandardPaths::getWebotsHomePath() + QString("resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/stop.png");
+  iconPath = StandardPaths::getWebotsHomePath() + "resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/stop.png";
   mStopControllerIcon = new QIcon(QPixmap((char*)iconPath.toStdString().c_str()));
   mSendControllerButton = new QPushButton(this);
   mSendControllerButton->setIconSize(QSize(64,64));
@@ -80,7 +82,7 @@ Transfer::Transfer(QWidget *parent):
   // remote control
   mSSH = NULL;
   mRemoteEnable = false;
-  iconPath = StandardPaths::getWebotsHomePath() + QString("resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/remote.png");
+  iconPath = StandardPaths::getWebotsHomePath() + "resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/remote.png";
   mRemoteControlIcon = new QIcon(QPixmap((char*)iconPath.toStdString().c_str()));
   mRemoteControlButton = new QPushButton(this);
   mRemoteControlButton->setIconSize(QSize(64,64));
@@ -88,7 +90,7 @@ Transfer::Transfer(QWidget *parent):
 
   // Wrapper
   mUninstallButton = new QPushButton(this);
-  iconPath = StandardPaths::getWebotsHomePath() + QString("resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/uninstall.png");
+  iconPath = StandardPaths::getWebotsHomePath() + "resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/uninstall.png";
   mUninstallButton->setIcon(QIcon(QPixmap((char*)iconPath.toStdString().c_str())));
   mUninstallButton->setIconSize(QSize(64,64));
   mUninstallButton->setToolTip(tr("If you don't need it any more, you can uninstall Webots API from the real robot"));
@@ -150,7 +152,7 @@ Transfer::~Transfer() {
 
 void Transfer::showProgressBox(const QString &title, const QString &message) {
   disableButtons();
-  mRemoteProgressDialog = new QProgressDialog(title, QString(), 0, 100, this, Qt::Dialog | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+  mRemoteProgressDialog = new QProgressDialog(title, "", 0, 100, this, Qt::Dialog | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
   mRemoteProgressDialog->setWindowTitle(title);
   mRemoteProgressDialog->setLabelText(tr("%1...").arg(message) + "\n\n"+tr("Please wait, it can take a few seconds."));
   mRemoteProgressBar = new QProgressBar(mRemoteProgressDialog);
@@ -350,7 +352,7 @@ void Transfer::SSHSessionComplete() {
       }
       break;
     default:
-      fprintf(stderr,"Unknown status: %d\n",mStatus);
+      cerr << "Unknown status: " << mStatus << endl;
       break;
     }
   }
@@ -396,9 +398,9 @@ void Transfer::saveSettings() {
 }
 
 void Transfer::loadSettings() {
-  mIPAddressLineEdit->setText(mSettings->value("darwin-op_window/IP", QString("192.168.123.1")).toString());
-  mUsernameLineEdit->setText(mSettings->value("darwin-op_window/username", QString("darwin")).toString());
-  mPasswordLineEdit->setText(mSettings->value("darwin-op_window/password", QString("111111")).toString());
+  mIPAddressLineEdit->setText(mSettings->value("darwin-op_window/IP", "192.168.123.1").toString());
+  mUsernameLineEdit->setText(mSettings->value("darwin-op_window/username", "darwin").toString());
+  mPasswordLineEdit->setText(mSettings->value("darwin-op_window/password", "111111").toString());
 }
 
 void Transfer::enableButtons() {

@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <iostream>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,6 +22,7 @@ typedef struct sockaddr SOCKADDR;
 #define PORT 5023
 
 using namespace webots;
+using namespace std;
 
 void writeINT2Buffer(char *buffer, int value);
 int readINTFromBuffer(char *buffer);
@@ -77,9 +79,9 @@ int main(int argc, char *argv[]) {
       // If socket works
       if (sock_err != SOCKET_ERROR) {
         // Wait until a client connect
-        printf("Waiting for client connection on port %d...\n", PORT);
+        cout << "Waiting for client connection on port " << PORT << "..." << endl;
         csock = accept(sock, (SOCKADDR*)&csin, &crecsize);
-        printf("Client connected.\n");
+        cout << "Client connected." << endl;
       } else
         perror("listen");
     }
@@ -109,7 +111,7 @@ int main(int argc, char *argv[]) {
         n += recv(csock, &receiveBuffer[n], 1024-n, 0);
       while(n<3);
       if (receiveBuffer[0]!='W') {
-        printf("Error: wrong TCP message received\n");
+        cerr << "Error: wrong TCP message received" << endl;
         continue;
       }
       int total = (unsigned char)receiveBuffer[1]+(unsigned char)receiveBuffer[2]*256;
@@ -245,7 +247,7 @@ int main(int argc, char *argv[]) {
         }
       }
       if (receiveBuffer[receivePos]!=0)
-        printf("Error: received unknown message: %c\n",receiveBuffer[receivePos]);
+        cerr << "Error: received unknown message: " << receiveBuffer[receivePos] << endl;
 
       // Terminate the buffer and send it
       sendBuffer[0] = 'W';
@@ -259,9 +261,9 @@ int main(int argc, char *argv[]) {
     }
 
     // Close client socket and server socket
-    printf("Closing client socket\n");
+    cout << "Closing client socket" << endl;
     closesocket(csock);
-    printf("Closing server socket\n");
+    cout << "Closing server socket" << endl;
     closesocket(sock);
     free(receiveBuffer);
     free(sendBuffer);
