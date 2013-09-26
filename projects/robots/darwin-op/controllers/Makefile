@@ -1,4 +1,4 @@
-TARGETS=soccer symmetry visual_tracking walk
+TARGETS=soccer symmetry visual_tracking walk motion_player
 
 .PHONY: $(TARGETS)
 

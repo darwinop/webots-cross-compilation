@@ -6,14 +6,28 @@
 #include <webots/Motor.hpp>
 #include <webots/Device.hpp>
 #include <webots/Speaker.hpp>
+#include <webots/utils/Motion.hpp>
+
 #include "LinuxDARwIn.h"
 #include "keyboard.hpp"
 
 #include <unistd.h>
 #include <libgen.h>
+#include <iostream>
 
+using namespace std;
+
+
+webots::Robot *webots::Robot::cInstance = NULL;
 
 webots::Robot::Robot() {
+  if (cInstance == NULL)
+    cInstance = this;
+  else {
+    cerr << "Only one instance of the Robot class should be created" << endl;
+    exit(-1);
+  }
+
   initDarwinOP();
   initDevices();
   gettimeofday(&mStart, NULL);
@@ -30,21 +44,21 @@ webots::Robot::Robot() {
   mCM730->MakeBulkReadPacketWb(); // Create the BulkReadPacket to read the actuators states in Robot::step
   
   // Unactive all Joints in the Motion Manager //
-  std::map<const std::string, int>::iterator motor_it;
-  for (motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++ ) {
-    ::Robot::MotionStatus::m_CurrentJoints.SetEnable((*motor_it).second, 0);
-    ::Robot::MotionStatus::m_CurrentJoints.SetValue((*motor_it).second, ((Motor *) mDevices[(*motor_it).first])->getGoalPosition());
+  std::map<const std::string, int>::iterator motorIt;
+  for (motorIt = Motor::mNamesToIDs.begin() ; motorIt != Motor::mNamesToIDs.end(); ++motorIt ) {
+    ::Robot::MotionStatus::m_CurrentJoints.SetEnable((*motorIt).second, 0);
+    ::Robot::MotionStatus::m_CurrentJoints.SetValue((*motorIt).second, ((Motor *) mDevices[(*motorIt).first])->getGoalPosition());
   }
 
 
   // Make each motors go to the start position slowly
   const int msgLength = 5; // id + Goal Position (L + H) + Moving speed (L + H)
-  int value=0, changed_motors=0, n=0;
-  int param[20*msgLength];
+  int value = 0, changed_motors = 0, n = 0;
+  int param[20 * msgLength];
   
-  for (motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++ ) {
-    Motor *motor = static_cast <Motor *> (mDevices[(*motor_it).first]);
-    int motorId = (*motor_it).second;
+  for (motorIt = Motor::mNamesToIDs.begin() ; motorIt != Motor::mNamesToIDs.end(); ++motorIt ) {
+    Motor *motor = static_cast <Motor *> (mDevices[(*motorIt).first]);
+    int motorId = (*motorIt).second;
     if (motor->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(motorId))) {
       param[n++] = motorId;  // id
       value = motor->getGoalPosition(); // Start position
@@ -68,13 +82,16 @@ webots::Robot::~Robot() {
 }
 
 int webots::Robot::step(int ms) {
+  // play motions if any
+  Motion::playMotions();
+
   double actualTime = getTime() * 1000;
   int stepDuration = actualTime - mPreviousStepTime;
-  std::map<const std::string, int>::iterator motor_it;
+  std::map<const std::string, int>::iterator motorIt;
   
   // -------- Update speed of each motors, according to acceleration limit if set --------  //
-  for (motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++  ) {
-    Motor *motor = static_cast <Motor *> (mDevices[(*motor_it).first]);
+  for (motorIt = Motor::mNamesToIDs.begin() ; motorIt != Motor::mNamesToIDs.end(); ++motorIt ) {
+    Motor *motor = static_cast <Motor *> (mDevices[(*motorIt).first]);
     motor->updateSpeed(stepDuration);
   }
   
@@ -83,9 +100,9 @@ int webots::Robot::step(int ms) {
     mCM730->BulkRead();
 
   // Motors
-  for (motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++) {
-    Motor *motor = static_cast <Motor *> (mDevices[(*motor_it).first]);
-    int motorId = (*motor_it).second;
+  for (motorIt = Motor::mNamesToIDs.begin() ; motorIt != Motor::mNamesToIDs.end(); ++motorIt) {
+    Motor *motor = static_cast <Motor *> (mDevices[(*motorIt).first]);
+    int motorId = (*motorIt).second;
     motor->setPresentPosition( mCM730->m_BulkReadData[motorId].ReadWord(::Robot::MX28::P_PRESENT_POSITION_L));
     motor->setPresentSpeed( mCM730->m_BulkReadData[motorId].ReadWord(::Robot::MX28::P_PRESENT_SPEED_L));
     motor->setPresentLoad( mCM730->m_BulkReadData[motorId].ReadWord(::Robot::MX28::P_PRESENT_LOAD_L));
@@ -121,14 +138,14 @@ int webots::Robot::step(int ms) {
   // -------- Sync Write to actuators --------  //
   const int msgLength = 9; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
   
-  int param[20*msgLength];
-  int n=0;
-  int changed_motors=0;
+  int param[20 * msgLength];
+  int n = 0;
+  int changed_motors = 0;
   int value;
   
-  for (motor_it = Motor::mNamesToIDs.begin() ; motor_it != Motor::mNamesToIDs.end(); motor_it++ ) {
-    Motor *motor = static_cast <Motor *> (mDevices[(*motor_it).first]);
-    int motorId = (*motor_it).second;
+  for (motorIt = Motor::mNamesToIDs.begin() ; motorIt != Motor::mNamesToIDs.end(); ++motorIt ) {
+    Motor *motor = static_cast <Motor *> (mDevices[(*motorIt).first]);
+    int motorId = (*motorIt).second;
     if (motor->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(motorId))) {
       param[n++] = motorId;
       param[n++] = motor->getPGain();
@@ -288,10 +305,10 @@ void webots::Robot::initDevices() {
 }
 
 void webots::Robot::initDarwinOP() {
-  char exepath[1024] = {0};
-  if (readlink("/proc/self/exe", exepath, sizeof(exepath)) != -1)  {
-      if (chdir(dirname(exepath)))
-          fprintf(stderr, "chdir error!! \n");
+  char exepath[1024] = "";
+  if (readlink("/proc/self/exe", exepath, sizeof(exepath)) != -1) {
+    if (chdir(dirname(exepath)))
+      fprintf(stderr, "chdir error!! \n");
   }
   
   mLinuxCM730 = new ::Robot::LinuxCM730("/dev/ttyUSB0");
@@ -355,8 +372,8 @@ void webots::Robot::keyboardEnable(int ms) {
     mKeyboard->createWindow();
 
     // create and start the thread
-    if ((error = pthread_create(&this->mKeyboardThread, NULL, this->KeyboardTimerProc, this))!= 0) {
-      printf("Keyboard thread error = %d\n",error);
+    if ((error = pthread_create(&this->mKeyboardThread, NULL, this->KeyboardTimerProc, this)) !=  0) {
+      printf("Keyboard thread error = %d\n", error);
       exit(-1);
     }
   }
@@ -371,23 +388,22 @@ void *::webots::Robot::KeyboardTimerProc(void *param) {
 
 void webots::Robot::keyboardDisable() {
   if (mKeyboardEnable == true) {
-    int error=0;
+    int error = 0;
     // End the thread
-    if ((error = pthread_cancel(this->mKeyboardThread))!= 0) {
-      printf("Keyboard thread error = %d\n",error);
+    if ((error = pthread_cancel(this->mKeyboardThread)) != 0) {
+      printf("Keyboard thread error = %d\n", error);
       exit(-1);
     }
-  mKeyboard->closeWindow();
-  mKeyboard->resetKeyPressed();
+    mKeyboard->closeWindow();
+    mKeyboard->resetKeyPressed();
   }
 
   mKeyboardEnable = false;
 }
 
 int webots::Robot::keyboardGetKey() const {
-  if (mKeyboardEnable == true) {
+  if (mKeyboardEnable == true)
     return mKeyboard->getKeyPressed();
-  }
   else
     return 0;
 }
