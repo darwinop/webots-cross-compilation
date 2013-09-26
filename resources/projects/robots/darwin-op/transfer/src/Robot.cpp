@@ -38,9 +38,11 @@ webots::Robot::Robot() {
   // Load TimeStep from the file "config.ini"
   minIni ini("config.ini");
   LoadINISettings(&ini, "Robot Config");
-  if (mTimeStep < 16)
-    printf("The time step selected of %dms is very small and will probably not be respected.\n A time step of at least 16ms is recommended.\n", mTimeStep);
-    
+  if (mTimeStep < 16) {
+    cout << "The time step selected of " << mTimeStep << "ms is very small and will probably not be respected." << endl;
+    cout << "A time step of at least 16ms is recommended." << endl;
+  }
+
   mCM730->MakeBulkReadPacketWb(); // Create the BulkReadPacket to read the actuators states in Robot::step
   
   // Unactive all Joints in the Motion Manager //
@@ -109,7 +111,7 @@ int webots::Robot::step(int ms) {
 
     int limit = mCM730->m_BulkReadData[motorId].ReadWord(::Robot::MX28::P_TORQUE_LIMIT_L);
     if (limit == 0) {
-      fprintf(stderr, "Alarm detected on id = %d\n", motorId);
+      cerr << "Alarm detected on id = " << motorId << endl;
       exit(EXIT_FAILURE);
     }
   }
@@ -308,26 +310,27 @@ void webots::Robot::initDarwinOP() {
   char exepath[1024] = "";
   if (readlink("/proc/self/exe", exepath, sizeof(exepath)) != -1) {
     if (chdir(dirname(exepath)))
-      fprintf(stderr, "chdir error!! \n");
+      cerr << "chdir error" << endl;
   }
   
   mLinuxCM730 = new ::Robot::LinuxCM730("/dev/ttyUSB0");
   mCM730 = new ::Robot::CM730(mLinuxCM730);
   
   if (mCM730->Connect() == false) {
-    printf("Fail to connect CM-730!\n");
+    cerr << "Fail to connect CM-730" << cout;
     exit(EXIT_FAILURE);
   }
   
   // Read firmware version
   int firm_ver = 0;
   if (mCM730->ReadByte(::Robot::JointData::ID_HEAD_PAN, ::Robot::MX28::P_VERSION, &firm_ver, 0)  != ::Robot::CM730::SUCCESS) {
-    fprintf(stderr, "Can't read firmware version from Dynamixel ID %d!\n", ::Robot::JointData::ID_HEAD_PAN);
+    cerr << "Can't read firmware version from Dynamixel ID " << ::Robot::JointData::ID_HEAD_PAN << endl;
     exit(EXIT_FAILURE);
   }
   
   if (firm_ver < 27) {
-    fprintf(stderr, "Firmware version of Dynamixel is too old, please update them.\nMore information available in the User guide.\n");
+    cerr << "Firmware version of Dynamixel is too old, please update them." << endl;
+    cerr << "More information available in the User guide." << endl;
     exit(EXIT_FAILURE);
   }
 
@@ -344,23 +347,23 @@ void webots::Robot::LoadINISettings(minIni *ini, const std::string &section) {
   if ((value = ini->getd(section, "time_step", INVALID_VALUE)) != INVALID_VALUE)
     mTimeStep = value;
   else
-    printf("Can't read time step from 'config.ini'\n");
+    cout << "Can't read time step from 'config.ini'" << endl;
 
   if ((value = ini->getd(section, "camera_width", INVALID_VALUE)) != INVALID_VALUE)
     ::Robot::Camera::WIDTH = value;
   else
-    printf("Can't read camera width from 'config.ini'\n");
+    cout << "Can't read camera width from 'config.ini'" << endl;
 
   if ((value = ini->getd(section, "camera_height", INVALID_VALUE)) != INVALID_VALUE)
     ::Robot::Camera::HEIGHT = value;
   else
-    printf("Can't read camera height from 'config.ini'\n");
+    cout << "Can't read camera height from 'config.ini'" << endl;
 
   if (!(::webots::Camera::checkResolution(::Robot::Camera::WIDTH, ::Robot::Camera::HEIGHT))) {
-    printf("The resolution of %dx%d selected is not supported by the camera.\nPlease use one of the resolution recommended.\n", ::Robot::Camera::WIDTH, ::Robot::Camera::HEIGHT);
+    cerr << "The resolution of " << ::Robot::Camera::WIDTH << "x" << ::Robot::Camera::HEIGHT << " selected is not supported by the camera.\nPlease use one of the resolution recommended." << endl;
     ::Robot::Camera::WIDTH = 320;
     ::Robot::Camera::HEIGHT = 240;
-    printf("WARNING : Camera resolution reseted to 320x240 pixels.");
+    cout << "WARNING : Camera resolution reseted to 320x240 pixels." << endl;
   }
 }
 
@@ -373,7 +376,7 @@ void webots::Robot::keyboardEnable(int ms) {
 
     // create and start the thread
     if ((error = pthread_create(&this->mKeyboardThread, NULL, this->KeyboardTimerProc, this)) !=  0) {
-      printf("Keyboard thread error = %d\n", error);
+      cerr << "Keyboard thread error = " << error << endl;
       exit(-1);
     }
   }
@@ -391,7 +394,7 @@ void webots::Robot::keyboardDisable() {
     int error = 0;
     // End the thread
     if ((error = pthread_cancel(this->mKeyboardThread)) != 0) {
-      printf("Keyboard thread error = %d\n", error);
+      cerr << "Keyboard thread error = " << error << endl;
       exit(-1);
     }
     mKeyboard->closeWindow();

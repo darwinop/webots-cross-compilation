@@ -29,7 +29,7 @@ class SSH : public QObject {
     int           startRemoteCompilation(const QString &IPAddress, const QString &username, const QString &password, bool makeDefaultConsoller);
     int           startRemoteControl(const QString &IPAddress, const QString &username, const QString &password);
     int           uninstall(const QString &IPAddress, const QString &username, const QString &password);
-    void          terminate() { mTerminate=true; }
+    void          terminate() { mTerminate = true; }
     const QString error();
 
   signals:
@@ -52,7 +52,7 @@ class SSH : public QObject {
     int           readRemoteFile(const QString &fileName, char *buffer, int buffer_size);
     int           verifyKnownHost();
     int           sendFile(const QString &source, const QString &target);
-    int           executeSSHCommand(const QString &command, bool display=true, bool wait=true);
+    int           executeSSHCommand(const QString &command, bool display = true, bool wait = true);
     void          readChannel(bool display, int err);
     int           updateFrameworkIfNeeded();
     bool          isFrameworkUpToDate();

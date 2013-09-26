@@ -35,7 +35,7 @@ namespace webots {
     virtual void               setReverse(bool reverse) { mReverse = reverse; }
     virtual void               setLoop(bool loop) { mLoop = loop; }
     
-    // not Webots API function: please don't use
+    // not member(s) of the Webots API function: please don't use
     static void                playMotions();
 
   private:

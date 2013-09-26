@@ -6,9 +6,11 @@
 #include <CM730.h>
 
 #include <cmath>
+#include <iostream>
 #include <fstream>
 #include <algorithm>
 
+using namespace std;
 using namespace webots;
 using namespace Robot;
 
@@ -168,7 +170,7 @@ void Motor::setTorque(double torque) {
     this->setAvailableTorque(fabs(torque));
     int firm_ver = 0;
     if (cm730->ReadByte(JointData::ID_HEAD_PAN, MX28::P_VERSION, &firm_ver, 0) != CM730::SUCCESS)
-      printf("Can't read firmware version from Dynamixel ID %d!\n", JointData::ID_HEAD_PAN);
+      cerr << "Can't read firmware version from Dynamixel ID " << JointData::ID_HEAD_PAN << endl;
     else if (27 <= firm_ver) {
       if (torque > 0)
         mGoalPosition = mNamesToLimDown[getName()];
@@ -176,7 +178,7 @@ void Motor::setTorque(double torque) {
         mGoalPosition = mNamesToLimUp[getName()];
      }
      else
-       printf("Motor::setTorque not available for this version of Dynamixel firmware, please update it.\n");
+       cerr << "Motor::setTorque not available for this version of Dynamixel firmware, please update it." << endl;
   }
 }
 
@@ -204,7 +206,7 @@ void Motor::setAvailableTorque(double availableTorque) {
 void Motor::setControlP(double p) { //TODO: why not PID?
 
   if (p < 3)
-    printf("WARNING : A small value of P can cause differences between simulation and reality.\n");
+    cout << "WARNING : A small value of P can cause differences between simulation and reality." << endl;
 
   if (p >= 0)
   {

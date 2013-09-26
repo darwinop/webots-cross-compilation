@@ -22,8 +22,8 @@ using namespace Robot;
 using namespace managers;
 using namespace webots;
 using namespace std;
-static const string sotorNames[DMM_NSERVOS] = {
 
+static const string sotorNames[DMM_NSERVOS] = {
   "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
   "ArmLowerR" /*ID5 */, "ArmLowerL" /*ID6 */, "PelvYR"    /*ID7 */, "PelvYL"    /*ID8 */,
   "PelvR"     /*ID9 */, "PelvL"     /*ID10*/, "LegUpperR" /*ID11*/, "LegUpperL" /*ID12*/,
@@ -50,7 +50,7 @@ DARwInOPMotionManager::DARwInOPMotionManager(webots::Robot *robot) :
   int firm_ver = 0;
   CM730 *cm730 = mRobot->getCM730();
   if (cm730->ReadByte(JointData::ID_HEAD_PAN, MX28::P_VERSION, &firm_ver, 0)  != CM730::SUCCESS) {
-    fprintf(stderr, "Can't read firmware version from Dynamixel ID %d!\n", JointData::ID_HEAD_PAN);
+    cerr << "Can't read firmware version from Dynamixel ID " << JointData::ID_HEAD_PAN << endl;
     mCorrectlyInitialized = false;
     mAction = NULL;
     return;
@@ -61,7 +61,7 @@ DARwInOPMotionManager::DARwInOPMotionManager(webots::Robot *robot) :
   else if (27 <= firm_ver)
     filename = DARwInOPDirectoryManager::getDataDirectory() + "motion_4096.bin";
   else {
-    fprintf(stderr, "The firmware version of Dynamixel ID %d is corrupted.\n", JointData::ID_HEAD_PAN);
+    cerr << "The firmware version of Dynamixel ID " << JointData::ID_HEAD_PAN << " is corrupted." << endl;
     mCorrectlyInitialized = false;
     mAction = NULL;
     return;
@@ -119,10 +119,9 @@ void DARwInOPMotionManager::playPage(int id, bool sync) {
     MotionManager::GetInstance()->SetEnable(false);   
   }
   else {
-    int error = 0;
-    if ((error = pthread_create(&this->mMotionThread, NULL, this->MotionThread, this))!= 0) {
-      printf("Motion thread error = %d\n",error);
-    }
+    int error = pthread_create(&this->mMotionThread, NULL, this->MotionThread, this);
+    if (error != 0)
+      cerr << "Motion thread error = " << error << endl;
   }
 #else
   if (sync) {

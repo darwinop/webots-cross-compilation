@@ -37,7 +37,7 @@ int Packet::readIntAt(int pos) {
     return c1 + (c2 << 8) + (c3 << 16) + (c4 << 24);
   }
   else {
-    printf("Impossible to read INT at pos %d\n", pos);
+    cerr << "Impossible to read INT at pos " << pos << endl;
     return -1;
   }
 }

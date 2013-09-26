@@ -2,12 +2,17 @@
 #include <webots/Robot.hpp>
 
 #include <LinuxDARwIn.h>
+
 #include "Camera.h"
+
+#include <iostream>
+
+using namespace std;
 
 unsigned char *::webots::Camera::mImage = NULL;
 const int ::webots::Camera::mResolution[NBRESOLUTION][2] = { {320, 240}, {640, 360}, {640, 400}, {640, 480}, {768, 480}, {800, 600} };
 
-::webots::Camera::Camera(const std::string &name, const Robot *robot) :
+::webots::Camera::Camera(const string &name, const Robot *robot) :
   Device(name, robot)
 {
   mIsActive = false;
@@ -27,7 +32,7 @@ void ::webots::Camera::enable(int ms) {
 
   // create and start the thread
   if ((error = pthread_create(&this->mCameraThread, NULL, this->CameraTimerProc, this))!= 0) {
-    printf("Camera thread error = %d\n",error);
+    cerr << "Camera thread error = " << error << endl;
     exit(-1);
   }
 
