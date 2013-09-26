@@ -11,7 +11,7 @@ using namespace webots;
 
 int main(int argc, char **argv)
 {
-  Symmetry* controller = new Symmetry();
+  Symmetry *controller = new Symmetry();
   controller->run();
   delete controller;
   return EXIT_FAILURE;

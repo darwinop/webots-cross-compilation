@@ -24,34 +24,34 @@ namespace webots {
   class Accelerometer;
   class Gyro;
   class Speaker;
-  
-  class Soccer : public Robot {
-    public:
-                                       Soccer();
-      virtual                         ~Soccer();
-      void                             run();
-      
-    private:
-      int                              mTimeStep;
-      
-      void                             myStep();
-      void                             wait(int ms);
-      bool                             getBallCenter(double &x, double &y);
-      
-      Motor                           *mMotors[NMOTORS];
-      LED                             *mEyeLED;
-      LED                             *mHeadLED;
-      LED                             *mBackLedRed;
-      LED                             *mBackLedGreen;
-      LED                             *mBackLedBlue;
-      Camera                          *mCamera;
-      Accelerometer                   *mAccelerometer;
-      Gyro                            *mGyro;
-      
-      managers::DARwInOPMotionManager *mMotionManager;
-      managers::DARwInOPGaitManager   *mGaitManager;
-      managers::DARwInOPVisionManager *mVisionManager;
-  };
+};
+
+class Soccer : public webots::Robot {
+  public:
+                                     Soccer();
+    virtual                         ~Soccer();
+    void                             run();
+    
+  private:
+    int                              mTimeStep;
+    
+    void                             myStep();
+    void                             wait(int ms);
+    bool                             getBallCenter(double &x, double &y);
+    
+    webots::Motor                    *mMotors[NMOTORS];
+    webots::LED                      *mEyeLED;
+    webots::LED                      *mHeadLED;
+    webots::LED                      *mBackLedRed;
+    webots::LED                      *mBackLedGreen;
+    webots::LED                      *mBackLedBlue;
+    webots::Camera                   *mCamera;
+    webots::Accelerometer            *mAccelerometer;
+    webots::Gyro                     *mGyro;
+    
+    managers::DARwInOPMotionManager  *mMotionManager;
+    managers::DARwInOPGaitManager    *mGaitManager;
+    managers::DARwInOPVisionManager  *mVisionManager;
 };
 
 #endif

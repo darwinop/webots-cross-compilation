@@ -11,7 +11,7 @@ using namespace webots;
 
 int main(int argc, char **argv)
 {
-  VisualTracking* controller = new VisualTracking();
+  VisualTracking *controller = new VisualTracking();
   controller->run();
   delete controller;
   return EXIT_FAILURE;

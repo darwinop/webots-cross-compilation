@@ -1,4 +1,4 @@
-// File:          walk.hpp
+// File:          Walk.hpp
 // Date:          January 2013
 // Description:   Example showing how to use the gait manager
 //                and keyboard inputs
@@ -23,26 +23,26 @@ namespace webots {
   class Accelerometer;
   class Gyro;
   class Speaker;
-  
-  class walk : public Robot {
-    public:
-                                       walk();
-      virtual                         ~walk();
-      void                             run();
-      void                             checkIfFallen();
-      
-    private:
-      int                              mTimeStep;
-      
-      void                             myStep();
-      void                             wait(int ms);
-      
-      Motor                           *mMotors[NMOTORS];
-      Accelerometer                   *mAccelerometer;
-      
-      managers::DARwInOPMotionManager *mMotionManager;
-      managers::DARwInOPGaitManager   *mGaitManager;
-  };
+};
+
+class Walk : public webots::Robot {
+  public:
+                                     Walk();
+    virtual                         ~Walk();
+    void                             run();
+    void                             checkIfFallen();
+    
+  private:
+    int                              mTimeStep;
+    
+    void                             myStep();
+    void                             wait(int ms);
+    
+    webots::Motor                   *mMotors[NMOTORS];
+    webots::Accelerometer           *mAccelerometer;
+    
+    managers::DARwInOPMotionManager *mMotionManager;
+    managers::DARwInOPGaitManager   *mGaitManager;
 };
 
 #endif

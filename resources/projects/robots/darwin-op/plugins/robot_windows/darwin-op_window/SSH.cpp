@@ -419,10 +419,11 @@ int SSH::updateFrameworkIfNeeded() {
 
 int SSH::updateWrapper(const QString &password) {
   emit status("Installing Webots API");
-  QString managerDir, darwinDir, installArchive, webotsHome;
+  QString managerDir, darwinDir, installArchive, webotsHome, controllerDir;
   webotsHome = QString(QProcessEnvironment::systemEnvironment().value("WEBOTS_HOME"));
   managerDir = webotsHome + QString("/resources/projects/robots/darwin-op/libraries/managers");
   darwinDir = webotsHome + QString("/resources/projects/robots/darwin-op");
+  controllerDir = webotsHome + QString("/projects/robots/darwin-op/controllers");
   installArchive = QDir::tempPath() + QString("/webots_darwin_") + QString::number((int)QCoreApplication::applicationPid()) + QString("_install.zip");
 
   // Create archive
@@ -434,6 +435,7 @@ int SSH::updateWrapper(const QString &password) {
   ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/config"), true, "config");
   ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/check_start_position"), true, "check_start_position");
   ZIP::AddFolderToArchive(installArchive, darwinDir + QString("/remote_control"), true, "remote_control");
+  ZIP::AddFileToArchive(installArchive, controllerDir + "/Makefile.include", "Makefile.include");
 
   // Clean directory /darwin/Linux/project/webots
   // Remove directory webots but save controller installed
@@ -507,6 +509,7 @@ int SSH::updateWrapper(const QString &password) {
   executeSSHCommand("mv /home/darwin/check_start_position /darwin/Linux/project/webots/check_start_position");
   executeSSHCommand("mv /home/darwin/config /darwin/Linux/project/webots/config");
   executeSSHCommand("mv /home/darwin/remote_control /darwin/Linux/project/webots/remote_control");
+  executeSSHCommand("mv /home/darwin/Makefile.include /darwin/Linux/project/webots/controllers");
   executeSSHCommand("rm /darwin/Linux/project/webots/install.zip");
 
   // Compile Wrapper
@@ -590,7 +593,7 @@ int SSH::startRemoteCompilation(const QString &IPAddress, const QString &usernam
   emit status("Starting remote compilation: Cleaning up the robot");
   executeSSHCommand("echo "+password+" | sudo -S killall -q default demo controller remote_control"); // kill default demo process (if any)
   // Clean directory controllers
-  executeSSHCommand("rm -rf /darwin/Linux/project/webots/controllers/*");
+  executeSSHCommand("find /darwin/Linux/project/webots/controllers/* ! -name 'Makefile.include' -delete");
 
   // Send archive file
   emit status("Starting remote compilation: Uploading to the robot");

@@ -8,19 +8,17 @@
 
 #include <webots/Robot.hpp>
 
-namespace webots {
-  class MotionPlayer : public Robot {
-    public:
-               MotionPlayer();
-      virtual ~MotionPlayer();
-      void     run();
-      
-    private:
-      int      mTimeStep;
-      
-      void     myStep();
-      void     wait(int ms);
-  };
+class MotionPlayer : public webots::Robot {
+  public:
+             MotionPlayer();
+    virtual ~MotionPlayer();
+    void     run();
+    
+  private:
+    int      mTimeStep;
+    
+    void     myStep();
+    void     wait(int ms);
 };
 
 #endif
