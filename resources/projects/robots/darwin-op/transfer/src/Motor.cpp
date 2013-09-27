@@ -203,14 +203,14 @@ void Motor::setAvailableTorque(double availableTorque) {
     mTorqueLimit = 1;
 }
 
-void Motor::setControlP(double p) { //TODO: why not PID?
+void Motor::setControlPID(double p, double i, double d) {
 
   if (p < 3)
     cout << "WARNING : A small value of P can cause differences between simulation and reality." << endl;
 
   if (p >= 0)
   {
-    int value = p * 8; // Seems to be good, but has to be verified
+    int value = p * 8; // TODO: Seems to be good, but has to be verified
     mPGain = value;
   }
 }

@@ -152,6 +152,7 @@ int webots::Robot::step(int ms) {
       param[n++] = motorId;
       param[n++] = motor->getPGain();
       param[n++] = 0; // Empty
+      // TODO: controlPID should be implemented there
       value = motor->getGoalPosition();
       param[n++] = ::Robot::CM730::GetLowByte(value);
       param[n++] = ::Robot::CM730::GetHighByte(value);

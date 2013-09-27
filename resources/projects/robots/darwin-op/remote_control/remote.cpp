@@ -107,9 +107,8 @@ void Remote::setRemoteMotorTorque(int index, int value) {
   mMotors[index]->setTorque(torque);
 }
 
-void Remote::setRemoteMotorControlP(int index, int value) {
-  double p = value/1000;
-  mMotors[index]->setControlP(p);
+void Remote::setRemoteMotorControlPID(int index, int p, int i, int d) {
+  mMotors[index]->setControlPID(0.001 * p, 0.001 * i, 0.001 * d);
 }
 
 double Remote::getRemoteMotorPosition(int index) {
