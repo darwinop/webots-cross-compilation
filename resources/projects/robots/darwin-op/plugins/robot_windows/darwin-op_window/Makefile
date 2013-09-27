@@ -34,8 +34,8 @@ ifeq ($(OSTYPE),Darwin)
  OSTYPE = darwin
 endif
 
-CXX_SOURCES = entry_points.cpp Viewer.cpp Transfer.cpp SSH.cpp ZIP.cpp 
-HPP_FILES_TO_MOC = Transfer.hpp SSH.hpp
+CXX_SOURCES = entry_points.cpp Viewer.cpp TransferWidget.cpp SSH.cpp ZIP.cpp
+HPP_FILES_TO_MOC = TransferWidget.hpp SSH.hpp
 
 QT = core gui widgets concurrent
 USE_C_API = true

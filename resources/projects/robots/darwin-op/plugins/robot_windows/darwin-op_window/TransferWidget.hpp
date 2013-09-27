@@ -1,13 +1,13 @@
 /*
- * File:         Transfer.hpp
+ * File:         TransferWidget.hpp
  * Date:         January 2013
  * Description:  Widget for communicating with the robot DARwIn-OP
  * Author:       david.mansolino@epfl.ch
  * Modifications:
  */
 
-#ifndef TRANSFER_HPP
-#define TRANSFER_HPP
+#ifndef TRANSFER_WIDGET_HPP
+#define TRANSFER_WIDGET_HPP
 
 #include <QtGui/QtGui>
 #include <QtCore/QtCore>
@@ -18,7 +18,7 @@
 class SSH;
 struct Parameters;
 
-class Transfer : public QScrollArea
+class TransferWidget : public QWidget
 {
   Q_OBJECT
 
@@ -34,8 +34,8 @@ class Transfer : public QScrollArea
       STOP_REMOTE_COMPILATION
     };
 
-                        Transfer(QWidget *parent = 0);
-    virtual            ~Transfer();
+                        TransferWidget(QWidget *parent = 0);
+    virtual            ~TransferWidget();
 
     // void                robotInstableSlot(); // TODO: this function is never call: when has it been unused?
 
@@ -45,18 +45,16 @@ class Transfer : public QScrollArea
     void                uninstall();
     void                sendController();
     void                remoteControl();
-    void                timerCallback();
     void                SSHSessionComplete();
     void                SSHSessionDone();
     void                print(const QString &message, bool error);
     void                status(const QString &message);
 
+  /*
   signals:
     void                setStabilityResponseSignal(int stability);
     void                isRobotStableSignal();
-    void                stopRemoteSignal();
-    void                stopControllerSignal();
-    void                testSignal();
+  */
 
   private:
     void                saveSettings();
@@ -78,7 +76,6 @@ class Transfer : public QScrollArea
     SSH                *mSSH;
     bool                mConnectionState;
 
-    QWidget            *mContainerWidget;
     QGridLayout        *mContainerGridLayout;
 
     //***  SETTINGS  ***//
@@ -119,7 +116,6 @@ class Transfer : public QScrollArea
     // Remote control wait during starting
     QProgressDialog    *mRemoteProgressDialog;
     QProgressBar       *mRemoteProgressBar;
-    QTimer             *mTimer;
 
     // Wrapper
     QPushButton        *mUninstallButton;

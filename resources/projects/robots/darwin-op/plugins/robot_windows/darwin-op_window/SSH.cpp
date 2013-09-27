@@ -639,7 +639,7 @@ int SSH::startRemoteCompilation(const QString &IPAddress, const QString &usernam
   } else {
     emit print("Checking ready position...\n", false);
     executeSSHCommand("/darwin/Linux/project/webots/check_start_position/check_start_position");
-    if (!mStdout.startsWith("OK")) {
+    if (!mStdout.startsWith("Success")) {
       emit print("Robot not in ready position!\n", true);
       emit status("Status : Robot not in ready position");
       // Remove compilation files
@@ -655,12 +655,12 @@ int SSH::startRemoteCompilation(const QString &IPAddress, const QString &usernam
         executeSSHCommand("mv /darwin/Linux/project/webots/controllers/" + controller + "/" + controller + " /darwin/Linux/project/webots/controllers/" + controller + "/controller");
         executeSSHCommand("echo -e \'#!/bin/bash\\nexport DISPLAY=:0\\n/darwin/Linux/project/webots/controllers/"+controller+"/controller\\n\' > /darwin/Linux/project/webots/controllers/"+controller+"/"+controller);
         executeSSHCommand("chmod a+x /darwin/Linux/project/webots/controllers/"+controller+"/"+controller);
-        executeSSHCommand("echo "+password+" | sudo -S /darwin/Linux/project/webots/controllers/"+controller+"/"+controller, true, false); // wait until we terminate it
-        executeSSHCommand("killall -q controller");
-        executeSSHCommand("rm -r /darwin/Linux/project/webots/controllers/*");
+        executeSSHCommand("echo " + password + " | sudo -S /darwin/Linux/project/webots/controllers/"+controller+"/"+controller, true, false); // wait until we terminate it
+        executeSSHCommand("echo " + password + " | sudo -S killall -q controller " + controller);
+        executeSSHCommand("find /darwin/Linux/project/webots/controllers/* ! -name 'Makefile.include' -delete");
       }
       else  // controller do not exist
-        executeSSHCommand("rm -r /darwin/Linux/project/webots/controllers/*"); // Remove controllers files
+        executeSSHCommand("find /darwin/Linux/project/webots/controllers/* ! -name 'Makefile.include' -delete");
     }
   }
   closeSFTPChannel();
