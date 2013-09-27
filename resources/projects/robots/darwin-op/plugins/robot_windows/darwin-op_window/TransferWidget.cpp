@@ -1,5 +1,5 @@
 #include "SSH.hpp"
-#include "Transfer.hpp"
+#include "TransferWidget.hpp"
 #include "ZIP.hpp"
 
 #include <webots/robot.h>
@@ -14,14 +14,10 @@
 using namespace webotsQtUtils;
 using namespace std;
 
-Transfer::Transfer(QWidget *parent):
-  QScrollArea(parent)
+TransferWidget::TransferWidget(QWidget *parent):
+  QWidget(parent)
 {
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setMinimumHeight(520);
-  mContainerGridLayout = new QGridLayout();
-  mContainerGridLayout->setHorizontalSpacing(150);
-  mContainerGridLayout->setVerticalSpacing(30);
+  mContainerGridLayout = new QGridLayout(this);
 
   //***  SETTINGS  ***//
   mSettingsGridLayout = new QGridLayout();
@@ -66,10 +62,11 @@ Transfer::Transfer(QWidget *parent):
   mActionGroupBox = new QGroupBox(tr("Upload controller"), this);
 
   // Send Controller
-  QString iconPath = StandardPaths::getWebotsHomePath() + "resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/send.png";
-  mSendControllerIcon = new QIcon(QPixmap((char*)iconPath.toStdString().c_str()));
+  QString iconPath;
+  iconPath = StandardPaths::getWebotsHomePath() + "resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/send.png";
+  mSendControllerIcon = new QIcon(QPixmap(iconPath));
   iconPath = StandardPaths::getWebotsHomePath() + "resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/stop.png";
-  mStopControllerIcon = new QIcon(QPixmap((char*)iconPath.toStdString().c_str()));
+  mStopControllerIcon = new QIcon(QPixmap(iconPath));
   mSendControllerButton = new QPushButton(this);
   mSendControllerButton->setIconSize(QSize(64,64));
   mActionGridLayout->addWidget(mSendControllerButton, 0, 0, 1, 1);
@@ -83,7 +80,7 @@ Transfer::Transfer(QWidget *parent):
   mSSH = NULL;
   mRemoteEnable = false;
   iconPath = StandardPaths::getWebotsHomePath() + "resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/remote.png";
-  mRemoteControlIcon = new QIcon(QPixmap((char*)iconPath.toStdString().c_str()));
+  mRemoteControlIcon = new QIcon(QPixmap(iconPath));
   mRemoteControlButton = new QPushButton(this);
   mRemoteControlButton->setIconSize(QSize(64,64));
   mActionGridLayout->addWidget(mRemoteControlButton, 0, 1, 1, 1);
@@ -91,7 +88,7 @@ Transfer::Transfer(QWidget *parent):
   // Wrapper
   mUninstallButton = new QPushButton(this);
   iconPath = StandardPaths::getWebotsHomePath() + "resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/uninstall.png";
-  mUninstallButton->setIcon(QIcon(QPixmap((char*)iconPath.toStdString().c_str())));
+  mUninstallButton->setIcon(QIcon(QPixmap(iconPath)));
   mUninstallButton->setIconSize(QSize(64,64));
   mUninstallButton->setToolTip(tr("If you don't need it any more, you can uninstall Webots API from the real robot"));
   mActionGridLayout->addWidget(mUninstallButton, 0, 2, 1, 1);
@@ -101,14 +98,15 @@ Transfer::Transfer(QWidget *parent):
 
   //***  OUTPUT  ***//
 
-  mOutputGridLayout = new QGridLayout(this);
+  mOutputGridLayout = new QGridLayout();
   mOutputGroupBox = new QGroupBox(tr("DARwIn-OP console"), this);
 
   // Status label and progress bar
   mStatusLabel = new QLabel(this);
   mOutputGridLayout->addWidget(mStatusLabel, 1, 0, 1, 1);
   mProgressBar = new QProgressBar(this);
-  mProgressBar->setValue(0);
+  mProgressBar->setMinimum(0); // min = max = 0 => busy indicator
+  mProgressBar->setMaximum(0);
   mProgressBar->hide();
   mOutputGridLayout->addWidget(mProgressBar, 3, 0, 1, 2);
 
@@ -123,14 +121,7 @@ Transfer::Transfer(QWidget *parent):
 
   mConnectionState = false;
 
-  mContainerWidget = new QWidget(this);
-  mContainerWidget->setLayout(mContainerGridLayout);
-  setWidget(mContainerWidget);
-
-  mTimer = new QTimer(this);
-
-  // Signals Transfer->Transfer
-  QObject::connect(mTimer, SIGNAL(timeout()), this, SLOT(timerCallback()));
+  // Signals TransferWidget->TransferWidget
   QObject::connect(mSendControllerButton, SIGNAL(clicked()), this, SLOT(sendController()));
   QObject::connect(mRemoteControlButton, SIGNAL(clicked()), this, SLOT(remoteControl()));
   QObject::connect(mUninstallButton, SIGNAL(clicked()), this, SLOT(uninstall()));
@@ -146,25 +137,24 @@ Transfer::Transfer(QWidget *parent):
   enableButtons();
 }
 
-Transfer::~Transfer() {
+TransferWidget::~TransferWidget() {
   delete mSSH;
 }
 
-void Transfer::showProgressBox(const QString &title, const QString &message) {
+void TransferWidget::showProgressBox(const QString &title, const QString &message) {
   disableButtons();
   mRemoteProgressDialog = new QProgressDialog(title, "", 0, 100, this, Qt::Dialog | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
   mRemoteProgressDialog->setWindowTitle(title);
   mRemoteProgressDialog->setLabelText(tr("%1...").arg(message) + "\n\n"+tr("Please wait, it can take a few seconds."));
   mRemoteProgressBar = new QProgressBar(mRemoteProgressDialog);
   mRemoteProgressBar->setTextVisible(false);
-  mRemoteProgressBar->setMinimum(0);
-  mRemoteProgressBar->setMaximum(100);
+  mRemoteProgressBar->setMinimum(0); // min = max = 0 => busy indicator
+  mRemoteProgressBar->setMaximum(0);
   mRemoteProgressDialog->setBar(mRemoteProgressBar);
   mRemoteProgressDialog->show();
-  mTimer->start(10);
 }
 
-void Transfer::print(const QString &message, bool error) {
+void TransferWidget::print(const QString &message, bool error) {
   static QString str_out;
   static QString str_err;
 
@@ -196,13 +186,13 @@ void Transfer::print(const QString &message, bool error) {
   } while(!str_err.isEmpty());
 }
 
-void Transfer::status(const QString &message) {
+void TransferWidget::status(const QString &message) {
   mStatusLabel->setText(tr("Status: %1...").arg(message));
   if (mRemoteProgressDialog)
     mRemoteProgressDialog->setLabelText(tr("%1...").arg(message) + "\n\n"+tr("Please wait, it can take a few seconds."));
 }
 
-void Transfer::sendController() {
+void TransferWidget::sendController() {
   QString controller;
   controller = QString(wb_robot_get_controller_name());
 
@@ -225,7 +215,7 @@ void Transfer::sendController() {
   }
 }
 
-void Transfer::remoteControl() {
+void TransferWidget::remoteControl() {
   if (mStatus==DISCONNECTED) { // start the remote control
     showProgressBox(tr("Starting remote control..."),tr("Initializing"));
     static QString ip = mIPAddressLineEdit->text();
@@ -241,7 +231,7 @@ void Transfer::remoteControl() {
   }
 }
 
-void Transfer::uninstall() {
+void TransferWidget::uninstall() {
   QMessageBox msgBox;
   msgBox.setWindowTitle(tr("Webots API uninstallation"));
   msgBox.setText(tr("You are going to completely uninstall Webots API from DARwIn-OP"));
@@ -260,7 +250,7 @@ void Transfer::uninstall() {
   }
 }
 
-void Transfer::finishStartRemoteCompilation() {
+void TransferWidget::finishStartRemoteCompilation() {
   delete mRemoteProgressDialog;
   mRemoteProgressDialog = NULL;
   mSendControllerButton->setIcon(*mStopControllerIcon);
@@ -274,7 +264,7 @@ void Transfer::finishStartRemoteCompilation() {
   mStatusLabel->setText(tr("Status: Running remote controller"));
 }
 
-void Transfer::finishStartRemoteControl() {
+void TransferWidget::finishStartRemoteControl() {
   delete mRemoteProgressDialog;
   mRemoteProgressDialog = NULL;
   mRemoteControlButton->setIcon(*mStopControllerIcon);
@@ -288,13 +278,13 @@ void Transfer::finishStartRemoteControl() {
   mStatusLabel->setText(tr("Status: Running remote control"));
 }
 
-void Transfer::finish() {
+void TransferWidget::finish() {
   delete mRemoteProgressDialog;
   mRemoteProgressDialog = NULL;
   enableButtons();
 }
 
-void Transfer::SSHSessionDone() {
+void TransferWidget::SSHSessionDone() {
   saveSettings(); // connection was successful, so we want to save the network settings
   switch (mStatus) {
     case START_REMOTE_COMPILATION:
@@ -309,7 +299,7 @@ void Transfer::SSHSessionDone() {
   }
 }
 
-void Transfer::SSHSessionComplete() {
+void TransferWidget::SSHSessionComplete() {
   if (mFutureWatcher.result() < 0) {
     delete mRemoteProgressDialog;
     mRemoteProgressDialog = NULL;
@@ -362,48 +352,26 @@ void Transfer::SSHSessionComplete() {
 // ***                        Auxiliary functions                           *** //
 // ---------------------------------------------------------------------------- //
 
-void Transfer::timerCallback() {
-  int static i = 5;
-  int static direction = 1;
 
-  if (mRemoteProgressDialog != NULL) {
-    if (!mRemoteProgressDialog->isVisible()) {
-      direction = 5;
-      i = 1;
-    }
-    mRemoteProgressDialog->setValue(i);
-    i = i + direction;
-
-    if (i > 95) {
-      direction = -1;
-      mRemoteProgressBar->setInvertedAppearance(true);
-    }
-    else if (i < 5) {
-      direction = 1;
-      mRemoteProgressBar->setInvertedAppearance(false);
-    }
-  }
-}
-
-void Transfer::restoreSettings() {
+void TransferWidget::restoreSettings() {
   mIPAddressLineEdit->setText("192.168.123.1");
   mUsernameLineEdit->setText("darwin");
   mPasswordLineEdit->setText("111111");
 }
 
-void Transfer::saveSettings() {
+void TransferWidget::saveSettings() {
   mSettings->setValue("darwin-op_window/IP", mIPAddressLineEdit->text()); 
   mSettings->setValue("darwin-op_window/username", mUsernameLineEdit->text());
   mSettings->setValue("darwin-op_window/password", mPasswordLineEdit->text());
 }
 
-void Transfer::loadSettings() {
+void TransferWidget::loadSettings() {
   mIPAddressLineEdit->setText(mSettings->value("darwin-op_window/IP", "192.168.123.1").toString());
   mUsernameLineEdit->setText(mSettings->value("darwin-op_window/username", "darwin").toString());
   mPasswordLineEdit->setText(mSettings->value("darwin-op_window/password", "111111").toString());
 }
 
-void Transfer::enableButtons() {
+void TransferWidget::enableButtons() {
   mSendControllerButton->setIcon(*mSendControllerIcon);
   mSendControllerButton->setToolTip(tr("Send the controller curently used in simulation on the real robot and play it"));
   mRemoteControlButton->setIcon(*mRemoteControlIcon);
@@ -416,7 +384,7 @@ void Transfer::enableButtons() {
   mStatus = DISCONNECTED;
 }
 
-void Transfer::disableButtons() {
+void TransferWidget::disableButtons() {
   mUninstallButton->setEnabled(false);
   mSendControllerButton->setEnabled(false);
   mMakeDefaultControllerCheckBox->setEnabled(false);
@@ -424,7 +392,7 @@ void Transfer::disableButtons() {
 }
 
 /*
-void Transfer::robotInstableSlot() {
+void TransferWidget::robotInstableSlot() {
   QString imagePath;
   imagePath = StandardPaths::getWebotsHomePath() + QString("resources/projects/robots/darwin-op/plugins/robot_windows/darwin-op_window/images/start_position.png");
   QMessageBox msgBox;
@@ -432,7 +400,7 @@ void Transfer::robotInstableSlot() {
   msgBox.setText("The robot doesn't seems to be in a stable position.");
   msgBox.setInformativeText("What do you want to do?");
   msgBox.setDetailedText("Warning, the robot doesn't seems to be in it's stable start-up position.\nWe recommand you to put the robot in the stable position and to retry.\nThe stable position is when the robot is sit down (illustration above).\nNevertheless if you want to start the controller in this position you can press Ignore, but be aware that the robot can make sudden movements to reach its start position and this can damage it!");
-  msgBox.setIconPixmap(QPixmap((char*)imagePath.toStdString().c_str()));
+  msgBox.setIconPixmap(QPixmap(imagePath));
   msgBox.setStandardButtons(QMessageBox::Retry | QMessageBox::Abort | QMessageBox::Ignore);
   msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
   msgBox.setDefaultButton(QMessageBox::Retry);
@@ -446,7 +414,7 @@ void Transfer::robotInstableSlot() {
 }
 */
 
-void Transfer::installControllerWarningSlot() {
+void TransferWidget::installControllerWarningSlot() {
   if (!mMakeDefaultControllerCheckBox->isChecked()) {
 #ifdef WIN32
     mMakeDefaultControllerCheckBox->setChecked(true);
