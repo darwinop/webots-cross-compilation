@@ -28,8 +28,7 @@ namespace webots {
       virtual void  setVelocity(double vel);
       virtual void  setAcceleration(double acceleration);
       virtual void  setAvailableTorque(double availableTorque);
-      // virtual void setControlPID(double p, double i, double d); // TODO: to implement
-      virtual void  setControlP(double p); // TODO: to remove
+      virtual void  setControlPID(double p, double i, double d);
       double        getMinPosition() const;
       double        getMaxPosition() const;
 

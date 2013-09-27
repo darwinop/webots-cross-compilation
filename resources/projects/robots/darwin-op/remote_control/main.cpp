@@ -207,10 +207,12 @@ int main(int argc, char *argv[]) {
             remote->setRemoteMotorAvailableTorque(motorNumber, value);
             receivePos += 5;
           }
-          if (receiveBuffer[receivePos] == 'c') { // ControlP // TODO: why not PID?
-            int value = readINTFromBuffer(receiveBuffer + receivePos + 1);
-            remote->setRemoteMotorControlP(motorNumber, value);
-            receivePos += 5;
+          if (receiveBuffer[receivePos] == 'c') { // ControlPID
+            int p = readINTFromBuffer(receiveBuffer + receivePos + 1);
+            int i = readINTFromBuffer(receiveBuffer + receivePos + 1 + 4);
+            int d = readINTFromBuffer(receiveBuffer + receivePos + 1 + 2 * 4);
+            remote->setRemoteMotorControlPID(motorNumber, p, i, d);
+            receivePos += 1 + 3 * 4; // TODO (fabien): why not use sizeof(int) ?
           }
           if (receiveBuffer[receivePos] == 'f') { // Torque
             int value = readINTFromBuffer(receiveBuffer + receivePos + 1);
