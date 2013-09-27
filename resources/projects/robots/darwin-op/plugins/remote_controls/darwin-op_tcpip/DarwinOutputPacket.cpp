@@ -142,17 +142,15 @@ void DarwinOutputPacket::apply(int simulationTime) {
       // ControlPID
       if (motor->isControlPIDRequested()) {
         append(QByteArray(1, 'c'));
-        int value = (int)(motor->controlP() * 1000);  // TODO: why not PID?
-        appendINT(value);
-        // I and D gains are not transmitted as the robot currently doesn't support it
+        int p = (int)(motor->controlP() * 1000);
+        int i = (int)(motor->controlI() * 1000);
+        int d = (int)(motor->controlD() * 1000);
+        appendINT(p);
+        appendINT(i);
+        appendINT(d);
+        // TODO (fabien): why doing this 1000 multiplication (and division at the other side) while
+        //                simply creating an appendDouble() function would be much more elegant?
         motor->resetControlPIDRequested();
-      }
-      // ControlP (legacy) // TODO: certainly to remove
-      if (motor->isControlPRequested()) {
-        append(QByteArray(1, 'c'));
-        int value = (int)(motor->controlP() * 1000);
-        appendINT(value);
-        motor->resetControlPRequested();
       }
       // Force
       if (motor->isForceRequested()) {

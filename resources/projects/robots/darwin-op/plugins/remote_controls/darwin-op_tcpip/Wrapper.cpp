@@ -242,15 +242,6 @@ void Wrapper::motorSetTorque(WbDeviceTag tag, double torque) {
     motor->setTorque(torque);
   }
 }
-void Wrapper::motorSetControlP(WbDeviceTag tag, double p) {
-  Device *device = DeviceManager::instance()->findDeviceFromTag(tag);
-  MotorR *motor = dynamic_cast<MotorR *>(device);
-  if (motor) {
-    motor->setMotorRequested();
-    motor->setControlPRequested();
-    motor->setControlPID(p, 0.0, 0.0);
-  }
-}
 
 void Wrapper::motorSetControlPID(WbDeviceTag tag, double p, double i, double d) {
   Device *device = DeviceManager::instance()->findDeviceFromTag(tag);

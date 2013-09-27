@@ -22,7 +22,7 @@ class MotorR : public SingleValueSensor {
                mVelocityRequested(false),
                mAccelerationRequested(false),
                mMotorAvailableTorqueRequested(false),
-               mControlPRequested(false),
+               mControlPIDRequested(false),
                mTorqueRequested(false) {}
     virtual ~MotorR() {}
     
@@ -68,11 +68,6 @@ class MotorR : public SingleValueSensor {
     void     resetControlPIDRequested() { mControlPIDRequested = false; }
     void     setControlPIDRequested() { mControlPIDRequested = true; }
     
-    // P-control legacy code //TODO: to remove
-    bool     isControlPRequested() const { return mControlPRequested; }
-    void     resetControlPRequested() { mControlPRequested = false; }
-    void     setControlPRequested() { mControlPRequested = true; }
-    
     bool     isForceRequested() const { return mTorqueRequested; }
     void     resetTorqueRequested() { mTorqueRequested = false; }
     void     setTorqueRequested() { mTorqueRequested = true; }
@@ -93,7 +88,6 @@ class MotorR : public SingleValueSensor {
     bool     mVelocityRequested;
     bool     mAccelerationRequested;
     bool     mMotorAvailableTorqueRequested;
-    bool     mControlPRequested; // legacy
     bool     mControlPIDRequested;
     bool     mTorqueRequested;
 };
