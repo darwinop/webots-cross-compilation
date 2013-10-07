@@ -13,22 +13,16 @@
 #include <string>
 
 namespace webots {
-  class Robot;
   class Device {
     public:
       virtual           ~Device() {}
       const std::string &getName() const { return mName; }
 
     protected:
-                         Device(const std::string &n, const Robot *r) :
-                           mName(n),
-                           mRobot(r) {}
-
-      const Robot       *getRobot() const { return mRobot; }
+                         Device(const std::string &n) : mName(n) {}
 
     private:
       std::string        mName;
-      const Robot       *mRobot;
   };
 }
 

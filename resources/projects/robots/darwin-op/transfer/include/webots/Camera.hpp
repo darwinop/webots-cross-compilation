@@ -19,7 +19,7 @@ namespace webots {
         WB_CAMERA_COLOR = 99
       };
 
-                              Camera(const std::string &name, const Robot *robot); //Use Robot::getCamera() instead
+                              Camera(const std::string &name); //Use Robot::getCamera() instead
       virtual                ~Camera();
 
       virtual void            enable(int ms);

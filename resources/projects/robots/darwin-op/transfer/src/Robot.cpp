@@ -276,35 +276,35 @@ webots::Speaker *webots::Robot::getSpeaker(const std::string &name) const {
 }
 
 void webots::Robot::initDevices() {
-  mDevices["Accelerometer"] = new webots::Accelerometer("Accelerometer", this);
-  mDevices["Camera"]        = new webots::Camera       ("Camera",        this);
-  mDevices["Gyro"]          = new webots::Gyro         ("Gyro",          this);
-  mDevices["EyeLed"]        = new webots::LED          ("EyeLed",        this);
-  mDevices["HeadLed"]       = new webots::LED          ("HeadLed",       this);
-  mDevices["BackLedRed"]    = new webots::LED          ("BackLedRed",    this);
-  mDevices["BackLedGreen"]  = new webots::LED          ("BackLedGreen",  this);
-  mDevices["BackLedBlue"]   = new webots::LED          ("BackLedBlue",   this);
-  mDevices["ShoulderR"]     = new webots::Motor        ("ShoulderR",     this);
-  mDevices["ShoulderL"]     = new webots::Motor        ("ShoulderL",     this);
-  mDevices["ArmUpperR"]     = new webots::Motor        ("ArmUpperR",     this);
-  mDevices["ArmUpperL"]     = new webots::Motor        ("ArmUpperL",     this);
-  mDevices["ArmLowerR"]     = new webots::Motor        ("ArmLowerR",     this);
-  mDevices["ArmLowerL"]     = new webots::Motor        ("ArmLowerL",     this);
-  mDevices["PelvYR"]        = new webots::Motor        ("PelvYR",        this);
-  mDevices["PelvYL"]        = new webots::Motor        ("PelvYL",        this);
-  mDevices["PelvR"]         = new webots::Motor        ("PelvR",         this);
-  mDevices["PelvL"]         = new webots::Motor        ("PelvL",         this);
-  mDevices["LegUpperR"]     = new webots::Motor        ("LegUpperR",     this);
-  mDevices["LegUpperL"]     = new webots::Motor        ("LegUpperL",     this);
-  mDevices["LegLowerR"]     = new webots::Motor        ("LegLowerR",     this);
-  mDevices["LegLowerL"]     = new webots::Motor        ("LegLowerL",     this);
-  mDevices["AnkleR"]        = new webots::Motor        ("AnkleR",        this);
-  mDevices["AnkleL"]        = new webots::Motor        ("AnkleL",        this);
-  mDevices["FootR"]         = new webots::Motor        ("FootR",         this);
-  mDevices["FootL"]         = new webots::Motor        ("FootL",         this);
-  mDevices["Neck"]          = new webots::Motor        ("Neck",          this);
-  mDevices["Head"]          = new webots::Motor        ("Head",          this);
-  mDevices["Speaker"]       = new webots::Speaker      ("Speaker",       this);
+  mDevices["Accelerometer"] = new webots::Accelerometer("Accelerometer");
+  mDevices["Camera"]        = new webots::Camera       ("Camera");
+  mDevices["Gyro"]          = new webots::Gyro         ("Gyro");
+  mDevices["EyeLed"]        = new webots::LED          ("EyeLed");
+  mDevices["HeadLed"]       = new webots::LED          ("HeadLed");
+  mDevices["BackLedRed"]    = new webots::LED          ("BackLedRed");
+  mDevices["BackLedGreen"]  = new webots::LED          ("BackLedGreen");
+  mDevices["BackLedBlue"]   = new webots::LED          ("BackLedBlue");
+  mDevices["ShoulderR"]     = new webots::Motor        ("ShoulderR");
+  mDevices["ShoulderL"]     = new webots::Motor        ("ShoulderL");
+  mDevices["ArmUpperR"]     = new webots::Motor        ("ArmUpperR");
+  mDevices["ArmUpperL"]     = new webots::Motor        ("ArmUpperL");
+  mDevices["ArmLowerR"]     = new webots::Motor        ("ArmLowerR");
+  mDevices["ArmLowerL"]     = new webots::Motor        ("ArmLowerL");
+  mDevices["PelvYR"]        = new webots::Motor        ("PelvYR");
+  mDevices["PelvYL"]        = new webots::Motor        ("PelvYL");
+  mDevices["PelvR"]         = new webots::Motor        ("PelvR");
+  mDevices["PelvL"]         = new webots::Motor        ("PelvL");
+  mDevices["LegUpperR"]     = new webots::Motor        ("LegUpperR");
+  mDevices["LegUpperL"]     = new webots::Motor        ("LegUpperL");
+  mDevices["LegLowerR"]     = new webots::Motor        ("LegLowerR");
+  mDevices["LegLowerL"]     = new webots::Motor        ("LegLowerL");
+  mDevices["AnkleR"]        = new webots::Motor        ("AnkleR");
+  mDevices["AnkleL"]        = new webots::Motor        ("AnkleL");
+  mDevices["FootR"]         = new webots::Motor        ("FootR");
+  mDevices["FootL"]         = new webots::Motor        ("FootL");
+  mDevices["Neck"]          = new webots::Motor        ("Neck");
+  mDevices["Head"]          = new webots::Motor        ("Head");
+  mDevices["Speaker"]       = new webots::Speaker      ("Speaker");
 }
 
 void webots::Robot::initDarwinOP() {

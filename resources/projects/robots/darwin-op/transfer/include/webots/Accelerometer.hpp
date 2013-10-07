@@ -15,7 +15,7 @@
 namespace webots {
   class Accelerometer: public Device  {
     public:
-                    Accelerometer(const std::string &name, const Robot *robot); //Use Robot::getAccelerometer() instead
+                    Accelerometer(const std::string &name); //Use Robot::getAccelerometer() instead
       virtual      ~Accelerometer();
 
       virtual void  enable(int ms);
