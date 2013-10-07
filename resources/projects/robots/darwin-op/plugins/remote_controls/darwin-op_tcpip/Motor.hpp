@@ -36,7 +36,6 @@ class MotorR : public SingleValueSensor {
     void     setAcceleration(double acceleration) { mAcceleration = acceleration; }
     void     setAvailableTorque(double torque) { mMotorAvailableTorque = torque; }
     void     setControlPID(double p, double i, double d) { mControlP = p; mControlI = i; mControlD = d; }
-    void     setControlP(double p) { mControlP = p; } // legacy //TODO: to remove
     void     setTorque(double torque) { mTorque = torque; }
     
     double   position() { return mPosition; }

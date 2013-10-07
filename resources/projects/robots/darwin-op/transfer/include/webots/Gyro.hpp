@@ -15,7 +15,7 @@
 namespace webots {
   class Gyro: public Device  {
     public:
-                    Gyro(const std::string &name, const Robot *robot); //Use Robot::getGyro() instead
+                    Gyro(const std::string &name); //Use Robot::getGyro() instead
       virtual      ~Gyro();
 
       virtual void  enable(int ms);

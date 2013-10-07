@@ -26,8 +26,8 @@ template <typename T> int sgn(T val) {
     return -1;
 }
 
-Motor::Motor(const std::string &name, const Robot *robot) :
-  Device(name, robot)
+Motor::Motor(const std::string &name) :
+  Device(name)
 {
   initStaticMap();
   mAcceleration   = -1;
@@ -162,7 +162,7 @@ void Motor::disablePosition() {  //EMPTY
 }
 
 void Motor::setTorque(double torque) {
-  CM730 *cm730 = getRobot()->getCM730();
+  CM730 *cm730 = Robot::getInstance()->getCM730();
   if (torque == 0)
     cm730->WriteWord(mNamesToIDs[getName()], MX28::P_TORQUE_ENABLE, 0, 0);
   else{
@@ -183,7 +183,7 @@ void Motor::setTorque(double torque) {
 }
 
 void Motor::setAvailableTorque(double availableTorque) {
-  CM730 *cm730 = getRobot()->getCM730();
+  CM730 *cm730 = Robot::getInstance()->getCM730();
   if (availableTorque > 2.5) {
     mTorqueEnable = 1;
     mTorqueLimit = 1023;
@@ -331,7 +331,7 @@ void Motor::setPresentLoad(int load) {
 }
 
 int Motor::getPositionSamplingPeriod() const {
-  return getRobot()->getBasicTimeStep();
+  return Robot::getInstance()->getBasicTimeStep();
 }
 
 double Motor::getTargetPosition() const {

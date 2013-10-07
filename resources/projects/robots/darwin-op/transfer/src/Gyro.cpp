@@ -3,8 +3,8 @@
 
 using namespace webots;
 
-Gyro::Gyro(const std::string &name, const Robot *robot) :
-  Device(name, robot)
+Gyro::Gyro(const std::string &name) :
+  Device(name)
 {
   for (int i = 0; i < 3; i++)
     mValues[i] = 512;  // 512 = central value -> no rotation
@@ -29,5 +29,5 @@ void Gyro::setValues(const int *integerValues) {
 }
 
 int Gyro::getSamplingPeriod() const {
-  return getRobot()->getBasicTimeStep();
+  return Robot::getInstance()->getBasicTimeStep();
 }

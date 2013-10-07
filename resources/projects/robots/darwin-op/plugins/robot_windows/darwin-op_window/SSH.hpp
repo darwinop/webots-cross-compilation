@@ -26,7 +26,7 @@ class SSH : public QObject {
                   SSH(QObject *parent);
     virtual      ~SSH();
 
-    int           startRemoteCompilation(const QString &IPAddress, const QString &username, const QString &password, bool makeDefaultConsoller);
+    int           startRemoteCompilation(const QString &IPAddress, const QString &username, const QString &password, bool makeDefaultController);
     int           startRemoteControl(const QString &IPAddress, const QString &username, const QString &password);
     int           uninstall(const QString &IPAddress, const QString &username, const QString &password);
     void          terminate() { mTerminate = true; }

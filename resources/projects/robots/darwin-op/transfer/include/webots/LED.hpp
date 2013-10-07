@@ -17,7 +17,7 @@
 namespace webots {
   class LED: public Device  {
     public:
-                                              LED(const std::string &name, const Robot *robot); //Use Robot::getLED() instead
+                                              LED(const std::string &name); //Use Robot::getLED() instead
       virtual                                ~LED();
       virtual void                            set(int value);
       int                                     get() const;

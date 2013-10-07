@@ -62,7 +62,7 @@ bool Communication::sendPacket(const Packet *packet) {
     return false;
   }
   
-  if (mSocket->waitForBytesWritten(-1) == -1) {
+  if (mSocket->waitForBytesWritten(-1) == false) {
     cerr << "BYTES NOT WRITTEN" << endl;
     return false;
   }
@@ -73,7 +73,7 @@ bool Communication::sendPacket(const Packet *packet) {
 bool Communication::receivePacket(Packet *packet) {
 
   packet->clear();
-  if (mSocket->waitForReadyRead(-1) == -1) {
+  if (mSocket->waitForReadyRead(-1) == false) {
     cerr << "RECEIVING PACKET NOT READABLE" << endl;
     return false;
   }

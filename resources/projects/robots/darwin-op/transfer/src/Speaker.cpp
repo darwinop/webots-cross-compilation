@@ -7,8 +7,8 @@
 using namespace webots;
 using namespace Robot;
 
-Speaker::Speaker(const std::string &name, const Robot *robot) :
-  Device(name, robot)
+Speaker::Speaker(const std::string &name) :
+  Device(name)
 {
   mSpeakPID = -1;
 }
