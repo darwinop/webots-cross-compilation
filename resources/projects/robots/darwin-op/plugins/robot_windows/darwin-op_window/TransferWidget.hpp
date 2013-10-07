@@ -13,10 +13,7 @@
 #include <QtCore/QtCore>
 #include <QtWidgets/QtWidgets>
 
-#include <pthread.h>
-
 class SSH;
-struct Parameters;
 
 class TransferWidget : public QWidget
 {

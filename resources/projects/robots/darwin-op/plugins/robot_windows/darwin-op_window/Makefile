@@ -1,38 +1,13 @@
-ifeq ($(OS),Windows_NT)
- OSTYPE = windows
-endif
+# Webots Makefile system 
+#
+# You may add some variable definitions hereafter to customize the build process
+# See documentation in $(WEBOTS_HOME_PATH)/resources/Makefile.include
 
-ifndef OSTYPE
- OSTYPE = $(shell uname)
-endif
+space :=
+space +=
+WEBOTS_HOME_PATH=$(subst $(space),\ ,$(strip $(subst \,/,$(WEBOTS_HOME))))
 
-ifeq ($(OSTYPE),Linux)
- OSTYPE = linux
-endif
-
-ifeq ($(OSTYPE),linux-gnu)
- OSTYPE = linux
-endif
-
-ifeq ($(OSTYPE),)
- OSTYPE = windows
-endif
-
-ifeq ($(OSTYPE),msys)
- OSTYPE = windows
-endif
-
-ifneq ($(findstring MINGW,$(OSTYPE)),)
- OSTYPE = windows
-endif
-
-ifneq ($(findstring CYGWIN,$(OSTYPE)),)
- OSTYPE = windows
-endif
-
-ifeq ($(OSTYPE),Darwin)
- OSTYPE = darwin
-endif
+include $(WEBOTS_HOME_PATH)/resources/Makefile.os.include
 
 CXX_SOURCES = entry_points.cpp Viewer.cpp TransferWidget.cpp SSH.cpp ZIP.cpp
 HPP_FILES_TO_MOC = TransferWidget.hpp SSH.hpp
@@ -56,7 +31,4 @@ ifeq ($(OSTYPE),linux)
 LIBRARIES += -lzip
 endif
 
-space :=
-space +=
-WEBOTS_HOME_PATH=$(subst $(space),\ ,$(strip $(subst \,/,$(WEBOTS_HOME))))
 include $(WEBOTS_HOME_PATH)/resources/Makefile.include

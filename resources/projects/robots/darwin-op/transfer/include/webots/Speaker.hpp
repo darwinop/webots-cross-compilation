@@ -17,7 +17,7 @@
 namespace webots {
   class Speaker: public Device  {
     public:
-                    Speaker(const std::string &name, const Robot *robot); //Use Robot::getSpeaker() instead
+                    Speaker(const std::string &name); //Use Robot::getSpeaker() instead
       virtual      ~Speaker();
 
       virtual void  enable(int ms);

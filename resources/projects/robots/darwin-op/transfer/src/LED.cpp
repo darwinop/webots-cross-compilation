@@ -11,8 +11,8 @@ int LED::mBackPanel = 0;
 
 #define LED_BOUND(x,a,b) (((x)<(a))?(a):((x)>(b))?(b):(x))
 
-LED::LED(const std::string &name, const Robot *robot) :
-  Device(name, robot)
+LED::LED(const std::string &name) :
+  Device(name)
 {
   initStaticMap();
 }
@@ -22,7 +22,7 @@ LED::~LED() {
 
 void LED::set(int value) {
   
-  CM730 *cm730 = getRobot()->getCM730();
+  CM730 *cm730 = Robot::getInstance()->getCM730();
 
   //RGB Led
   if (getName() == "EyeLed" || getName() == "HeadLed") {

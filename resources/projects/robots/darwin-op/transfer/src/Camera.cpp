@@ -12,8 +12,8 @@ using namespace std;
 unsigned char *::webots::Camera::mImage = NULL;
 const int ::webots::Camera::mResolution[NBRESOLUTION][2] = { {320, 240}, {640, 360}, {640, 400}, {640, 480}, {768, 480}, {800, 600} };
 
-::webots::Camera::Camera(const string &name, const Robot *robot) :
-  Device(name, robot)
+::webots::Camera::Camera(const string &name) :
+  Device(name)
 {
   mIsActive = false;
 }
@@ -106,10 +106,10 @@ bool ::webots::Camera::checkResolution(int width, int height) {
 }
 
 int ::webots::Camera::getSamplingPeriod() const {
-  if (getRobot()->getBasicTimeStep() < 30)
+  if (Robot::getInstance()->getBasicTimeStep() < 30)
     return 30;
   else
-    return getRobot()->getBasicTimeStep();
+    return Robot::getInstance()->getBasicTimeStep();
 }
 
 int ::webots::Camera::getType() const {

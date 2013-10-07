@@ -3,8 +3,8 @@
 
 using namespace webots;
 
-Accelerometer::Accelerometer(const std::string &name, const Robot *robot) :
-  Device(name, robot)
+Accelerometer::Accelerometer(const std::string &name) :
+  Device(name)
 {
   for (int i = 0; i < 3; i++)
     mValues[i] = 512;  // 512 = central value -> no acceleration
@@ -29,5 +29,5 @@ void Accelerometer::setValues(const int *integerValues) {
 }
 
 int Accelerometer::getSamplingPeriod() const {
-  return getRobot()->getBasicTimeStep();
+  return Robot::getInstance()->getBasicTimeStep();
 }

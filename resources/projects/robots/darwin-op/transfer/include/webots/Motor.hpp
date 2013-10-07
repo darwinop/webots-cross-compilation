@@ -20,7 +20,7 @@ namespace webots {
         ROTATIONAL = 0
       };
 
-                    Motor(const std::string &name, const Robot *robot); //Use Robot::getMotor() instead
+                    Motor(const std::string &name); //Use Robot::getMotor() instead
       virtual      ~Motor();
 
       virtual void  setPosition(double position);
