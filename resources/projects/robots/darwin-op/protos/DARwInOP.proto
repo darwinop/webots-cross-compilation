@@ -26,13 +26,22 @@ PROTO DARwInOP [
   field SFBool waistBand FALSE 
   field SFColor waistBandColor 0 0 1 
   field SFInt32 channel 0 
-  field SFBool showRobotWindow FALSE 
+  field SFBool showRobotWindow FALSE
+  field MFNode bodySlot []
+  field MFNode headSlot []
+  field MFNode leftFootSlot []
+  field MFNode rightFootSlot []
+  field MFNode leftHandSlot []
+  field MFNode rightHandSlot []
 ]
 {
   Robot {
     translation IS translation
     rotation IS rotation
     children [
+      DEF BODY_SLOT Group {
+        children IS bodySlot
+      }
       DEF WAIST_BAND Transform {
         translation 0 -0.04 -0.02 
         children [
@@ -550,6 +559,10 @@ PROTO DARwInOP [
               endPoint Solid {
                 rotation -1 0 0 -0.5954 
                 children [
+                  DEF HEAD_SLOT Transform {
+                    translation 0 0.022 -0.012
+                    children IS headSlot
+                  }
                   DEF DHeadShape Group {
                     children [
                       Shape {
@@ -1705,6 +1718,9 @@ PROTO DARwInOP [
                                       endPoint Solid {
                                         rotation 0 0 1 -0.02 
                                         children [
+                                          DEF LEFT_FOOT_SLOT Group {
+                                            children IS leftFootSlot
+                                          }
                                           DEF DFootLShape Group {
                                             children [
                                               Shape {
@@ -2639,6 +2655,9 @@ PROTO DARwInOP [
                                       endPoint Solid {
                                         rotation 0 0 1 0.05 
                                         children [
+                                          DEF RIGHT_FOOT_SLOT Group {
+                                            children IS rightFootSlot
+                                          }
                                           DEF DFootRShape Group {
                                             children [
                                               Shape {
@@ -3206,6 +3225,9 @@ PROTO DARwInOP [
                       translation 0 -0.06 0.016 
                       rotation 1 0 0 -2.0908 
                       children [
+                        DEF LEFT_HAND_SLOT Group {
+                          children IS leftHandSlot
+                        }
                         DEF DArmLowerLShape Group {
                           children [
                             Shape {
@@ -3875,6 +3897,9 @@ PROTO DARwInOP [
                       translation 0 -0.06 0.016 
                       rotation -1 0 0 2.0808 
                       children [
+                        DEF RIGHT_HAND_SLOT Group {
+                          children IS rightHandSlot
+                        }
                         DEF DArmLowerRShape Group {
                           children [
                             Shape {
