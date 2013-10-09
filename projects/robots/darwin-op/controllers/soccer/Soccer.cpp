@@ -8,6 +8,7 @@
 #include <DARwInOPGaitManager.hpp>
 #include <DARwInOPVisionManager.hpp>
 
+#include <cassert>
 #include <cstdlib>
 #include <cmath>
 #include <iostream>
@@ -16,6 +17,14 @@
 using namespace webots;
 using namespace managers;
 using namespace std;
+
+static double clamp(double value, double min, double max) {
+  if (min > max) {
+    assert(0);
+    return value;
+  }
+  return value < min ? min : value > max ? max : value;
+}
 
 static const char *motorNames[NMOTORS] = {
   "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
@@ -123,7 +132,7 @@ void Soccer::run() {
   const double acc_step = 20;
   
   while (true) {
-    double x, y;
+    double x, y, neckPosition, headPosition;
     bool ballInFieldOfView = getBallCenter(x, y);
     const double *acc = mAccelerometer->getValues();
     
@@ -165,18 +174,20 @@ void Soccer::run() {
       y  = 0.015*y + py;
       px = x;
       py = y;
+      neckPosition = clamp(-x, mMotors[18]->getMinPosition(), mMotors[18]->getMaxPosition());
+      headPosition = clamp(-y, mMotors[19]->getMinPosition(), mMotors[19]->getMaxPosition());
 
       // go forwards and turn according to the head rotation
       if (y < 0.1) // ball far away, go quickly
         mGaitManager->setXAmplitude(1.0);
       else // ball close, go slowly
         mGaitManager->setXAmplitude(0.5);
-      mGaitManager->setAAmplitude(-x);
+      mGaitManager->setAAmplitude(neckPosition);
       mGaitManager->step(mTimeStep);
       
       // Move head
-      mMotors[18]->setPosition(-x);
-      mMotors[19]->setPosition(-y);
+      mMotors[18]->setPosition(neckPosition);
+      mMotors[19]->setPosition(headPosition);
       
       // if the ball is close enough
       // kick the ball with the right foot
@@ -208,7 +219,8 @@ void Soccer::run() {
       mGaitManager->step(mTimeStep);
       
       // move the head vertically
-      mMotors[19]->setPosition(0.7*sin(2.0*getTime()));
+      headPosition = clamp(0.7*sin(2.0*getTime()), mMotors[19]->getMinPosition(), mMotors[19]->getMaxPosition());
+      mMotors[19]->setPosition(headPosition);
     }
     
     // step

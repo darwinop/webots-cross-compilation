@@ -5,6 +5,7 @@
 #include <webots/Speaker.hpp>
 #endif
 
+#include <cassert>
 #include <cstdlib>
 #include <cmath>
 #include <iostream>
@@ -12,6 +13,14 @@
 
 using namespace webots;
 using namespace std;
+
+static double clamp(double value, double min, double max) {
+  if (min > max) {
+    assert(0);
+    return value;
+  }
+  return value < min ? min : value > max ? max : value;
+}
 
 static const char *motorNames[NMOTORS] = {
   "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
@@ -86,15 +95,15 @@ void Symmetry::run() {
   while (true) {
       
     // Get position of right arm of the robot
-    position[0] = mMotors[0]->getPosition();
-    position[1] = mMotors[2]->getPosition();
-    position[2] = mMotors[4]->getPosition();
-    
-    // Set position of XX arm of the robot
-    // the inversion of sign is done because of the symmetry
-    mMotors[1]->setPosition(-position[0]);
-    mMotors[3]->setPosition(-position[1]);
-    mMotors[5]->setPosition(-position[2]);
+    // invert (symmetry) and bound the positions
+    position[0] = clamp(-mMotors[0]->getPosition(), mMotors[0]->getMinPosition(), mMotors[0]->getMaxPosition());
+    position[1] = clamp(-mMotors[2]->getPosition(), mMotors[2]->getMinPosition(), mMotors[2]->getMaxPosition());
+    position[2] = clamp(-mMotors[4]->getPosition(), mMotors[4]->getMinPosition(), mMotors[4]->getMaxPosition());
+
+    // Set position of left arm of the robot
+    mMotors[1]->setPosition(position[0]);
+    mMotors[3]->setPosition(position[1]);
+    mMotors[5]->setPosition(position[2]);
     
     // step
     myStep();
