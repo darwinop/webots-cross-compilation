@@ -13,10 +13,11 @@
 #include <unistd.h>
 #endif
 
+#include <cassert>
+#include <cmath>
+#include <cstdlib>
 #include <iostream>
 #include <iomanip>
-#include <cstdlib>
-#include <cmath>
 
 using namespace Robot;
 using namespace managers;
@@ -30,6 +31,14 @@ static const string sotorNames[DMM_NSERVOS] = {
   "LegLowerR" /*ID13*/, "LegLowerL" /*ID14*/, "AnkleR"    /*ID15*/, "AnkleL"    /*ID16*/,
   "FootR"     /*ID17*/, "FootL"     /*ID18*/, "Neck"      /*ID19*/, "Head"      /*ID20*/
 };
+
+static double clamp(double value, double min, double max) {
+  if (min > max) {
+    assert(0);
+    return value;
+  }
+  return value < min ? min : value > max ? max : value;
+}
 
 DARwInOPMotionManager::DARwInOPMotionManager(webots::Robot *robot) :
   mRobot(robot),
@@ -184,6 +193,7 @@ void DARwInOPMotionManager::achieveTarget(int msToAchieveTarget) {
     for (int i = 0; i < DMM_NSERVOS; i++) {
       double dX = mTargetPositions[i] - mCurrentPositions[i];
       double newPosition = mCurrentPositions[i] + dX / stepNumberToAchieveTarget;
+      newPosition = clamp(newPosition, mMotors[i]->getMinPosition(), mMotors[i]->getMaxPosition());
       mCurrentPositions[i] = newPosition;
       mMotors[i]->setPosition(newPosition);
     }
