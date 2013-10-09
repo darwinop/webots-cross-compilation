@@ -4,6 +4,7 @@
 #include <webots/Camera.hpp>
 #include <DARwInOPVisionManager.hpp>
 
+#include <cassert>
 #include <cstdlib>
 #include <cmath>
 #include <iostream>
@@ -12,6 +13,14 @@
 using namespace webots;
 using namespace managers;
 using namespace std;
+
+static double clamp(double value, double min, double max) {
+  if (min > max) {
+    assert(0);
+    return value;
+  }
+  return value < min ? min : value > max ? max : value;
+}
 
 static const char *motorNames[NMOTORS] = {
   "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
@@ -72,12 +81,8 @@ void VisualTracking::run() {
       horizontal -= dh;
       double dv = 0.1*((y / height ) - 0.5);
       vertical -= dv;
-      // clamp horizontal to [-2;2]
-      if (horizontal > 1.81) horizontal = 1.81;
-      else if (horizontal < -1.81) horizontal = -1.81;
-      // clamp vertical to [-1;1]
-      if (vertical > 0.94) vertical = 0.94;
-      else if (vertical < -0.36) vertical = -0.36;      
+      horizontal = clamp(horizontal, mMotors[18]->getMinPosition(), mMotors[18]->getMaxPosition());
+      horizontal = clamp(horizontal, mMotors[19]->getMinPosition(), mMotors[19]->getMaxPosition());
       mMotors[18]->setPosition(horizontal);
       mMotors[19]->setPosition(vertical);
     }
