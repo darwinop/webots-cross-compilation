@@ -24,13 +24,16 @@ using namespace managers;
 using namespace webots;
 using namespace std;
 
-static const string sotorNames[DMM_NSERVOS] = {
+static const string motorNames[DMM_NSERVOS] = {
   "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
   "ArmLowerR" /*ID5 */, "ArmLowerL" /*ID6 */, "PelvYR"    /*ID7 */, "PelvYL"    /*ID8 */,
   "PelvR"     /*ID9 */, "PelvL"     /*ID10*/, "LegUpperR" /*ID11*/, "LegUpperL" /*ID12*/,
   "LegLowerR" /*ID13*/, "LegLowerL" /*ID14*/, "AnkleR"    /*ID15*/, "AnkleL"    /*ID16*/,
   "FootR"     /*ID17*/, "FootL"     /*ID18*/, "Neck"      /*ID19*/, "Head"      /*ID20*/
 };
+
+static double minMotorPositions[DMM_NSERVOS];
+static double maxMotorPositions[DMM_NSERVOS];
 
 static double clamp(double value, double min, double max) {
   if (min > max) {
@@ -78,7 +81,9 @@ DARwInOPMotionManager::DARwInOPMotionManager(webots::Robot *robot) :
 #else
   for (int i = 0; i<DMM_NSERVOS; i++) {
     mCurrentPositions[i] = 0.0;
-    mMotors[i] = mRobot->getMotor(sotorNames[i]);
+    mMotors[i] = mRobot->getMotor(motorNames[i]);
+    minMotorPositions[i] = mMotors[i]->getMinPosition();
+    maxMotorPositions[i] = mMotors[i]->getMaxPosition();
   }
   filename = DARwInOPDirectoryManager::getDataDirectory() + "motion_4096.bin";
 #endif
@@ -120,7 +125,7 @@ void DARwInOPMotionManager::playPage(int id, bool sync) {
     
     // Reset Goal Position of all motors after a motion //
     for (i = 0; i < DMM_NSERVOS; i++)
-      mRobot->getMotor(sotorNames[i])->setPosition(MX28::Value2Angle(mAction->m_Joint.GetValue(i+1))*(M_PI/180));
+      mRobot->getMotor(motorNames[i])->setPosition(MX28::Value2Angle(mAction->m_Joint.GetValue(i+1))*(M_PI/180));
     
     // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
     mAction->m_Joint.SetEnableBody(false, true);
@@ -180,7 +185,7 @@ void DARwInOPMotionManager::achieveTarget(int msToAchieveTarget) {
   
   for (int i = 0; i < DMM_NSERVOS; i++) {
     if (mMotors[i]->getPositionSamplingPeriod() <= 0) {
-      cerr << "The position feedback of sotor "<<  sotorNames[i] << " is not enabled. DARwInOPMotionManager need to read the position of all motors. The position will be automatically enable."<< endl;
+      cerr << "The position feedback of sotor "<<  motorNames[i] << " is not enabled. DARwInOPMotionManager need to read the position of all motors. The position will be automatically enable."<< endl;
       mMotors[i]->enablePosition(mBasicTimeStep);
       stepNeeded = true;
     }
@@ -193,7 +198,7 @@ void DARwInOPMotionManager::achieveTarget(int msToAchieveTarget) {
     for (int i = 0; i < DMM_NSERVOS; i++) {
       double dX = mTargetPositions[i] - mCurrentPositions[i];
       double newPosition = mCurrentPositions[i] + dX / stepNumberToAchieveTarget;
-      newPosition = clamp(newPosition, mMotors[i]->getMinPosition(), mMotors[i]->getMaxPosition());
+      newPosition = clamp(newPosition, minMotorPositions[i], maxMotorPositions[i]);
       mCurrentPositions[i] = newPosition;
       mMotors[i]->setPosition(newPosition);
     }
@@ -212,7 +217,7 @@ void DARwInOPMotionManager::InitMotionAsync() {
   bool stepNeeded = false;
   for (int i = 0; i < DMM_NSERVOS; i++) {
     if (mMotors[i]->getPositionSamplingPeriod() <= 0) {
-      cerr << "The position feedback of sotor "<<  sotorNames[i] << " is not enabled. DARwInOPMotionManager need to read the position of all motors. The position will be automatically enable."<< endl;
+      cerr << "The position feedback of sotor "<<  motorNames[i] << " is not enabled. DARwInOPMotionManager need to read the position of all motors. The position will be automatically enable."<< endl;
       mMotors[i]->enablePosition(mBasicTimeStep);
       stepNeeded = true;
     }
@@ -272,7 +277,7 @@ void *DARwInOPMotionManager::MotionThread(void *param) {
   
   // Reset Goal Position of all motors after a motion //
   for (int i = 0; i < DMM_NSERVOS; i++)
-    instance->mRobot->getMotor(sotorNames[i])->setPosition(MX28::Value2Angle(instance->mAction->m_Joint.GetValue(i+1))*(M_PI/180));
+    instance->mRobot->getMotor(motorNames[i])->setPosition(MX28::Value2Angle(instance->mAction->m_Joint.GetValue(i+1))*(M_PI/180));
     
   // Disable the Joints in the Gait Manager, this allow to control them again 'manualy' //
   instance->mAction->m_Joint.SetEnableBody(false, true);
