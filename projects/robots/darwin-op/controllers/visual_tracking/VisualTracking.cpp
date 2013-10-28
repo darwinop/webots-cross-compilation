@@ -22,6 +22,9 @@ static double clamp(double value, double min, double max) {
   return value < min ? min : value > max ? max : value;
 }
 
+static double minMotorPositions[NMOTORS];
+static double maxMotorPositions[NMOTORS];
+
 static const char *motorNames[NMOTORS] = {
   "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
   "ArmLowerR" /*ID5 */, "ArmLowerL" /*ID6 */, "PelvYR"    /*ID7 */, "PelvYL"    /*ID8 */,
@@ -38,8 +41,11 @@ VisualTracking::VisualTracking(): Robot() {
   mCamera = getCamera("Camera");
   mCamera->enable(2*mTimeStep);
   
-  for (int i=0; i<NMOTORS; i++)
+  for (int i=0; i<NMOTORS; i++) {
     mMotors[i] = getMotor(motorNames[i]);
+    minMotorPositions[i] = mMotors[i]->getMinPosition();
+    maxMotorPositions[i] = mMotors[i]->getMaxPosition();
+  }
   
   mVisionManager = new DARwInOPVisionManager(mCamera->getWidth(), mCamera->getHeight(), 355, 15, 60, 15, 0, 30);
 }
@@ -81,8 +87,8 @@ void VisualTracking::run() {
       horizontal -= dh;
       double dv = 0.1*((y / height ) - 0.5);
       vertical -= dv;
-      horizontal = clamp(horizontal, mMotors[18]->getMinPosition(), mMotors[18]->getMaxPosition());
-      horizontal = clamp(horizontal, mMotors[19]->getMinPosition(), mMotors[19]->getMaxPosition());
+      horizontal = clamp(horizontal, minMotorPositions[18], maxMotorPositions[18]);
+      horizontal = clamp(horizontal, minMotorPositions[19], maxMotorPositions[19]);
       mMotors[18]->setPosition(horizontal);
       mMotors[19]->setPosition(vertical);
     }

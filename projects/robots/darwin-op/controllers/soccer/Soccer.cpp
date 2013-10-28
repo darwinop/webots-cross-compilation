@@ -26,6 +26,9 @@ static double clamp(double value, double min, double max) {
   return value < min ? min : value > max ? max : value;
 }
 
+static double minMotorPositions[NMOTORS];
+static double maxMotorPositions[NMOTORS];
+
 static const char *motorNames[NMOTORS] = {
   "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
   "ArmLowerR" /*ID5 */, "ArmLowerL" /*ID6 */, "PelvYR"    /*ID7 */, "PelvYL"    /*ID8 */,
@@ -55,6 +58,8 @@ Soccer::Soccer():
   for (int i=0; i<NMOTORS; i++) {
     mMotors[i] = getMotor(motorNames[i]);
     mMotors[i]->enablePosition(mTimeStep);
+    minMotorPositions[i] = mMotors[i]->getMinPosition();
+    maxMotorPositions[i] = mMotors[i]->getMaxPosition();
   }
   
   mMotionManager = new DARwInOPMotionManager(this);
@@ -174,8 +179,8 @@ void Soccer::run() {
       y  = 0.015*y + py;
       px = x;
       py = y;
-      neckPosition = clamp(-x, mMotors[18]->getMinPosition(), mMotors[18]->getMaxPosition());
-      headPosition = clamp(-y, mMotors[19]->getMinPosition(), mMotors[19]->getMaxPosition());
+      neckPosition = clamp(-x, minMotorPositions[18], maxMotorPositions[18]);
+      headPosition = clamp(-y, minMotorPositions[19], maxMotorPositions[19]);
 
       // go forwards and turn according to the head rotation
       if (y < 0.1) // ball far away, go quickly
@@ -219,7 +224,7 @@ void Soccer::run() {
       mGaitManager->step(mTimeStep);
       
       // move the head vertically
-      headPosition = clamp(0.7*sin(2.0*getTime()), mMotors[19]->getMinPosition(), mMotors[19]->getMaxPosition());
+      headPosition = clamp(0.7*sin(2.0*getTime()), minMotorPositions[19], maxMotorPositions[19]);
       mMotors[19]->setPosition(headPosition);
     }
     

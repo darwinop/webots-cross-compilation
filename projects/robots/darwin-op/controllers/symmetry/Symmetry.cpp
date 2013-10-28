@@ -22,6 +22,9 @@ static double clamp(double value, double min, double max) {
   return value < min ? min : value > max ? max : value;
 }
 
+static double minMotorPositions[NMOTORS];
+static double maxMotorPositions[NMOTORS];
+
 static const char *motorNames[NMOTORS] = {
   "ShoulderR" /*ID1 */, "ShoulderL" /*ID2 */, "ArmUpperR" /*ID3 */, "ArmUpperL" /*ID4 */,
   "ArmLowerR" /*ID5 */, "ArmLowerL" /*ID6 */, "PelvYR"    /*ID7 */, "PelvYL"    /*ID8 */,
@@ -45,6 +48,8 @@ Symmetry::Symmetry():
   for (int i=0; i<NMOTORS; i++) {
     mMotors[i] = getMotor(motorNames[i]);
     mMotors[i]->enablePosition(mTimeStep);
+    minMotorPositions[i] = mMotors[i]->getMinPosition();
+    maxMotorPositions[i] = mMotors[i]->getMaxPosition();
   }
 
 }
@@ -96,9 +101,9 @@ void Symmetry::run() {
       
     // Get position of right arm of the robot
     // invert (symmetry) and bound the positions
-    position[0] = clamp(-mMotors[0]->getPosition(), mMotors[0]->getMinPosition(), mMotors[0]->getMaxPosition());
-    position[1] = clamp(-mMotors[2]->getPosition(), mMotors[2]->getMinPosition(), mMotors[2]->getMaxPosition());
-    position[2] = clamp(-mMotors[4]->getPosition(), mMotors[4]->getMinPosition(), mMotors[4]->getMaxPosition());
+    position[0] = clamp(-mMotors[0]->getPosition(), minMotorPositions[0], maxMotorPositions[0]);
+    position[1] = clamp(-mMotors[2]->getPosition(), minMotorPositions[2], maxMotorPositions[2]);
+    position[2] = clamp(-mMotors[4]->getPosition(), minMotorPositions[4], maxMotorPositions[4]);
 
     // Set position of left arm of the robot
     mMotors[1]->setPosition(position[0]);
