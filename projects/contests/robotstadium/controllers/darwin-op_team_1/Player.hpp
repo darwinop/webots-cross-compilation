@@ -67,6 +67,9 @@ protected:
   Emitter *emitter, *superEmitter;
   Receiver *receiver;
   
+  double motorMinPositions[Player::NMOTORS];
+  double motorMaxPositions[Player::NMOTORS];
+  
   managers::DARwInOPGaitManager *gaitManager;
   managers::DARwInOPMotionManager *motionManager;
 

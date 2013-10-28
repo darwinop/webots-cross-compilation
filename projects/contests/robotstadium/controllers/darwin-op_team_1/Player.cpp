@@ -72,6 +72,8 @@ Player::Player(int playerID, int teamID) {
   for (int i=0; i<NMOTORS; i++) {
     motors[i] = getMotor(motorNames[i]);
     motors[i]->enablePosition(SIMULATION_STEP);
+    motorMinPositions[i] = motors[i]->getMinPosition();
+    motorMaxPositions[i] = motors[i]->getMaxPosition();
   }
 
   while (isnan(motors[0]->getPosition()))

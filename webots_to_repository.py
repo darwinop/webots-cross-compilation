@@ -7,7 +7,7 @@ script_path = os.path.abspath(os.path.dirname(__file__))
 
 # interesting paths in absolute
 webots_path = os.path.abspath(script_path + '/../webotsd')
-monitored_directories = [webots_path + '/' + s for s in ['resources/projects/robots/darwin-op', 'projects/robots/darwin-op']]
+monitored_directories = [webots_path + '/' + s for s in ['resources/projects/robots/darwin-op', 'projects/robots/darwin-op', 'projects/contests/robotstadium/controllers/darwin-op_team_0', 'projects/contests/robotstadium/controllers/darwin-op_team_1', 'projects/contests/robotstadium/worlds']]
 
 # generate and copy the files
 for directory in monitored_directories:
