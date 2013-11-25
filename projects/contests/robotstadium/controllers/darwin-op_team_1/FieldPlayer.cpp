@@ -4,8 +4,17 @@
 #include <DARwInOPGaitManager.hpp>
 #include <iostream>
 #include <cmath>
+#include <cassert>
 
 using namespace webots;
+
+static double clamp(double value, double min, double max) {
+  if (min > max) {
+    assert(0);
+    return value;
+  }
+  return value < min ? min : value > max ? max : value;
+}
 
 FieldPlayer::FieldPlayer(int playerID, int teamID) : Player(playerID, teamID) {
 }
@@ -74,7 +83,7 @@ void FieldPlayer::run() {
       sleepSteps(5);
     }
 
-    double x, y;
+    double x, y, neckPosition, headPosition;
     bool ballInFieldOfView = getBallCenter(x, y);
     const double *acc = accelerometer->getValues();
     const double xFactor = 0.5;
@@ -115,18 +124,20 @@ void FieldPlayer::run() {
       y  = 0.01*y + py;
       px = x;
       py = y;
+      neckPosition = clamp(-x, motorMinPositions[18], motorMaxPositions[18]);
+      headPosition = clamp(-y, motorMinPositions[19], motorMaxPositions[19]);
 
       // go forwards and turn according to the head rotation
       if (y < 0.1) // ball far away, go quickly
         gaitManager->setXAmplitude(1.0 * xFactor);
       else // ball close, go slowly
         gaitManager->setXAmplitude(0.5 * xFactor);
-      gaitManager->setAAmplitude(- aFactor * x);
+      gaitManager->setAAmplitude(aFactor * neckPosition);
       gaitManager->step(SIMULATION_STEP);
       
       // Move head
-      motors[18]->setPosition(-x);
-      motors[19]->setPosition(-y);
+      motors[18]->setPosition(neckPosition);
+      motors[19]->setPosition(headPosition);
       
       // if the ball is close enough
       // kick the ball with the right foot
@@ -152,7 +163,9 @@ void FieldPlayer::run() {
       
       // move the head vertically
       motors[18]->setPosition(0.0);
-      motors[19]->setPosition(-0.7*sin(2.0*getTime()));
+      neckPosition = -0.7*sin(2.0*getTime());
+      neckPosition = clamp(neckPosition, motorMinPositions[19], motorMaxPositions[19]);
+      motors[19]->setPosition(neckPosition);
     }
     
     // step

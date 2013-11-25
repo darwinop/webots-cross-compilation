@@ -24,7 +24,7 @@ LIBRARIES += -lpthread -lzip-2
 endif
 
 ifeq ($(OSTYPE),darwin)
-LIBRARIES += -lzip.2
+LIBRARIES += -lnihzip
 endif
 
 ifeq ($(OSTYPE),linux)
