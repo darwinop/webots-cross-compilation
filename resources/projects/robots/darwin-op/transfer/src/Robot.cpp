@@ -136,6 +136,11 @@ int webots::Robot::step(int ms) {
   ((LED *)mDevices["HeadLed"])->setColor(values[0]);
   ((LED *)mDevices["EyeLed"])->setColor(values[1]);
   LED::setBackPanel(values[2]);
+  
+  // push button state (TODO: check with real robot that the masks are correct)
+  //values[0] = mCM730->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_BUTTON) & 0x1;
+  //values[1] = mCM730->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_BUTTON) & 0x2;
+  //values[2] = mCM730->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_BUTTON) & 0x4;
 
   // -------- Sync Write to actuators --------  //
   const int msgLength = 9; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
