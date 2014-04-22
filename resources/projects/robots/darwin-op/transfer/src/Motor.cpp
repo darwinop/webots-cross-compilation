@@ -212,19 +212,19 @@ void Motor::setControlPID(double p, double i, double d) {
 
   if (p >= 0) {
     int value = p * 8; // TODO: Seems to be good, but has to be verified
-    value < 255 ? mPGain = value : 254;
+    mPGain = value < 255 ? value : 254;
   }
   
   // integral gain
   if (i >= 0) {
     int value = i * 2048 / 1000;
-    value < 255 ? mIGain = value : 254;
+    mIGain = value < 255 ? value : 254;
   }
   
   // derivative gain
   if (d >= 0) {
     int value = d * 1000 / 4;
-    value < 255 ? mDGain = value : 254;
+    mDGain = value < 255 ? value : 254;
   }
 }
 
