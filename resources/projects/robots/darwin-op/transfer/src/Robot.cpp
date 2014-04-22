@@ -143,7 +143,7 @@ int webots::Robot::step(int ms) {
   //values[2] = mCM730->m_BulkReadData[::Robot::CM730::ID_CM].ReadWord(::Robot::CM730::P_BUTTON) & 0x4;
 
   // -------- Sync Write to actuators --------  //
-  const int msgLength = 9; // id + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
+  const int msgLength = 11; // id + D + I + P + Empty + Goal Position (L + H) + Moving speed (L + H) + Torque Limit (L + H)
   
   int param[20 * msgLength];
   int n = 0;
@@ -155,6 +155,8 @@ int webots::Robot::step(int ms) {
     int motorId = (*motorIt).second;
     if (motor->getTorqueEnable() && !(::Robot::MotionStatus::m_CurrentJoints.GetEnable(motorId))) {
       param[n++] = motorId;
+      param[n++] = motor->getDGain();
+      param[n++] = motor->getIGain();
       param[n++] = motor->getPGain();
       param[n++] = 0; // Empty
       // TODO: controlPID should be implemented there
@@ -170,7 +172,7 @@ int webots::Robot::step(int ms) {
       changed_motors++;
     }
   }
-  mCM730->SyncWrite(::Robot::MX28::P_P_GAIN, msgLength, changed_motors , param);
+  mCM730->SyncWrite(::Robot::MX28::P_D_GAIN, msgLength, changed_motors , param);
 
   // -------- Keyboard Reset ----------- //
   if (mKeyboardEnable == true)

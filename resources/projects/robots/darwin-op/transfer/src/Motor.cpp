@@ -36,6 +36,8 @@ Motor::Motor(const std::string &name) :
   mGoalPosition = mNamesToInitPos[getName()];
   mTorqueEnable = 1;    // Yes
   mPGain = 32;
+  mIGain = 0;
+  mDGain = 0;
   mMovingSpeed = 1023;  // Max speed
   mTorqueLimit = 1023;  // Max torque
   mPresentPosition = mNamesToInitPos[getName()];
@@ -204,14 +206,25 @@ void Motor::setAvailableTorque(double availableTorque) {
 }
 
 void Motor::setControlPID(double p, double i, double d) {
-
+  // proportionnal gain
   if (p < 3)
     cout << "WARNING : A small value of P can cause differences between simulation and reality." << endl;
 
-  if (p >= 0)
-  {
+  if (p >= 0) {
     int value = p * 8; // TODO: Seems to be good, but has to be verified
-    mPGain = value;
+    value < 255 ? mPGain = value : 254;
+  }
+  
+  // integral gain
+  if (i >= 0) {
+    int value = i * 2048 / 1000;
+    value < 255 ? mIGain = value : 254;
+  }
+  
+  // derivative gain
+  if (d >= 0) {
+    int value = d * 1000 / 4;
+    value < 255 ? mDGain = value : 254;
   }
 }
 
