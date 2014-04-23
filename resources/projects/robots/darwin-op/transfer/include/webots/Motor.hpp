@@ -64,6 +64,8 @@ namespace webots {
       int           getGoalPosition() const;
       int           getTorqueEnable() const;
       int           getPGain() const;
+      int           getIGain() const;
+      int           getDGain() const;
       int           getMovingSpeed() const;
       int           getTorqueLimit() const;
       double        getSpeed() const;
@@ -81,6 +83,8 @@ namespace webots {
       int           mGoalPosition;
       int           mTorqueEnable;
       int           mPGain;
+      int           mIGain;
+      int           mDGain;
       int           mMovingSpeed;
       int           mTorqueLimit;
       int           mTorqueFeedback;
